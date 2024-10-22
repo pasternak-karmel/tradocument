@@ -53,10 +53,10 @@ export default function Footer() {
         </div>
         <div className="mt-8 pt-8 border-t border-gray-800">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <p className="text-sm text-center md:text-left text-gray-400">© 2024 TraDocument. All rights reserved.</p>
+            <p className="text-sm text-center md:text-left text-gray-400">© 2024 TraDocument. Tout droit réservés.</p>
             <nav className="flex space-x-4">
               <Link className="text-sm text-gray-400 hover:text-white transition-colors" href="#">
-                Terms of Service
+                Termes et services
               </Link>
               <Link className="text-sm text-gray-400 hover:text-white transition-colors" href="#">
                 Privacy Policy
