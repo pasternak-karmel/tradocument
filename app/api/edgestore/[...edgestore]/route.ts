@@ -11,7 +11,8 @@ type Context = {
   userRole: "admin" | "user" | "traducteur";
 };
 
-async function createContext({ req }: CreateContextOptions): Promise<Context> {
+// async function createContext({ req }: CreateContextOptions): Promise<Context> {
+async function createContext(): Promise<Context> {
   const session = await auth();
 
   if (!session || !session.user?.id) {

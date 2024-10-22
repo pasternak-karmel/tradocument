@@ -1,6 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { customAlphabet } from 'nanoid'
+import { customAlphabet } from "nanoid";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -11,7 +11,8 @@ export const nanoid = customAlphabet(
   7
 ); // 7-character random string
 
-export async function fetcher<JSON = any>(
+// Use a generic type with a default of unknown instead of any
+export async function fetcher<JSON = unknown>(
   input: RequestInfo,
   init?: RequestInit
 ): Promise<JSON> {
@@ -48,8 +49,9 @@ export const formatNumber = (value: number) =>
     currency: "USD",
   }).format(value);
 
+// Instead of using 'any', use 'unknown' for async functions and casting the result when needed
 export const runAsyncFnWithoutBlocking = (
-  fn: (...args: any) => Promise<any>
+  fn: (...args: unknown[]) => Promise<unknown>
 ) => {
   fn();
 };
