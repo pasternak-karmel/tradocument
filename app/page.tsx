@@ -1,9 +1,9 @@
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { FileText, Globe, Shield, Clock, ArrowRight } from "lucide-react"
-import Link from "next/link"
-import { NavBar } from "@/components/ui/_components/navigation"
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { FileText, Globe, Shield, Clock, ArrowRight } from "lucide-react";
+import Link from "next/link";
+import { NavBar } from "@/app/_components/navigation";
 
 export default function TraDocumentLanding() {
   return (
@@ -34,7 +34,9 @@ export default function TraDocumentLanding() {
           </div>
         </div>
       </header> */}
-      <div  className="flex justify-center items-center "><NavBar/></div>
+      <div className="flex justify-center items-center ">
+        <NavBar />
+      </div>
       <main className="flex-1">
         <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48">
           <div className="container px-4 md:px-6">
@@ -44,13 +46,18 @@ export default function TraDocumentLanding() {
                   Simplify Your Document Translations
                 </h1>
                 <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400">
-                  TraDocument helps you translate and certify your documents quickly and easily. Perfect for immigration,
-                  education, and business needs.
+                  TraDocument helps you translate and certify your documents
+                  quickly and easily. Perfect for immigration, education, and
+                  business needs.
                 </p>
               </div>
               <div className="w-full max-w-sm space-y-2">
                 <form className="flex space-x-2">
-                  <Input className="max-w-lg flex-1" placeholder="Enter your email" type="email" />
+                  <Input
+                    className="max-w-lg flex-1"
+                    placeholder="Enter your email"
+                    type="email"
+                  />
                   <Button type="submit">Get Started</Button>
                 </form>
               </div>
@@ -69,7 +76,10 @@ export default function TraDocumentLanding() {
                   <CardTitle>Global Network</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p>Access translators from around the world for accurate translations.</p>
+                  <p>
+                    Access translators from around the world for accurate
+                    translations.
+                  </p>
                 </CardContent>
               </Card>
               <Card>
@@ -78,7 +88,10 @@ export default function TraDocumentLanding() {
                   <CardTitle>Certified Translations</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p>Get certified translations accepted by government agencies and institutions.</p>
+                  <p>
+                    Get certified translations accepted by government agencies
+                    and institutions.
+                  </p>
                 </CardContent>
               </Card>
               <Card>
@@ -87,7 +100,10 @@ export default function TraDocumentLanding() {
                   <CardTitle>Fast Turnaround</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p>Receive your translated documents quickly, often within 24 hours.</p>
+                  <p>
+                    Receive your translated documents quickly, often within 24
+                    hours.
+                  </p>
                 </CardContent>
               </Card>
             </div>
@@ -101,8 +117,9 @@ export default function TraDocumentLanding() {
                   Streamline Your Document Translation Process
                 </h2>
                 <p className="text-gray-500 md:text-xl dark:text-gray-400">
-                  TraDocument makes it easy to get your documents translated and certified. Our platform connects you with
-                  expert translators and simplifies the entire process.
+                  TraDocument makes it easy to get your documents translated and
+                  certified. Our platform connects you with expert translators
+                  and simplifies the entire process.
                 </p>
                 <ul className="space-y-2">
                   <li className="flex items-center space-x-2">
@@ -132,7 +149,9 @@ export default function TraDocumentLanding() {
                     <Card className="w-64 h-64">
                       <CardContent className="flex flex-col items-center justify-center h-full text-center p-6">
                         <FileText className="h-16 w-16 mb-4 text-primary" />
-                        <p className="text-xl font-semibold">Your documents, translated and certified</p>
+                        <p className="text-xl font-semibold">
+                          Your documents, translated and certified
+                        </p>
                       </CardContent>
                     </Card>
                   </div>
@@ -149,13 +168,21 @@ export default function TraDocumentLanding() {
                   Ready to Simplify Your Document Translations?
                 </h2>
                 <p className="mx-auto max-w-[600px] text-primary-foreground/80 md:text-xl">
-                  Join thousands of satisfied customers who trust TraDocument for their translation needs.
+                  Join thousands of satisfied customers who trust TraDocument
+                  for their translation needs.
                 </p>
               </div>
               <div className="w-full max-w-sm space-y-2">
                 <form className="flex space-x-2">
-                  <Input className="max-w-lg flex-1 bg-primary-foreground text-primary placeholder:text-primary/50" placeholder="Enter your email" type="email" />
-                  <Button className="bg-primary-foreground text-primary hover:bg-primary-foreground/90" type="submit">
+                  <Input
+                    className="max-w-lg flex-1 bg-primary-foreground text-primary placeholder:text-primary/50"
+                    placeholder="Enter your email"
+                    type="email"
+                  />
+                  <Button
+                    className="bg-primary-foreground text-primary hover:bg-primary-foreground/90"
+                    type="submit"
+                  >
                     Get Started
                   </Button>
                 </form>
@@ -165,7 +192,9 @@ export default function TraDocumentLanding() {
         </section>
       </main>
       <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t">
-        <p className="text-xs text-gray-500 dark:text-gray-400">© 2024 TraDocument. All rights reserved.</p>
+        <p className="text-xs text-gray-500 dark:text-gray-400">
+          © 2024 TraDocument. All rights reserved.
+        </p>
         <nav className="sm:ml-auto flex gap-4 sm:gap-6">
           <Link className="text-xs hover:underline underline-offset-4" href="#">
             Terms of Service
@@ -176,5 +205,5 @@ export default function TraDocumentLanding() {
         </nav>
       </footer>
     </div>
-  )
+  );
 }
