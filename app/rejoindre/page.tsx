@@ -1,14 +1,29 @@
-'use client'
-import { useState } from 'react'
-import { motion } from 'framer-motion'
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Textarea } from "@/components/ui/textarea"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Briefcase, User, MapPin, Phone, Mail, Send, CheckCircle } from "lucide-react"
+"use client";
+
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Briefcase,
+  User,
+  MapPin,
+  Phone,
+  Mail,
+  Send,
+  CheckCircle,
+} from "lucide-react";
 
 const jobTypes = [
   { value: "avocat", label: "Avocat", icon: "⚖️" },
@@ -17,23 +32,22 @@ const jobTypes = [
   { value: "huissier", label: "Huissier de justice", icon: "🏛️" },
   { value: "coursier-taxi", label: "Coursier taxi", icon: "🚕" },
   { value: "coursier-prive", label: "Coursier privé", icon: "🚚" },
-]
+];
 
 export default function JoinOurTeamEnhanced() {
-  const [selectedJob, setSelectedJob] = useState("")
-  const [isSubmitted, setIsSubmitted] = useState(false)
+  // const [selectedJob, setSelectedJob] = useState("");
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    // Ici, vous ajouteriez la logique pour envoyer le formulaire
-    setIsSubmitted(true)
-    setTimeout(() => setIsSubmitted(false), 3000)
-  }
+    e.preventDefault();
+    setIsSubmitted(true);
+    setTimeout(() => setIsSubmitted(false), 3000);
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white dark:from-gray-900 dark:to-gray-800">
       <div className="container mx-auto px-4 py-16">
-        <motion.h1 
+        <motion.h1
           className="text-4xl font-bold text-center mb-8 black dark:text-blue-400"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -42,7 +56,7 @@ export default function JoinOurTeamEnhanced() {
           <Briefcase className="inline-block mr-2 h-10 w-10" />
           Rejoignez notre équipe
         </motion.h1>
-        
+
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -50,7 +64,9 @@ export default function JoinOurTeamEnhanced() {
         >
           <Card className="max-w-2xl mx-auto">
             <CardHeader>
-              <CardTitle className="text-2xl font-semibold text-center">Formulaire de candidature</CardTitle>
+              <CardTitle className="text-2xl font-semibold text-center">
+                Formulaire de candidature
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-6">
@@ -59,7 +75,10 @@ export default function JoinOurTeamEnhanced() {
                     <Briefcase className="mr-2 h-5 w-5 blackblack" />
                     Choisissez votre domaine
                   </Label>
-                  <Select onValueChange={setSelectedJob} required>
+                  <Select
+                    // onValueChange={setSelectedJob}
+                    required
+                  >
                     <SelectTrigger id="jobType">
                       <SelectValue placeholder="Sélectionnez un poste" />
                     </SelectTrigger>
@@ -184,11 +203,12 @@ export default function JoinOurTeamEnhanced() {
           transition={{ duration: 0.5, delay: 0.4 }}
         >
           <p>
-            Rejoignez TraDocument et faites partie d&apos;une équipe dynamique et passionnée.
-            Ensemble, nous révolutionnons le monde de la traduction et des services juridiques.
+            Rejoignez TraDocument et faites partie d&apos;une équipe dynamique
+            et passionnée. Ensemble, nous révolutionnons le monde de la
+            traduction et des services juridiques.
           </p>
         </motion.div>
       </div>
     </div>
-  )
+  );
 }

@@ -12,11 +12,17 @@ type Context = {
 };
 
 async function createContext({ req }: CreateContextOptions): Promise<Context> {
-  // const session = await auth();
-  // if (!session) return "";
+  const session = await auth();
+
+  if (!session || !session.user?.id) {
+    return {
+      userId: "1234",
+      userRole: "user",
+    };
+  }
+
   return {
-    // userId: session?.user.id,
-    userId: "1234",
+    userId: session.user.id,
     userRole: "user",
   };
 }
@@ -43,10 +49,10 @@ const edgeStoreRouter = es.router({
         type: z.enum(["post", "profile"]),
       })
     )
-    .beforeUpload(({ ctx, input, fileInfo }) => {
+    .beforeUpload(({}) => {
       return true;
     })
-    .beforeDelete(({ ctx, fileInfo }) => {
+    .beforeDelete(({}) => {
       return true;
     })
     .path(({ input }) => [{ type: input.type }]),
@@ -67,10 +73,10 @@ const edgeStoreRouter = es.router({
         },
       ],
     })
-    .beforeUpload(({ ctx, input, fileInfo }) => {
+    .beforeUpload(() => {
       return true;
     })
-    .beforeDelete(({ ctx, fileInfo }) => {
+    .beforeDelete(() => {
       return true;
     }),
 });

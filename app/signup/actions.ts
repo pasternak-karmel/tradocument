@@ -3,9 +3,8 @@
 import { signIn } from "@/auth";
 import { ResultCode, getStringFromBuffer } from "@/lib/utils";
 import { z } from "zod";
-// import { kv } from "@vercel/kv";
 import { db } from "@/db/drizzle";
-import { InsertUserSchema, users } from "@/db/schema";
+import { users } from "@/db/schema";
 import { getUser } from "../login/actions";
 import { AuthError } from "next-auth";
 
@@ -30,14 +29,7 @@ export async function createUser(
       salt,
     };
 
-    // Log the user object to verify the data before insertion
-    console.log("Attempting to insert user:", user);
-
-    // Insert the user into the database
-    const data = await db.insert(users).values(user).returning(); // If returning() does not work as expected, remove it
-
-    // Check the returned data
-    console.log("Insert result:", data);
+    const data = await db.insert(users).values(user).returning();
 
     if (data && data.length > 0) {
       return {
