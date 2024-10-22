@@ -5,6 +5,7 @@ import { NavBar } from "@/components/ui/_components/navigation"
 import Image from 'next/image';
 import Footer from "@/components/ui/_components/footer"
 import FeaturesSection from "@/components/ui/avantages";
+import Link from "next/link";
 
 export default function TraDocumentLanding() {
   return (
@@ -53,7 +54,10 @@ export default function TraDocumentLanding() {
                 </p>
               </div>
               <div className="w-full max-w-sm space-y-2">
-                <Button type="submit">A propos</Button>
+                <Link href="/apropos">
+                <Button>A propos</Button>
+                </Link>
+                
               </div>
             </div>
           </div>
