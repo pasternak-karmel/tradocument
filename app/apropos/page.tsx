@@ -4,8 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { CheckCircle, Users, Target, Lightbulb } from "lucide-react"
-import { NavBar } from '@/components/ui/_components/navigation'
-import Footer from '@/components/ui/_components/footer'
+import { NavBar } from '@/app/_components/navigation'
+import Footer from '@/app/_components/footer'
 
 const teamMembers = [
   { name: "Sophie Martin", role: "Fondatrice & PDG", image: "/placeholder.svg?height=100&width=100" },
@@ -46,10 +46,10 @@ export default function AboutPage() {
           <Card>
             <CardContent className="pt-6">
               <p className="text-gray-600 dark:text-gray-300">
-                Fondée en 2015, TraDocument est née de la vision de Sophie Martin, une linguiste passionnée qui a reconnu le besoin de services de traduction de haute qualité dans un monde de plus en plus connecté. Depuis nos humbles débuts dans un petit bureau parisien, nous avons grandi pour devenir un leader de l'industrie, servant des clients dans le monde entier.
+                Fondée en 2015, TraDocument est née de la vision de Sophie Martin, une linguiste passionnée qui a reconnu le besoin de services de traduction de haute qualité dans un monde de plus en plus connecté. Depuis nos humbles débuts dans un petit bureau parisien, nous avons grandi pour devenir un leader de l&apos;industrie, servant des clients dans le monde entier.
               </p>
               <p className="mt-4 text-gray-600 dark:text-gray-300">
-                Au fil des années, nous avons constamment innové, intégrant les dernières technologies de traduction assistée par ordinateur et d'intelligence artificielle pour améliorer notre efficacité tout en maintenant la touche humaine essentielle à des traductions de qualité.
+                Au fil des années, nous avons constamment innové, intégrant les dernières technologies de traduction assistée par ordinateur et d&apos;intelligence artificielle pour améliorer notre efficacité tout en maintenant la touche humaine essentielle à des traductions de qualité.
               </p>
             </CardContent>
           </Card>

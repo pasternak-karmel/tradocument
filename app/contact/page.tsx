@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { MapPin, Phone, Mail, Clock } from "lucide-react"
-import Footer from '@/components/ui/_components/footer'
+import Footer from '@/app/_components/footer'
 
 export default function ContactPage() {
   const [isSubmitted, setIsSubmitted] = useState(false)
