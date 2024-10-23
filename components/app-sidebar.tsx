@@ -159,11 +159,11 @@ const data = {
 export async function AppSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
-  const session = (await auth()) as Session;
+  const {data: session} = useSession();
   const user = {
     name: session?.user?.name!,
     email: session?.user?.email!,
-    avatar: session?.user?.avatar!,
+    // avatar: session?.user?.avatar!,
   };
   return (
     <Sidebar variant="inset" {...props}>
