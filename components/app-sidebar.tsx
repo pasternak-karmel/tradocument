@@ -156,7 +156,7 @@ const data = {
   ],
 };
 
-export async function AppSidebar({
+export function AppSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
   const {data: session} = useSession();
