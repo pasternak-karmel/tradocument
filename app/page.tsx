@@ -1,15 +1,26 @@
+"use client"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent} from "@/components/ui/card"
-import { FileText,ArrowRight } from "lucide-react"
-import { NavBar } from "@/app/_components/navigation"
+import { FileText,ArrowRight, CheckIcon } from "lucide-react"
+import  Navbar  from "@/components/global/navbar"
 import Image from 'next/image';
 import Footer from "@/app/_components/footer"
 import FeaturesSection from "@/components/ui/avantages";
 import Link from "next/link";
+import { ContainerScroll } from "@/components/global/container-scroll-animation";
+import { InfiniteMovingCards } from "@/components/global/infinite-moving-cards";
+import { clients, products } from "@/lib/constant";
+import { HeroParallax } from "@/components/global/connect-parallax";
+import { LampComponent } from "@/components/global/lamp";
+import { CardBody, CardContainer, CardItem } from "@/components/global/3d-card";
+import { NavBar } from "./_components/navigation"
+import ElegantSection from "./_components/ElegantSection"
 
 export default function TraDocumentLanding() {
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
+      <Navbar/>
+      
       {/* <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-16 items-center space-x-4 sm:justify-between sm:space-x-0">
           <div className="flex gap-6 md:gap-10">
@@ -36,84 +47,49 @@ export default function TraDocumentLanding() {
           </div>
         </div>
       </header> */}
-      <div  className="flex justify-between items-center  ">
+
+
+<section className="h-screen w-full  bg-neutral-950 rounded-md  !overflow-visible relative flex flex-col items-center  antialiased">
+        <div className="absolute inset-0  h-full w-full items-center px-5 py-24 [background:radial-gradient(125%_125%_at_50%_10%,#000_35%,#223_100%)]">
+        </div>
+        <div className="flex flex-col mt-[-100px] md:mt-[-50px]">
+          <ContainerScroll
+            titleComponent = {
+              <div className="flex items-center justify-center flex-col">
+                <Button  size={'lg'}
+                  className="p-8 mb-8 md:mb-0 text-2xl w-full sm:w-fit border-t-2 rounded-full border-[#4D4D4D] bg-[#1F1F1F] hover:bg-white group transition-all flex items-center justify-center gap-4 hover:shadow-xl hover:shadow-neutral-500 duration-500" >
+                    <span className="bg-clip-text text-transparent bg-gradient-to-r from-neutral-500 to-neutral-600  md:text-center font-sans group-hover:bg-gradient-to-r group-hover:from-black goup-hover:to-black">
+                    <Link href="/apropos">
+                A propos
+                </Link>
+                  </span>
+                </Button>
+                <h1 className="text-5xl md:text-7xl  bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-600 font-sans font-bold">
+                Traduction rapides et de qualité optimale
+                </h1>
+
+              </div>
+            }
+          />
+        </div>
+
+      </section>
+
+
+      {/* <div  className="flex justify-between items-center  ">
         <Image src="/logo.png" alt="Logo" width={150} height={150} className="m-2"/>
         <NavBar/>
         <Button className="m-2">Sign in</Button>
-        </div>
+        </div> */}
+
+
       <main className="flex-grow">
         <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48 ">
-          <div className="container px-4 md:px-6">
-            <div className="flex flex-col items-center space-y-4 text-center">
-              <div className="space-y-2">
-                <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">
-                  Simplifiez les traductions de vos documents
-                </h1>
-                <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400">
-                Tradocument.com vous propose des solutions linguistiques harmonisées et d&apos; une fiabilité absolue
-                </p>
-              </div>
-              <div className="w-full max-w-sm space-y-2">
-                <Link href="/apropos">
-                <Button>A propos</Button>
-                </Link>
-                
-              </div>
-            </div>
-          </div>
+          
         </section>
         <FeaturesSection/>
-        <section className="w-full py-12 md:py-24 lg:py-32">
-          <div className="container px-4 md:px-6">
-            <div className="grid gap-10 lg:grid-cols-2 items-center">
-              <div className="space-y-4">
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-                  Streamline Your Document Translation Process
-                </h2>
-                <p className="text-gray-500 md:text-xl dark:text-gray-400">
-                  TraDocument makes it easy to get your documents translated and
-                  certified. Our platform connects you with expert translators
-                  and simplifies the entire process.
-                </p>
-                <ul className="space-y-2">
-                  <li className="flex items-center space-x-2">
-                    <ArrowRight className="h-5 w-5 text-primary" />
-                    <span>Upload your documents securely</span>
-                  </li>
-                  <li className="flex items-center space-x-2">
-                    <ArrowRight className="h-5 w-5 text-primary" />
-                    <span>Get instant quotes</span>
-                  </li>
-                  <li className="flex items-center space-x-2">
-                    <ArrowRight className="h-5 w-5 text-primary" />
-                    <span>Track your translation progress</span>
-                  </li>
-                  <li className="flex items-center space-x-2">
-                    <ArrowRight className="h-5 w-5 text-primary" />
-                    <span>Download certified translations</span>
-                  </li>
-                </ul>
-              </div>
-              <div className="flex justify-center">
-                <div className="relative w-full max-w-lg aspect-square">
-                  <div className="absolute inset-0 bg-gradient-to-r from-blue-300 to-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
-                  <div className="absolute inset-0 bg-gradient-to-r from-yellow-300 to-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
-                  <div className="absolute inset-0 bg-gradient-to-r from-green-300 to-cyan-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"></div>
-                  <div className="relative flex items-center justify-center w-full h-full">
-                    <Card className="w-64 h-64">
-                      <CardContent className="flex flex-col items-center justify-center h-full text-center p-6">
-                        <FileText className="h-16 w-16 mb-4 text-primary" />
-                        <p className="text-xl font-semibold">
-                          Your documents, translated and certified
-                        </p>
-                      </CardContent>
-                    </Card>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+        <ElegantSection/>
+        
       </main>
       <Footer/>
     </div>

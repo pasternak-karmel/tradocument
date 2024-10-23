@@ -4,6 +4,8 @@ import { motion } from 'framer-motion'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Globe, Shield, Clock, CheckCircle, ThumbsUp, Zap } from "lucide-react"
+import Link from 'next/link'
+import { Button } from './button'
 
 const features = [
   {
@@ -56,14 +58,19 @@ export default function FeaturesSection() {
   return (
     <section className="w-full py-12 md:py-24 lg:py-32 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
       <div className="container px-4 md:px-6">
-        <div className="text-center mb-12">
-          <Badge className="mb-4" variant="outline">Nos avantages</Badge>
+        <div className="text-center">
+      
           <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl">
-            Pourquoi choisir TraDocument?
+          Qui sommes nous ?
           </h2>
           <p className="mt-4 text-gray-500 dark:text-gray-400 max-w-[700px] mx-auto">
-            Découvrez comment nous révolutionnons le monde de la traduction avec notre approche innovante et centrée sur le client.
+          Si vous recherchez des services de traduction rapides et de qualité optimale,Tradocument.com vous propose des solutions linguistiques harmonisées et d’une fiabilité absolue. Nous sommes en mesure de vous proposer des traductions pertinentes adaptés à un domaine particulier.
+Tradocument.com travaille avec des traducteurs assermentés en langues maternelles, très expérimentés dans leurs domaines de spécialisation respectifs
+Nous traduisons et certifions vos documents officiels
           </p>
+          <Link href="/apropos">
+            <Button className='m-2'>En savoir plus</Button>
+          </Link>
         </div>
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {features.map((feature, index) => (
@@ -87,13 +94,13 @@ export default function FeaturesSection() {
                   <motion.div
                     className="mt-4 text-sm text-gray-600 dark:text-gray-300"
                     initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: hoveredIndex === index ? 1 : 0, height: hoveredIndex === index ? 'auto' : 0 }}
+                    animate={{ opacity: hoveredIndex === index ? 1 : 0, height: hoveredIndex === index ? 'auto' :0  }}
                     transition={{ duration: 0.3 }}
                   >
                     {feature.details}
                   </motion.div>
                 </CardContent>
-                <div className={`absolute bottom-0 left-0 w-full h-1 ${feature.color.replace('text', 'bg')}`} />
+                <div className={`absolute bottom-0 left-0 w-full h-1 ${feature.color.replace('text', 'bg')}`}></div>
               </Card>
             </motion.div>
           ))}
