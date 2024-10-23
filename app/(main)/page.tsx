@@ -1,46 +1,12 @@
-import { Button } from "@/components/ui/button"
-import { Card, CardContent} from "@/components/ui/card"
-import { FileText,ArrowRight } from "lucide-react"
-import { NavBar } from "@/app/_components/navigation"
-import Image from 'next/image';
-import Footer from "@/app/_components/footer"
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { FileText, ArrowRight } from "lucide-react";
 import FeaturesSection from "@/components/ui/avantages";
 import Link from "next/link";
 
 export default function TraDocumentLanding() {
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50">
-      {/* <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container flex h-16 items-center space-x-4 sm:justify-between sm:space-x-0">
-          <div className="flex gap-6 md:gap-10">
-            <Link className="flex items-center space-x-2" href="#">
-              <FileText className="h-6 w-6" />
-              <span className="inline-block font-bold">TraDocument</span>
-            </Link>
-          </div>
-          <div className="flex flex-1 items-center justify-end space-x-4">
-            <nav className="flex items-center space-x-1">
-              <Link className=" text-sm font-medium text-muted-foreground transition-colors hover:text-primary" href="#">
-                Features
-              </Link>
-              <Link className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary" href="#">
-                Pricing
-              </Link>
-              <Link className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary" href="#">
-                About
-              </Link>
-              <Link className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary" href="#">
-                Contact
-              </Link>
-            </nav>
-          </div>
-        </div>
-      </header> */}
-      <div  className="flex justify-between items-center  ">
-        <Image src="/logo.png" alt="Logo" width={150} height={150} className="m-2"/>
-        <NavBar/>
-        <Button className="m-2">Sign in</Button>
-        </div>
+    <div className="flex flex-col ">
       <main className="flex-grow">
         <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48 ">
           <div className="container px-4 md:px-6">
@@ -50,19 +16,19 @@ export default function TraDocumentLanding() {
                   Simplifiez les traductions de vos documents
                 </h1>
                 <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400">
-                Tradocument.com vous propose des solutions linguistiques harmonisées et d&apos; une fiabilité absolue
+                  Tradocument.com vous propose des solutions linguistiques
+                  harmonisées et d&apos; une fiabilité absolue
                 </p>
               </div>
               <div className="w-full max-w-sm space-y-2">
                 <Link href="/apropos">
-                <Button>A propos</Button>
+                  <Button>A propos</Button>
                 </Link>
-                
               </div>
             </div>
           </div>
         </section>
-        <FeaturesSection/>
+        <FeaturesSection />
         <section className="w-full py-12 md:py-24 lg:py-32">
           <div className="container px-4 md:px-6">
             <div className="grid gap-10 lg:grid-cols-2 items-center">
@@ -115,7 +81,6 @@ export default function TraDocumentLanding() {
           </div>
         </section>
       </main>
-      <Footer/>
     </div>
   );
 }

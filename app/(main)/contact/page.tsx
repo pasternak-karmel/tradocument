@@ -6,14 +6,12 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { MapPin, Phone, Mail, Clock } from "lucide-react"
-import Footer from '@/app/_components/footer'
 
 export default function ContactPage() {
   const [isSubmitted, setIsSubmitted] = useState(false)
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    // Ici, vous ajouteriez la logique pour envoyer le formulaire
     setIsSubmitted(true)
     setTimeout(() => setIsSubmitted(false), 3000)
   }
@@ -106,7 +104,6 @@ export default function ContactPage() {
         </div>
         
       </div>
-      <Footer/>
     </div>
   )
 }

@@ -5,9 +5,19 @@ import {
   primaryKey,
   text,
   timestamp,
+  uniqueIndex,
 } from "drizzle-orm/pg-core";
+
 import type { AdapterAccountType } from "next-auth/adapters";
 import { createInsertSchema } from "drizzle-zod";
+
+export const UserRoleEnum = {
+  ADMIN: "admin",
+  USER: "user",
+  TRADUCTEUR: "traducteur",
+};
+
+export type UserRole = (typeof UserRoleEnum)[keyof typeof UserRoleEnum];
 
 export const users = pgTable("user", {
   id: text("id")
@@ -19,6 +29,7 @@ export const users = pgTable("user", {
   image: text("image"),
   password: text("password"),
   salt: text("salt"),
+  role: text("role").notNull().default("user"),
 });
 
 export const InsertUserSchema = createInsertSchema(users);
@@ -59,12 +70,13 @@ export const verificationTokens = pgTable(
   "verificationToken",
   {
     identifier: text("identifier").notNull(),
+    email: text("email").notNull(),
     token: text("token").notNull(),
     expires: timestamp("expires", { mode: "date" }).notNull(),
   },
   (verificationToken) => ({
     compositePk: primaryKey({
-      columns: [verificationToken.identifier, verificationToken.token],
+      columns: [verificationToken.email, verificationToken.token],
     }),
   })
 );
@@ -87,5 +99,49 @@ export const authenticators = pgTable(
     compositePK: primaryKey({
       columns: [authenticator.userId, authenticator.credentialID],
     }),
+  })
+);
+
+export const passwordResetTokens = pgTable(
+  "password_reset_tokens",
+  {
+    id: text("id").primaryKey().default("cuid()"),
+    email: text("email").notNull(),
+    token: text("token").notNull(),
+    expires: integer("expires").notNull(),
+  },
+  (table) => ({
+    uniqueEmailToken: uniqueIndex("unique_email_token").on(
+      table.email,
+      table.token
+    ),
+  })
+);
+
+// TwoFactorToken Table
+export const twoFactorTokens = pgTable(
+  "two_factor_tokens",
+  {
+    id: text("id").$defaultFn(() => crypto.randomUUID()),
+    email: text("email").notNull(),
+    token: text("token").notNull(),
+    expires: integer("expires").notNull(),
+  },
+  (table) => ({
+    compositePK: primaryKey({
+      columns: [table.email, table.token],
+    }),
+  })
+);
+
+// TwoFactorConfirmation Table
+export const twoFactorConfirmations = pgTable(
+  "two_factor_confirmations",
+  {
+    id: text("id").primaryKey().default("cuid()"),
+    userId: text("user_id").notNull(),
+  },
+  (table) => ({
+    uniqueUser: uniqueIndex("unique_user").on(table.userId),
   })
 );

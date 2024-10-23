@@ -1,10 +1,9 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import Link from "next/link"
+import * as React from "react";
+import Link from "next/link";
 
-import { cn } from "@/lib/utils"
-// import { Icons } from "@/components/icons"
+import { cn } from "@/lib/utils";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -13,7 +12,7 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu"
+} from "@/components/ui/navigation-menu";
 
 const components: { title: string; href: string; description: string }[] = [
   {
@@ -28,42 +27,49 @@ const components: { title: string; href: string; description: string }[] = [
     description:
       "For sighted users to preview content available behind a link.",
   },
-]
+];
 
 export function NavBar() {
   return (
-
     <NavigationMenu>
       <NavigationMenuList>
         <NavigationMenuItem>
           <NavigationMenuTrigger>Traduction</NavigationMenuTrigger>
           <NavigationMenuContent>
             <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
-                <ListItem href="/actes" title="Actes d'état civile">
-                Acte de naissance, Acte de mariage, Acte de décès, Acte de naturalisation/ Nationalité, Acte de reconnaissance, Carte d&apos;identité, Certificat de changement de nom, Certificat de célibat, Déclaration sur l&apos;honneur, Livret de famille, Procuration, Permis de séjour,Passeport.
-                </ListItem>
-                
-              
+              <ListItem href="/actes" title="Actes d'état civile">
+                Acte de naissance, Acte de mariage, Acte de décès, Acte de
+                naturalisation/ Nationalité, Acte de reconnaissance, Carte
+                d&apos;identité, Certificat de changement de nom, Certificat de
+                célibat, Déclaration sur l&apos;honneur, Livret de famille,
+                Procuration, Permis de séjour,Passeport.
+              </ListItem>
+
               <ListItem href="/affaire" title="Affaires & Business">
                 Bilan, Contrat, Convention
               </ListItem>
               <ListItem href="/diplomes" title="Diplome & Bulletins">
-                Attestation étude, Attestation de scolarité, Attestation de Stage, Diplome baccalauréat, Relevé de notes Bac / Relevé de notes universitaires avec appréciations, Diplome 
+                Attestation étude, Attestation de scolarité, Attestation de
+                Stage, Diplome baccalauréat, Relevé de notes Bac / Relevé de
+                notes universitaires avec appréciations, Diplome
               </ListItem>
               <ListItem href="/finance" title="Finance & Commerciale">
-                Relevé de compte, Avis d&apos;imposition, Fiche de paye/ Bulletin de salaire, Attestation de retraite/ Sécurité sociale, Facture/ Attestation Bancaire
+                Relevé de compte, Avis d&apos;imposition, Fiche de paye/
+                Bulletin de salaire, Attestation de retraite/ Sécurité sociale,
+                Facture/ Attestation Bancaire
               </ListItem>
               <ListItem href="/juridique" title="Juridique">
-                Acte de divorce, Acte notorié, Assignations et jugements, Casier judiciaire, Exequatur, Testament, Procuration juridique 
+                Acte de divorce, Acte notorié, Assignations et jugements, Casier
+                judiciaire, Exequatur, Testament, Procuration juridique
               </ListItem>
-              <ListItem href="/permis" title="Permis de Conduire">
-                
-              </ListItem>
+              <ListItem href="/permis" title="Permis de Conduire"></ListItem>
               <ListItem href="/techniques" title="Technique">
-              Appels d&apos;offre, Brevets, Brochures, Cahiers des charges, Catalogues produits, Journaux d&apos;entreprise, Manuels et notices techniques, Newsletters spécialisées, Normes, Rapports d&apos;expertise, Rapports techniques
+                Appels d&apos;offre, Brevets, Brochures, Cahiers des charges,
+                Catalogues produits, Journaux d&apos;entreprise, Manuels et
+                notices techniques, Newsletters spécialisées, Normes, Rapports
+                d&apos;expertise, Rapports techniques
               </ListItem>
-              <ListItem href="/autres" title="Autres">
-              </ListItem>
+              <ListItem href="/autres" title="Autres"></ListItem>
             </ul>
           </NavigationMenuContent>
         </NavigationMenuItem>
@@ -127,7 +133,7 @@ export function NavBar() {
         </NavigationMenuItem>
       </NavigationMenuList>
     </NavigationMenu>
-  )
+  );
 }
 
 const ListItem = React.forwardRef<
@@ -152,6 +158,6 @@ const ListItem = React.forwardRef<
         </a>
       </NavigationMenuLink>
     </li>
-  )
-})
-ListItem.displayName = "ListItem"
+  );
+});
+ListItem.displayName = "ListItem";

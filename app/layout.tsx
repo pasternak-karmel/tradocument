@@ -1,17 +1,24 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-// import {
-//   ClerkProvider,
-//   SignInButton,
-//   SignedIn,
-//   SignedOut,
-//   UserButton,
-// } from "@clerk/nextjs";
+
+
+import { SessionProvider } from "next-auth/react";
+import { QueryProviders } from "@/providers/query-providers";
 import { EdgeStoreProvider } from "@/lib/edgestore";
 
-import { QueryProviders } from "@/providers/query-providers";
+import { auth } from "@/auth";
+
 import { Toaster } from "sonner";
+
+
+
+import { Poppins } from "next/font/google";
+
+const font = Poppins({
+  subsets: ["latin"],
+  weight: ["600"],
+});
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -29,23 +36,24 @@ export const metadata: Metadata = {
   description: "Le site de rérérence vos traductions en toute simplicité",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await auth();
   return (
-    // <ClerkProvider>
+    <SessionProvider session={session}>
       <html lang="en">
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        >
+        <body className={`${font.className} ${geistMono.variable} antialiased`}>
           <QueryProviders>
-            <EdgeStoreProvider>{children}</EdgeStoreProvider>
+            <EdgeStoreProvider>
+              {children}
+            </EdgeStoreProvider>
           </QueryProviders>
-          <Toaster/>
+          <Toaster />
         </body>
       </html>
-    // </ClerkProvider>
+    </SessionProvider>
   );
 }

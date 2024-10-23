@@ -1,42 +1,114 @@
-import type { NextAuthConfig } from 'next-auth'
+import type { NextAuthConfig } from "next-auth";
+
+import bcrypt from "bcryptjs";
+
+import Github from "next-auth/providers/github";
+import Google from "next-auth/providers/google";
+import Credentials from "next-auth/providers/credentials";
+import { z } from "zod";
+import { getUserByEmail, getUserById } from "./data/user";
+import { getAccountByUserId } from "./data/account";
 
 export const authConfig = {
   secret: process.env.AUTH_SECRET,
-  pages: {
-    signIn: '/login',
-    newUser: '/signup'
-  },
+  providers: [
+    Google,
+    Github,
+    Credentials({
+      async authorize(credentials) {
+        const parsedCredentials = z
+          .object({
+            email: z.string().email(),
+            password: z.string().min(6),
+          })
+          .safeParse(credentials);
+
+        if (parsedCredentials.success) {
+          const { email, password } = parsedCredentials.data;
+          const user = await getUserByEmail(email);
+
+          if (!user || !user.password) return null;
+
+          const passwordsMatch = await bcrypt.compare(password, user.password);
+
+          if (passwordsMatch) return user;
+          else {
+            return null;
+          }
+        }
+        return null;
+      },
+    }),
+  ],
   callbacks: {
     async authorized({ auth, request: { nextUrl } }) {
-      const isLoggedIn = !!auth?.user
-      const isOnLoginPage = nextUrl.pathname.startsWith('/login')
-      const isOnSignupPage = nextUrl.pathname.startsWith('/signup')
+      const isLoggedIn = !!auth?.user;
+      const isOnLoginPage = nextUrl.pathname.startsWith("/auth/login");
+      const isOnSignupPage = nextUrl.pathname.startsWith("/auth/register");
 
       if (isLoggedIn) {
         if (isOnLoginPage || isOnSignupPage) {
-          return Response.redirect(new URL('/', nextUrl))
+          return Response.redirect(new URL("/dashboard", nextUrl));
         }
       }
 
-      return true
+      return true;
     },
-    async jwt({ token, user }) {
-      if (user) {
-        token = { ...token, id: user.id }
+    async jwt({ token, trigger, session, account }) {
+      if (trigger === "update") {
+        token.name = session.user.name;
       }
 
-      return token
+      if (account?.provider === "keycloak") {
+        return { ...token, accessToken: account.access_token };
+      }
+
+      if (!token.sub) return token;
+
+      const existingUser = await getUserById(token.sub);
+      if (!existingUser) return token;
+
+      const existingAccount = await getAccountByUserId(existingUser.id);
+
+      token.isOAuth = !!existingAccount;
+      token.name = existingUser.name;
+      token.email = existingUser.email;
+      token.role = existingUser.role;
+      token.id = existingUser.id;
+
+      return token;
     },
     async session({ session, token }) {
-      if (token) {
-        const { id } = token as { id: string }
-        const { user } = session
+      // if (token?.accessToken) {
+      //   session.accessToken = token.accessToken;
+      // }
 
-        session = { ...session, user: { ...user, id } }
-      }
+      // if (token.role && session.user) {
+      //   session.user.role = token.role;
+      // }
 
-      return session
-    }
+      session.user.id = token.id ? (token.id as string) : "";
+
+      return session;
+    },
   },
-  providers: []
-} satisfies NextAuthConfig
+} satisfies NextAuthConfig;
+
+declare module "next-auth" {
+  interface Session {
+    accessToken?: string;
+    user: {
+      id: string;
+      name: string;
+      email: string;
+      image: string;
+      role: string;
+    };
+  }
+}
+
+// declare module "next-auth/jwt" {
+//   interface JWT {
+//     accessToken?: string;
+//   }
+// }
