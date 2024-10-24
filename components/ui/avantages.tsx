@@ -67,9 +67,11 @@ export default function FeaturesSection() {
         Si vous recherchez des services de traduction rapides et de qualité optimale, Tradocument.com vous propose des solutions linguistiques harmonisées et d’une fiabilité absolue. Nous sommes en mesure de vous proposer des traductions pertinentes adaptées à un domaine particulier.
         Tradocument.com travaille avec des traducteurs assermentés en langues maternelles, très expérimentés dans leurs domaines de spécialisation respectifs. Nous traduisons et certifions vos documents officiels.
       </p>
-      <Button size={'lg'} className='mt-4'>
-        <Link href="/apropos">A propos de nous</Link>
+      <Link href="/apropos">
+      <Button size={'lg'} className='mt-4 hover:bg-[#F49C60] group transition-all gap-4 hover:shadow-3xl duration-500'>
+        A propos de nous
       </Button>
+      </Link>
     </div>
   
     {/* Section des cartes centrées */}

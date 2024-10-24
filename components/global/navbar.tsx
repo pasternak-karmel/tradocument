@@ -27,26 +27,26 @@ const Navbar = () => {
 
       {/* Navigation pour desktop */}
       <nav className="hidden md:flex justify-center items-center">
-        <ul className="flex items-center list-none space-between gap-4">
-          <li className="text-white">
+        <ul className="flex items-center list-none space-between gap-4 ">
+          <li className="text-white hover:text-[#F49C60] duration-500">
             <Link href="/">Accueil</Link>
           </li>
-          <li className="text-white">
+          <li className="text-white hover:text-[#F49C60] duration-500">
             <Link href="/translation">Traduction</Link>
           </li>
-          <li className="text-white">
+          <li className="text-white hover:text-[#F49C60] duration-500">
             <Link href="/rejoindre">Rejoignez notre équipe</Link>
           </li>
-          <li className="text-white">
-            <Link href="#">Nos services</Link>
+          <li className="text-white hover:text-[#F49C60] duration-500">
+            <Link href="/services">Nos services</Link>
           </li>
-          <li className="text-white">
+          <li className="text-white hover:text-[#F49C60] duration-500">
             <Link href="#">Demande de devis</Link>
           </li>
-          <li className="text-white">
+          <li className="text-white hover:text-[#F49C60] duration-500">
             <Link href="#">Transport coursier</Link>
           </li>
-          <li className="text-white">
+          <li className="text-white hover:text-[#F49C60] duration-500">
             <Link href="/contact">Contact</Link>
           </li>
         </ul>
