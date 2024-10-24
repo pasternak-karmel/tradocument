@@ -19,7 +19,7 @@ export default function RejoignezNous() {
   const benefits = [
     { icon: <Users className="h-6 w-6 text-blue-500" />, title: "Équipe Dynamique", description: "Rejoignez une équipe passionnée et collaborative." },
     { icon: <Briefcase className="h-6 w-6 text-green-500" />, title: "Projets Variés", description: "Travaillez sur une diversité de projets stimulants." },
-    { icon: <GraduationCap className="h-6 w-6 text-purple-500" />, title: "Formation Continue", description: "Bénéficiez d'opportunités de développement professionnel." },
+    { icon: <GraduationCap className="h-6 w-6 text-purple-500" />, title: "Traduction de qualité", description: "Bénéficiez d'une traduction optimale de l'Arabe au Francais et du Francais en Arabe" },
     { icon: <Globe className="h-6 w-6 text-pink-500" />, title: "Impact Global", description: "Contribuez à des projets d'envergure internationale." },
   ]
 
@@ -87,6 +87,11 @@ export default function RejoignezNous() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <Input placeholder="Nom" />
                   <Input placeholder="Prénom" />
+                  <Input placeholder="Pays" />
+                  <Input placeholder="Ville" />
+                  <Input placeholder="Adresse" />
+                  <Input placeholder="Numéero de téléphone" />
+
                 </div>
                 <Input type="email" placeholder="Email" />
                 <Select>

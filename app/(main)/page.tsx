@@ -13,11 +13,10 @@ export default function TraDocumentLanding() {
         <div className="absolute inset-0 h-full w-full flex items-center justify-center px-4 sm:px-8 py-16 sm:py-24 [background:radial-gradient(125%_125%_at_50%_10%,#000_35%,#223_100%)]">
           <div className="text-center text-white m-4 sm:m-10">
             <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold tracking-tighter">
-              Traduction rapides et de qualité optimale
+              Traduction rapides Francais - Arabe <br /> Arabe - Francais
             </h2>
             <p className="mt-4 max-w-[300px] sm:max-w-[500px] md:max-w-[700px] mx-auto">
-              Tradocument.com vous propose des solutions linguistiques
-              harmonisées et d'une fiabilité absolue
+              Tradocument.com vous  propose une traduction harmonisée et une fiabilité absolue
             </p>
             <Button
               size={"lg"}

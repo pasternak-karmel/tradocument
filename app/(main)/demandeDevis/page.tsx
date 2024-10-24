@@ -172,10 +172,13 @@ export default function DemandeDevis() {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            <SelectItem value="legal">Document juridique</SelectItem>
-                            <SelectItem value="medical">Document médical</SelectItem>
-                            <SelectItem value="technical">Document technique</SelectItem>
-                            <SelectItem value="financial">Document financier</SelectItem>
+                            <SelectItem value="legal">Actes d'état civile</SelectItem>
+                            <SelectItem value="medical">Affaires & Business</SelectItem>
+                            <SelectItem value="technical">Diplomes & Bulletins</SelectItem>
+                            <SelectItem value="financial">Finance & Commerciale</SelectItem>
+                            <SelectItem value="Juridique">Juridique</SelectItem>
+                            <SelectItem value="Permis">Permis de Conduire</SelectItem>
+                            <SelectItem value="Technique">Technique</SelectItem>
                             <SelectItem value="other">Autre</SelectItem>
                           </SelectContent>
                         </Select>
@@ -200,8 +203,7 @@ export default function DemandeDevis() {
                               <SelectItem value="fr">Français</SelectItem>
                               <SelectItem value="en">Anglais</SelectItem>
                               <SelectItem value="es">Espagnol</SelectItem>
-                              <SelectItem value="de">Allemand</SelectItem>
-                              <SelectItem value="it">Italien</SelectItem>
+                              <SelectItem value="it">Arabe</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -224,8 +226,7 @@ export default function DemandeDevis() {
                               <SelectItem value="fr">Français</SelectItem>
                               <SelectItem value="en">Anglais</SelectItem>
                               <SelectItem value="es">Espagnol</SelectItem>
-                              <SelectItem value="de">Allemand</SelectItem>
-                              <SelectItem value="it">Italien</SelectItem>
+                              <SelectItem value="it">Arabe</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -255,11 +256,11 @@ export default function DemandeDevis() {
                       name="wordCount"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Nombre de mots (approximatif)</FormLabel>
+                          <FormLabel>Nombre de page</FormLabel>
                           <FormControl>
                             <div className="flex items-center">
                               <FileText className="w-4 h-4 mr-2 text-gray-500" />
-                              <Input type="number" placeholder="Nombre de mots" {...field} />
+                              <Input type="number" placeholder="Nombre de page" {...field} />
                             </div>
                           </FormControl>
                           <FormMessage />
@@ -284,6 +285,38 @@ export default function DemandeDevis() {
                       </FormItem>
                     )}
                   />
+                  <div className="flex flex-col items-center space-y-2">
+  <label
+    htmlFor="certificate"
+    className="cursor-pointer flex flex-col items-center justify-center w-full p-4 border border-dashed border-blue-400 rounded-lg bg-blue-50 hover:bg-blue-100 transition duration-300 ease-in-out"
+  > Téléchargez votre fichier
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth="1.5"
+      stroke="currentColor"
+      className="h-10 w-10 text-blue-700 mb-2"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M3 16.5v4.5h4.5m-4.5-4.5L20.25 3m0 0h-6.75M20.25 3v6.75"
+      />
+    </svg>
+    <span className="text-sm text-blue-700 font-medium">
+      Cliquez pour télécharger un fichier
+    </span>
+    <span className="text-xs text-gray-500 mt-1">
+      Formats acceptés : PDF, JPG, PNG (max 5MB)
+    </span>
+  </label>
+  <input
+    id="certificate"
+    type="file"
+    className="hidden"
+  />
+</div>
                   <FormField
                     control={form.control}
                     name="termsAccepted"
@@ -307,6 +340,8 @@ export default function DemandeDevis() {
                       </FormItem>
                     )}
                   />
+                  
+                
                   <Button type="submit" className="w-full">
                     Demander un devis
                   </Button>
