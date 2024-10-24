@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import Navbar from "@/components/global/navbar";
+
 import FeaturesSection from "@/components/ui/avantages";
 import Link from "next/link";
 import ElegantSection from "../_components/ElegantSection";
@@ -8,8 +8,6 @@ import ElegantSection from "../_components/ElegantSection";
 export default function TraDocumentLanding() {
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
-      <Navbar />
-    
       {/* Section principale */}
       <section className="h-screen w-full bg-neutral-950 rounded-md relative flex flex-col items-center antialiased">
         <div className="absolute inset-0 h-full w-full flex items-center justify-center px-4 sm:px-8 py-16 sm:py-24 [background:radial-gradient(125%_125%_at_50%_10%,#000_35%,#223_100%)]">
@@ -18,7 +16,8 @@ export default function TraDocumentLanding() {
               Traduction rapides et de qualité optimale
             </h2>
             <p className="mt-4 max-w-[300px] sm:max-w-[500px] md:max-w-[700px] mx-auto">
-              Tradocument.com vous propose des solutions linguistiques harmonisées et d'une fiabilité absolue
+              Tradocument.com vous propose des solutions linguistiques
+              harmonisées et d'une fiabilité absolue
             </p>
             <Button
               size={"lg"}
@@ -31,14 +30,14 @@ export default function TraDocumentLanding() {
           </div>
         </div>
       </section>
-  
+
       {/* Sections secondaires */}
       <main className="flex-grow w-full flex flex-col items-center justify-center px-4 sm:px-8">
         {/* Centrage du FeaturesSection */}
         <div className="w-full flex flex-col items-center justify-center">
           <FeaturesSection />
         </div>
-  
+
         <div className="w-full flex flex-col items-center justify-center mt-10">
           <ElegantSection />
         </div>
