@@ -32,10 +32,10 @@ export default function TradocumentPage() {
         mb-3
       >
         <motion.h1
-          className="text-4xl font-bold text-[#F49C60] mb-8 text-center"
+          className="text-4xl font-bold text-black mb-8 text-center"
           variants={fadeInUp}
         >
-          Qui sommes nous
+          A propos de nous 
         </motion.h1>
 
         <motion.section className="flex bg-white rounded-lg shadow-lg p-6 mb-8" variants={fadeInUp} >
