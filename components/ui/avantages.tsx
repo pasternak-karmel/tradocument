@@ -69,7 +69,7 @@ export default function FeaturesSection() {
       </p>
       <Link href="/apropos">
       <Button size={'lg'} className='mt-4 hover:bg-[#F49C60] group transition-all gap-4 hover:shadow-3xl duration-500'>
-        A propos de nous
+        En savoir plus
       </Button>
       </Link>
     </div>
