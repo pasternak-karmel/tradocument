@@ -1,18 +1,11 @@
-import Image from "next/image";
-import Link from "next/link";
-
-import { auth } from "@/auth";
-
-import { Button } from "@/components/ui/button";
+import Navbar from "@/components/global/navbar";
 
 import Footer from "@/app/_components/footer";
-import { NavBar } from "@/app/_components/navigation";
-import { LoginButton } from "@/components/auth/login-button";
+// import { NavBar } from "@/app/_components/navigation";
 const MainLayout = async ({ children }: { children: React.ReactNode }) => {
-  const session = await auth();
   return (
     <div className="h-full ">
-      <div className="flex h-auto justify-between items-center sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b">
+      {/* <div className="flex h-auto justify-between items-center sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b">
         <Link href="/" className="cursor-pointer">
           <Image
             src="/logo.png"
@@ -36,7 +29,8 @@ const MainLayout = async ({ children }: { children: React.ReactNode }) => {
             </Button>
           </LoginButton>
         )}
-      </div>
+      </div> */}
+      <Navbar />
       {children}
       <Footer />
     </div>
