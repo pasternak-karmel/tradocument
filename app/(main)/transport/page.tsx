@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Truck, Bike, Plane, Car, Clock, ShieldCheck, MapPin, Package, Zap, Briefcase, FileText } from "lucide-react"
 import Link from "next/link"
 
-const ServiceCard = ({ title, description, icon, features }) => (
+const ServiceCard = ({ title, description, icon, features }:{title:any,description:any,icon:any,features:any}) => (
   <Card className="h-full flex flex-col">
     <CardHeader>
       <div className="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center mb-4">
@@ -18,7 +18,7 @@ const ServiceCard = ({ title, description, icon, features }) => (
     </CardHeader>
     <CardContent className="flex-grow">
       <ul className="space-y-2">
-        {features.map((feature, index) => (
+        {features.map((feature:any, index:any) => (
           <li key={index} className="flex items-center space-x-2">
             {feature.icon}
             <span>{feature.text}</span>
