@@ -79,13 +79,13 @@ export const authConfig = {
       return token;
     },
     async session({ session, token }) {
-      // if (token?.accessToken) {
-      //   session.accessToken = token.accessToken;
-      // }
+      if (token?.accessToken) {
+        session.accessToken = token.accessToken;
+      }
 
-      // if (token.role && session.user) {
-      //   session.user.role = token.role;
-      // }
+      if (token.role && session.user) {
+        session.user.role = token.role;
+      }
 
       session.user.id = token.id ? (token.id as string) : "";
 

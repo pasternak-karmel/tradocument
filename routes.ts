@@ -26,6 +26,7 @@ export const authRoutes: string[] = [
   "/auth/reset",
   "/auth/new-password",
 ];
+
 export const adminRoutes: string[] = ["/admin/*"];
 export const agentRoutes: string[] = ["/agent/*"];
 

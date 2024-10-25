@@ -24,20 +24,19 @@ export async function POST(req: Request) {
       await db.select().from(users).where(eq(users.id, userId))
     )[0];
 
-    if (!userProfile?.emailVerified) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Veuillez vérifier votre email avant de pourvoir continuer",
-        },
-        { status: 400 }
-      );
-    }
+    // if (!userProfile?.emailVerified) {
+    //   return NextResponse.json(
+    //     {
+    //       success: false,
+    //       message: "Veuillez vérifier votre email avant de pourvoir continuer",
+    //     },
+    //     { status: 400 }
+    //   );
+    // }
 
     const values = await req.json();
     const { fichier, traduire_de, traduire_pour } = values;
 
-    console.log(`Les values${values}`);
 
     const traductionValues = {
       userId,

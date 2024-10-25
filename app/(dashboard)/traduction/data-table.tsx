@@ -90,10 +90,10 @@ export function DataTable<TData, TValue>({
     <div>
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filtrer les noms..."
-          value={(table.getColumn("nom")?.getFilterValue() as string) ?? ""}
+          placeholder="Filtrer par status..."
+          value={(table.getColumn("status")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("nom")?.setFilterValue(event.target.value)
+            table.getColumn("status")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
@@ -141,7 +141,7 @@ export function DataTable<TData, TValue>({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  Pas de traduction correspondante.
                 </TableCell>
               </TableRow>
             )}
@@ -150,7 +150,7 @@ export function DataTable<TData, TValue>({
       </div>
       <div className="flex-1 text-sm text-muted-foreground py-4">
         {table.getFilteredSelectedRowModel().rows.length} of{" "}
-        {table.getFilteredRowModel().rows.length} row(s) selected.
+        {table.getFilteredRowModel().rows.length} colonne (s)sélectionnée(s).
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
         <Button
@@ -169,12 +169,12 @@ export function DataTable<TData, TValue>({
         >
           Next
         </Button>
-        <Button
+        {/* <Button
           disabled={table.getFilteredSelectedRowModel().rows.length === 0}
           onClick={handleAcceptArticles}
         >
           Accepter les articles sélectionnés
-        </Button>
+        </Button> */}
       </div>
     </div>
   );

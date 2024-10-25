@@ -1,7 +1,10 @@
 "use server";
 
+import { eq } from "drizzle-orm";
 import { getUserByEmail } from "@/data/user";
 import { getVerificationTokenByToken } from "@/data/verificiation-token";
+import { db } from "@/db/drizzle";
+import { users, verificationTokens } from "@/db/schema";
 
 export const newVerification = async (token: string) => {
   const existingToken = await getVerificationTokenByToken(token);
@@ -10,29 +13,29 @@ export const newVerification = async (token: string) => {
     return { error: "Token does not exist!" };
   }
 
-  // const hasExpired = new Date(existingToken.expires) < new Date();
+  const hasExpired = new Date(existingToken.expires) < new Date();
 
-  // if (hasExpired) {
-  //   return { error: "Token has expired!" };
-  // }
+  if (hasExpired) {
+    return { error: "Token has expired!" };
+  }
 
-  // const existingUser = await getUserByEmail(existingToken.email);
+  const existingUser = await getUserByEmail(existingToken.email);
 
-  // if (!existingUser) {
-  //   return { error: "Email does not exist!" };
-  // }
+  if (!existingUser) {
+    return { error: "Email does not exist!" };
+  }
 
-  // await db.user.update({
-  //   where: { id: existingUser.id },
-  //   data: {
-  //     emailVerified: new Date(),
-  //     email: existingToken.email,
-  //   },
-  // });
+  await db
+    .update(users)
+    .set({
+      emailVerified: new Date(),
+      email: existingToken.email,
+    })
+    .where(eq(users.id, existingUser.id));
 
-  // await db.verificationToken.delete({
-  //   where: { id: existingToken.id },
-  // });
+  await db
+    .delete(verificationTokens)
+    .where(eq(verificationTokens.identifier, existingToken.identifier));
 
   return { success: "Email verified!" };
 };

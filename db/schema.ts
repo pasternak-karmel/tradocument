@@ -159,7 +159,7 @@ export const traduction = pgTable("traduction", {
     // .notNull()
     .references(() => users.id),
   montant: integer("montant").notNull(),
-  created_at: timestamp("createdAT", { mode: "date" }),
+  created_at: timestamp("createdAT", { mode: "date" }).notNull().defaultNow(),
   delivered_at: timestamp("deliveredAT", { mode: "date" }),
   status: text("status").default("pending").notNull(),
   traduction_from: text("traduction_from").notNull(),
