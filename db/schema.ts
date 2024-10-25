@@ -145,3 +145,26 @@ export const twoFactorConfirmations = pgTable(
     uniqueUser: uniqueIndex("unique_user").on(table.userId),
   })
 );
+
+export const traduction = pgTable("traduction", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  userId: text("userId")
+    .notNull()
+    .references(() => users.id),
+  fichier: text("fichier").unique().notNull(),
+  traducteur: text("traducteur")
+    .unique()
+    // .notNull()
+    .references(() => users.id),
+  montant: integer("montant").notNull(),
+  created_at: timestamp("createdAT", { mode: "date" }),
+  delivered_at: timestamp("deliveredAT", { mode: "date" }),
+  status: text("status").default("pending").notNull(),
+  traduction_from: text("traduction_from").notNull(),
+  traduction_to: text("traduction_to").notNull(),
+  payer: boolean("payer").default(false),
+});
+
+export const InsertTraduction = createInsertSchema(traduction);

@@ -2,15 +2,26 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import AddTraduction from "../_components/traduction";
 
-export default function Traduction() {
+import { currentRole } from "@/lib/auth";
+
+export default async function Traduction() {
+  const role = await currentRole();
+
   return (
-    <div className="min-h-screen ">
+    <div className="h-auto">
       <div className="h-auto flex justify-between items-center">
-        <div></div>
+        <div />
         <AddTraduction>
-          <Button> <Plus/> Ajouter un traducteur</Button>
+          <Button>
+            {" "}
+            <Plus />
+            Nouvelle traduction
+          </Button>
         </AddTraduction>
       </div>
+      <h1 className="text-2xl text-center mt-6 underline">
+        Vos traductions réçentes
+      </h1>
     </div>
   );
 }

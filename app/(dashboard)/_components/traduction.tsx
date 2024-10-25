@@ -25,7 +25,7 @@ export const AddTraduction = ({ children, asChild }: TraductionProps) => {
       <SheetTrigger asChild>{children}</SheetTrigger>
       <SheetContent>
         <SheetHeader>
-          <SheetTitle>Traduction</SheetTitle>
+          <SheetTitle>Nouvelle Traduction</SheetTitle>
           <SheetDescription>
             Entrez les infos de la traduction
           </SheetDescription>

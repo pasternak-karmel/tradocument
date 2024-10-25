@@ -36,8 +36,8 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
   await db.insert(users).values(user).returning();
 
   const verificationToken = await generateVerificationToken(email);
-  console.log(verificationToken);
-  // await sendVerificationEmail(verificationToken.email, verificationToken.token);
+
+  await sendVerificationEmail(verificationToken.email, verificationToken.token);
 
   return {
     success:
