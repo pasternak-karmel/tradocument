@@ -9,7 +9,7 @@ export default function Footer() {
       <div className="container px-4 md:px-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">TraDocument</h3>
+            <h3 className="text-lg font-semibold">Tradocument</h3>
             <p className="text-sm text-gray-400">Simplifying document translations for businesses and individuals worldwide.</p>
             <div className="flex space-x-4">
               <Link href="#" aria-label="Facebook">
@@ -53,7 +53,7 @@ export default function Footer() {
         </div>
         <div className="mt-8 pt-8 border-t border-gray-800">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <p className="text-sm text-center md:text-left text-gray-400">© 2024 TraDocument. Tout droit réservés.</p>
+            <p className="text-sm text-center md:text-left text-gray-400">© 2024 Tradocument. Tout droit réservés.</p>
             <nav className="flex space-x-4">
               <Link className="text-sm text-gray-400 hover:text-white transition-colors" href="#">
                 Termes et services
