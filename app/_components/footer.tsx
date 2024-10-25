@@ -5,7 +5,7 @@ import Link from "next/link"
 
 export default function Footer() {
   return (
-    <footer className="w-full py-12 bg-gray-900 text-gray-100">
+    <footer className="w-full py-12 bg-gray-900 text-gray-100 mb-0">
       <div className="container px-4 md:px-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="space-y-4">
@@ -46,7 +46,7 @@ export default function Footer() {
             <div className="relative h-48 rounded-lg overflow-hidden bg-gray-800">
               <div className="absolute inset-0 bg-gray-700 animate-pulse"></div>
               <div className="absolute inset-0 flex items-center justify-center">
-                <MapPin className="h-12 w-12 text-blue-500" />
+                <MapPin className="h-12 w-12 text-[#F49C60]" />
               </div>
             </div>
           </div>
@@ -75,7 +75,7 @@ export default function Footer() {
               placeholder="Enter your email"
               type="email"
             />
-            <Button className="bg-blue-600 text-white hover:bg-blue-700" type="submit">
+            <Button className="bg-[#F49C60] text-white" type="submit">
               Subscribe
             </Button>
           </form>

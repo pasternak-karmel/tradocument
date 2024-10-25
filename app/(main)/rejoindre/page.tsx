@@ -1,214 +1,151 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import React from "react"
+import { motion } from "framer-motion"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Briefcase,
-  User,
-  MapPin,
-  Phone,
-  Mail,
-  Send,
-  CheckCircle,
-} from "lucide-react";
+} from "@/components/ui/select"
+import { Users, Briefcase, GraduationCap, Globe, Send, Upload } from "lucide-react"
 
-const jobTypes = [
-  { value: "avocat", label: "Avocat", icon: "⚖️" },
-  { value: "traducteur", label: "Traducteur", icon: "🌐" },
-  { value: "notaire", label: "Notaire", icon: "📜" },
-  { value: "huissier", label: "Huissier de justice", icon: "🏛️" },
-  { value: "coursier-taxi", label: "Coursier taxi", icon: "🚕" },
-  { value: "coursier-prive", label: "Coursier privé", icon: "🚚" },
-];
+export default function RejoignezNous() {
+  const benefits = [
+    { icon: <Users className="h-6 w-6 text-blue-500" />, title: "Équipe Dynamique", description: "Rejoignez une équipe passionnée et collaborative." },
+    { icon: <Briefcase className="h-6 w-6 text-green-500" />, title: "Projets Variés", description: "Travaillez sur une diversité de projets stimulants." },
+    { icon: <GraduationCap className="h-6 w-6 text-purple-500" />, title: "Traduction de qualité", description: "Bénéficiez d'une traduction optimale de l'Arabe au Francais et du Francais en Arabe" },
+    { icon: <Globe className="h-6 w-6 text-pink-500" />, title: "Impact Global", description: "Contribuez à des projets d'envergure internationale." },
+  ]
 
-export default function JoinOurTeamEnhanced() {
-  // const [selectedJob, setSelectedJob] = useState("");
-  const [isSubmitted, setIsSubmitted] = useState(false);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitted(true);
-    setTimeout(() => setIsSubmitted(false), 3000);
-  };
+  const specialties = [
+    "Traducteur/trice agréé",
+    "Avocat/e agréé",
+    "Notaire agréé",
+    "Huissier de Justice agréé",
+    "Coursier Taxi",
+    "Coursier Privé"
+  ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white dark:from-gray-900 dark:to-gray-800">
-      <div className="container mx-auto px-4 py-16">
-        <motion.h1
-          className="text-4xl font-bold text-center mb-8 black dark:text-blue-400"
+    <div className="mt-10 min-h-screen bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-4xl mx-auto">
+        <motion.h1 
+          className="text-4xl font-bold text-center text-gray-900 mb-8"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <Briefcase className="inline-block mr-2 h-10 w-10" />
-          Rejoignez notre équipe
+          Rejoignez Notre Équipe de Traduction
         </motion.h1>
+
+        <motion.p 
+          className="text-xl text-center text-gray-700 mb-12"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
+          Vous êtes passionné par les langues et la communication interculturelle ? 
+          Nous recherchons des talents comme vous !
+        </motion.p>
+
+        <motion.div 
+          className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+        >
+          {benefits.map((benefit, index) => (
+            <Card key={index} className="bg-white shadow-lg hover:shadow-xl transition-shadow duration-300">
+              <CardHeader className="flex flex-row items-center space-x-4 pb-2">
+                <div className="bg-gray-100 p-2 rounded-full">{benefit.icon}</div>
+                <CardTitle className="text-xl font-semibold">{benefit.title}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600">{benefit.description}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </motion.div>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
+          transition={{ duration: 0.5, delay: 0.6 }}
         >
-          <Card className="max-w-2xl mx-auto">
+          <Card className="bg-white shadow-lg">
             <CardHeader>
-              <CardTitle className="text-2xl font-semibold text-center">
-                Formulaire de candidature
-              </CardTitle>
+              <CardTitle className="text-2xl font-bold text-center">Intéressé(e) ? Contactez-nous !</CardTitle>
             </CardHeader>
             <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="space-y-4">
-                  <Label htmlFor="jobType" className="flex items-center">
-                    <Briefcase className="mr-2 h-5 w-5 blackblack" />
-                    Choisissez votre domaine
-                  </Label>
-                  <Select
-                    // onValueChange={setSelectedJob}
-                    required
-                  >
-                    <SelectTrigger id="jobType">
-                      <SelectValue placeholder="Sélectionnez un poste" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {jobTypes.map((job) => (
-                        <SelectItem key={job.value} value={job.value}>
-                          <span className="mr-2">{job.icon}</span> {job.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
+              <form className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="lastName" className="flex items-center">
-                      <User className="mr-2 h-5 w-5 black" />
-                      Nom
-                    </Label>
-                    <Input id="lastName" required />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="firstName" className="flex items-center">
-                      <User className="mr-2 h-5 w-5 black" />
-                      Prénom
-                    </Label>
-                    <Input id="firstName" required />
-                  </div>
-                </div>
+                  <Input placeholder="Nom" />
+                  <Input placeholder="Prénom" />
+                  <Input placeholder="Pays" />
+                  <Input placeholder="Ville" />
+                  <Input placeholder="Adresse" />
+                  <Input placeholder="Numéero de téléphone" />
 
-                <div className="space-y-2">
-                  <Label className="flex items-center">
-                    <User className="mr-2 h-5 w-5 black" />
-                    Civilité
-                  </Label>
-                  <RadioGroup defaultValue="mr" className="flex space-x-4">
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="mr" id="mr" />
-                      <Label htmlFor="mr">Mr</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="mme" id="mme" />
-                      <Label htmlFor="mme">Mme</Label>
-                    </div>
-                  </RadioGroup>
                 </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="address" className="flex items-center">
-                    <MapPin className="mr-2 h-5 w-5 black" />
-                    Adresse
-                  </Label>
-                  <Input id="address" required />
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="city" className="flex items-center">
-                      <MapPin className="mr-2 h-5 w-5 black" />
-                      Ville
-                    </Label>
-                    <Input id="city" required />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="country" className="flex items-center">
-                      <MapPin className="mr-2 h-5 w-5 black" />
-                      Pays
-                    </Label>
-                    <Input id="country" required />
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="phone" className="flex items-center">
-                    <Phone className="mr-2 h-5 w-5 black" />
-                    Téléphone mobile (WhatsApp, Telegram, Viber, Imo)
-                  </Label>
-                  <Input id="phone" type="tel" required />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="email" className="flex items-center">
-                    <Mail className="mr-2 h-5 w-5 black" />
-                    Email
-                  </Label>
-                  <Input id="email" type="email" required />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="message" className="flex items-center">
-                    <Send className="mr-2 h-5 w-5 black" />
-                    Parlez-nous de vous
-                  </Label>
-                  <Textarea
-                    id="message"
-                    placeholder="Décrivez votre expérience, vos compétences et vos motivations..."
-                    className="min-h-[100px]"
-                    required
-                  />
-                </div>
-
-                <Button type="submit" className="w-full">
-                  {isSubmitted ? (
-                    <span className="flex items-center justify-center">
-                      <CheckCircle className="mr-2" /> Candidature envoyée !
-                    </span>
-                  ) : (
-                    <span className="flex items-center justify-center">
-                      <Send className="mr-2" /> Envoyer ma candidature
-                    </span>
-                  )}
+                <Input type="email" placeholder="Email" />
+                <Select>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Choisissez votre spécialité" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {specialties.map((specialty, index) => (
+                      <SelectItem key={index} value={specialty.toLowerCase().replace(/ /g, '-')}>
+                        {specialty}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <div className="flex flex-col items-center space-y-2">
+  <label
+    htmlFor="certificate"
+    className="cursor-pointer flex flex-col items-center justify-center w-full p-4 border border-dashed border-blue-400 rounded-lg bg-blue-50 hover:bg-blue-100 transition duration-300 ease-in-out"
+  > Téléchargez votre certificat 
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth="1.5"
+      stroke="currentColor"
+      className="h-10 w-10 text-blue-700 mb-2"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M3 16.5v4.5h4.5m-4.5-4.5L20.25 3m0 0h-6.75M20.25 3v6.75"
+      />
+    </svg>
+    <span className="text-sm text-blue-700 font-medium">
+      Cliquez pour télécharger un fichier
+    </span>
+    <span className="text-xs text-gray-500 mt-1">
+      Formats acceptés : PDF, JPG, PNG (max 5MB)
+    </span>
+  </label>
+  <input
+    id="certificate"
+    type="file"
+    className="hidden"
+  />
+</div>
+                <Button className="w-500 ml-5 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105">
+                  <Send className="mr-2 h-4 w-4" /> Envoyer ma candidature
                 </Button>
               </form>
             </CardContent>
           </Card>
         </motion.div>
-
-        <motion.div
-          className="mt-12 text-center text-gray-600 dark:text-gray-300"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-        >
-          <p>
-            Rejoignez TraDocument et faites partie d&apos;une équipe dynamique
-            et passionnée. Ensemble, nous révolutionnons le monde de la
-            traduction et des services juridiques.
-          </p>
-        </motion.div>
       </div>
     </div>
-  );
+  )
 }
