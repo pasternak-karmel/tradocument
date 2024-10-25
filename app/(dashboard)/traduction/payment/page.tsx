@@ -3,12 +3,12 @@
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
-import { loadStripe } from "@stripe/stripe-js";
+// import { loadStripe } from "@stripe/stripe-js";
 import { Button } from "@/components/ui/button";
 
-const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
-);
+// const stripePromise = loadStripe(
+//   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
+// );
 
 export default function PaymentForm() {
   const searchParams = useSearchParams();
@@ -34,14 +34,14 @@ export default function PaymentForm() {
       }
 
       const { sessionId } = await response.json();
-      const stripe = await stripePromise;
+      // const stripe = await stripePromise;
 
-      if (stripe) {
-        const { error } = await stripe.redirectToCheckout({ sessionId });
-        if (error) {
-          console.error("Erreur de redirection vers Stripe:", error);
-        }
-      }
+      // if (stripe) {
+      //   const { error } = await stripe.redirectToCheckout({ sessionId });
+      //   if (error) {
+      //     console.error("Erreur de redirection vers Stripe:", error);
+      //   }
+      // }
     } catch (error) {
       console.error("Erreur:", error);
     } finally {
