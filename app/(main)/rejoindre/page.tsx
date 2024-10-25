@@ -25,11 +25,7 @@ export default function RejoignezNous() {
 
   const specialties = [
     "Traducteur/trice agréé",
-    "Avocat/e agréé",
-    "Notaire agréé",
-    "Huissier de Justice agréé",
-    "Coursier Taxi",
-    "Coursier Privé"
+    "Professionnel de la livraison de courriers"
   ]
 
   return (
@@ -41,17 +37,16 @@ export default function RejoignezNous() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          Rejoignez Notre Équipe de Traduction
+          Rejoignez Notre Équipe
         </motion.h1>
 
         <motion.p 
-          className="text-xl text-center text-gray-700 mb-12"
+          className="text-lg text-center text-gray-700 mb-12"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}
         >
-          Vous êtes passionné par les langues et la communication interculturelle ? 
-          Nous recherchons des talents comme vous !
+          Si vous êtes agréé et disposez d'un bureau, et que vous souhaitez faire partie de notre équipe en qualité de traducteur/trice ou professionnel de la livraison de courrier, il vous suffit de remplir le formulaire et de nous l'envoyer avec vos coordonnées. Nous prendrons contact avec vous après avoir effectué les vérifications nécessaires.
         </motion.p>
 
         <motion.div 
@@ -90,10 +85,10 @@ export default function RejoignezNous() {
                   <Input placeholder="Pays" />
                   <Input placeholder="Ville" />
                   <Input placeholder="Adresse" />
-                  <Input placeholder="Numéero de téléphone" />
+                  <Input placeholder="Numéro de téléphone (Ex:+123 XXX-XXX-XXX)" />
 
                 </div>
-                <Input type="email" placeholder="Email" />
+                <Input type="email" placeholder="E mail:" />
                 <Select>
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Choisissez votre spécialité" />

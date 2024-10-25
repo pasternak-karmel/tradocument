@@ -144,7 +144,21 @@ const translationCategories = [
     title: "Actes d'état civil",
     icon: <FileText className="h-6 w-6 text-blue-500" />,
     color: "bg-blue-100",
-    items: ["Acte de naissance", "Acte de mariage", "Acte de décès", "Carte d'identité", "Passeport","Acte de Naturalisation/Nationalité","Acte de rconnaissance","Certificat de changement de nom","Certificat de célibat","Déclaration sur l'honneur","Livret de famille","Procuration","Permis de séjour"]
+    items: [
+      "Acte de mariage", 
+      "Acte de naissance", 
+      "Acte de décès",
+      "Acte de Naturalisation/Nationalité",
+      "Acte de reconnaissance",
+      "Carte d'identité",
+      "Certificat de célibat",
+      "Certificat de changement de nom",
+      "Déclaration sur l'honneur",
+      "Livret de famille", 
+      "Passeport",
+      "Permis de séjour",
+      "Procuration"
+    ]
   },
   {
     title: "Affaires et Business",
@@ -156,25 +170,57 @@ const translationCategories = [
     title: "Juridique",
     icon: <Scale className="h-6 w-6 text-red-500" />,
     color: "bg-red-100",
-    items: ["Acte de divorce", "Acte notarié", "Assignations et Jugements", "Testament", "Casier Judiciaire","Exequatur", "Procuration Juridique"]
+    items: [
+      "Acte de divorce", 
+      "Acte notarié", 
+      "Assignations et Jugements", 
+      "Casier Judiciaire",
+      "Exequatur", 
+      "Procuration Juridique",
+      "Testament"
+    ]
   },
   {
     title: "Diplômes et Bulletins",
     icon: <GraduationCap className="h-6 w-6 text-yellow-500" />,
     color: "bg-yellow-100",
-    items: ["Diplôme(Licence, Ingénieurat, Master, Doctorat...)", "Relevé de notes Bac/Relevé de notes universitaires avec appréciations", "Attestation d'études", "Attestation de stage","Attestation de scolarité"]
+    items: [
+      "Attestation de scolarité",
+      "Attestation de stage",
+      "Attestation d'études", 
+      "Diplôme (Licence, Ingénieurat, Master, Doctorat...)", 
+      "Relevé de notes Bac/Relevé de notes universitaires avec appréciations"
+    ]
   },
   {
     title: "Finance et Commercial",
     icon: <CreditCard className="h-6 w-6 text-purple-500" />,
     color: "bg-purple-100",
-    items: ["Facture/Attestatin bancaire", "Fiche de paie/ Bulletin de salaire", "Avis d'imposition", "Attestation de retraite/ Sécurité sociale"]
+    items: [
+      "Attestation de retraite/ Sécurité sociale",
+      "Avis d'imposition", 
+      "Facture/Attestation bancaire", 
+      "Fiche de paie/ Bulletin de salaire",
+      "Relevé de compte"
+    ]
   },
   {
     title: "Technique",
     icon: <Truck className="h-6 w-6 text-indigo-500" />,
     color: "bg-indigo-100",
-    items: ["Manues et notices techniques", "Brevets", "Cahier des charges", "Rapport technique","Rapport d'expertise","Brochures","Catalogues Produits","Journaux d'entreprise","Newsletters spécialisées","Normes"]
+    items: [
+      "Appels d'offre",
+      "Brevets",
+      "Brochures",
+      "Cahier des charges",
+      "Catalogues Produits",
+      "Journaux d'entreprise",
+      "Manuels et notices techniques", 
+      "Newsletters spécialisées", 
+      "Normes", 
+      "Rapport d'expertise", 
+      "Rapport technique"
+    ]
   },
   {
     title: "Autres",
@@ -182,6 +228,7 @@ const translationCategories = [
     color: "bg-pink-100",
     items: ["Autres"]
   }
+  
 ]
 
 export default function PageTraduction() {

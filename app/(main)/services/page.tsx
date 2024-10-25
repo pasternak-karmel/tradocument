@@ -25,7 +25,7 @@ export default function NosServices() {
       icon: <Truck className="h-12 w-12 text-green-500" />,
       description: "Livraison rapide et sécurisée de vos documents importants.",
       features: [
-        { icon: <Package className="h-5 w-5" />, text: "Livraison de documents et petits colis" },
+        { icon: <Package className="h-5 w-5" />, text: "Livraison de documents" },
         { icon: <Clock className="h-5 w-5" />, text: "Options de livraison express" },
         { icon: <MapPin className="h-5 w-5" />, text: "Suivi en temps réel" },
       ],
