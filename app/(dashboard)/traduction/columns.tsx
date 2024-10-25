@@ -73,9 +73,14 @@ export const Columns: ColumnDef<Article>[] = [
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
-        Nom
+        Fichier
         <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
+    ),
+    cell: ({ row }) => (
+      <a target="_blank" href={row.original.fichier} download>
+        Voir le fichier
+      </a>
     ),
   },
   // description

@@ -5,7 +5,7 @@ import { verificationTokens } from "@/db/schema";
 
 export const getVerificationTokenByToken = async (token: string) => {
   try {
-    const verificationToken = await db
+    const [verificationToken] = await db
       .select()
       .from(verificationTokens)
       .where(eq(verificationTokens.token, token))

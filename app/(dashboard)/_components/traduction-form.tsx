@@ -7,6 +7,7 @@ import { z } from "zod";
 import { CreateTraductionSchema } from "@/schemas";
 
 import { useRouter } from "next/navigation";
+import { BeatLoader } from "react-spinners";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -245,7 +246,7 @@ export function AddTraductionForm() {
         )}
 
         <Button type="submit" disabled={montant === null || loading}>
-          {loading ? "en cours..." : "Nouvelle traduction"}
+          {loading ? <BeatLoader /> : "Nouvelle traduction"}
         </Button>
       </form>
     </Form>
