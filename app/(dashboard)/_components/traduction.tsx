@@ -1,7 +1,4 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Sheet,
   SheetClose,
@@ -26,9 +23,7 @@ export const AddTraduction = ({ children, asChild }: TraductionProps) => {
       <SheetContent>
         <SheetHeader>
           <SheetTitle>Nouvelle Traduction</SheetTitle>
-          <SheetDescription>
-            Entrez les infos de la traduction
-          </SheetDescription>
+          <SheetDescription>Entrez les infos de la traduction</SheetDescription>
         </SheetHeader>
         <AddTraductionForm />
       </SheetContent>

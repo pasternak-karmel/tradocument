@@ -30,7 +30,6 @@ import { useState } from "react";
 import { useEdgeStore } from "@/lib/edgestore";
 import { toast } from "sonner";
 import { getPDFPageCount } from "@/actions/calculate_montant_page";
-import PaymentForm from "@/components/payment/traductionPayment";
 
 export function AddTraductionForm() {
   const [montant, setMontant] = useState<number | null>(null);
