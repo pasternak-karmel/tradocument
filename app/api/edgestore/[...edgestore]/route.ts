@@ -1,4 +1,5 @@
 import { auth } from "@/auth";
+import { fetchUserRole } from "@/lib/fetchUserRole";
 import { initEdgeStore } from "@edgestore/server";
 import {
   CreateContextOptions,
@@ -11,20 +12,25 @@ type Context = {
   userRole: "admin" | "user" | "traducteur";
 };
 
-// async function createContext({ req }: CreateContextOptions): Promise<Context> {
-async function createContext(): Promise<Context> {
+async function createContext({ req }: CreateContextOptions): Promise<Context> {
+  // async function createContext(): Promise<Context> {
   const session = await auth();
 
+  // if (!session || !session.user?.id) {
+  //   return {
+  //     userId: "1234",
+  //     userRole: "user",
+  //   };
+  // }
   if (!session || !session.user?.id) {
-    return {
-      userId: "1234",
-      userRole: "user",
-    };
+    throw new Error("Authentification requise");
   }
 
+  // const role = (await fetchUserRole()) || "user";
   return {
     userId: session.user.id,
     userRole: "user",
+    // userRole: role,
   };
 }
 
@@ -57,9 +63,28 @@ const edgeStoreRouter = es.router({
       return true;
     })
     .path(({ input }) => [{ type: input.type }]),
+  document: es
+    .fileBucket()
+    .input(
+      z.object({
+        type: z.enum(["post", "profile"]),
+      })
+    )
+    .beforeUpload(({}) => {
+      return true;
+    })
+    .beforeDelete(({}) => {
+      return true;
+    })
+    .path(({ input }) => [{ type: input.type }]),
 
   Tradocument: es
     .fileBucket()
+    .input(
+      z.object({
+        type: z.enum(["traduction", "profile"]),
+      })
+    )
     .path(({ ctx }) => [{ owner: ctx.userId }])
     .accessControl({
       OR: [
@@ -74,10 +99,10 @@ const edgeStoreRouter = es.router({
         },
       ],
     })
-    .beforeUpload(() => {
+    .beforeUpload(async ({ ctx }) => {
       return true;
     })
-    .beforeDelete(() => {
+    .beforeDelete(async ({ ctx }) => {
       return true;
     }),
 });

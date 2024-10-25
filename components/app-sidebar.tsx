@@ -32,75 +32,41 @@ import { useSession } from "next-auth/react";
 const data = {
   navMain: [
     {
+      title: "Dashboard",
+      url: "/dashboard",
+      icon: SquareTerminal,
+    },
+    {
       title: "Traduction",
       url: "/traduction",
       icon: SquareTerminal,
       isActive: true,
     },
     {
-      title: "Models",
-      url: "#",
-      icon: Bot,
-      items: [
-        {
-          title: "Genesis",
-          url: "#",
-        },
-        {
-          title: "Explorer",
-          url: "#",
-        },
-        {
-          title: "Quantum",
-          url: "#",
-        },
-      ],
+      title: "Me livrer",
+      url: "/me_livrer",
+      icon: BookOpen,
+    },
+
+    {
+      title: "demande de devis",
+      url: "/devis",
+      icon: BookOpen,
     },
     {
-      title: "Documentation",
-      url: "#",
+      title: "Consultation",
+      url: "/consultation",
+      icon: Bot,
+    },
+    {
+      title: "Procuration",
+      url: "/procuration",
       icon: BookOpen,
-      items: [
-        {
-          title: "Introduction",
-          url: "#",
-        },
-        {
-          title: "Get Started",
-          url: "#",
-        },
-        {
-          title: "Tutorials",
-          url: "#",
-        },
-        {
-          title: "Changelog",
-          url: "#",
-        },
-      ],
     },
     {
       title: "Settings",
       url: "#",
       icon: Settings2,
-      items: [
-        {
-          title: "General",
-          url: "#",
-        },
-        {
-          title: "Team",
-          url: "#",
-        },
-        {
-          title: "Billing",
-          url: "#",
-        },
-        {
-          title: "Limits",
-          url: "#",
-        },
-      ],
     },
   ],
   navSecondary: [

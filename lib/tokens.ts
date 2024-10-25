@@ -75,7 +75,7 @@ export const generateVerificationToken = async (email: string) => {
       .where(eq(verificationTokens.email, email));
   }
 
-  const verificationToken = await db
+  const [verificationToken] = await db
     .insert(verificationTokens)
     .values({
       identifier: token,
