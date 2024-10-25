@@ -12,9 +12,22 @@ export default function TraDocumentLanding() {
       <section className="h-screen w-full bg-neutral-950 rounded-md relative flex flex-col items-center antialiased">
         <div className="absolute inset-0 h-full w-full flex items-center justify-center px-4 sm:px-8 py-16 sm:py-24 [background:radial-gradient(125%_125%_at_50%_10%,#000_35%,#223_100%)]">
           <div className="text-center text-white m-4 sm:m-10">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold tracking-tighter">
-              Traduction rapides Francais - Arabe <br /> Arabe - Francais
-            </h2>
+           <h2 className="text-4xl font-bold tracking-tighter text-center space-y-4">
+      <div>Traduction rapide réalisée par des professionnels qualifiés</div>
+      <div className="flex flex-col items-center space-y-2">
+        <div className="flex items-center justify-center w-full">
+          <span className="w-1/3 text-right">Arabe</span>
+          <span className="w-1/3 text-center">→</span>
+          <span className="w-1/3 text-left">Français</span>
+        </div>
+        <div className="flex items-center justify-center w-full">
+          <span className="w-1/3 text-right">Français</span>
+          <span className="w-1/3 text-center">→</span>
+          <span className="w-1/3 text-left">Arabe</span>
+        </div>
+      </div>
+    </h2>
+
             <p className="mt-4 max-w-[300px] sm:max-w-[500px] md:max-w-[700px] mx-auto">
               Tradocument.com vous  propose une traduction harmonisée et une fiabilité absolue
             </p>
