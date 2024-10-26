@@ -49,7 +49,7 @@ export const generatePasswordResetToken = async (email: string) => {
       .where(eq(passwordResetTokens.email, email));
   }
 
-  const passwordResetToken = await db
+  const [passwordResetToken] = await db
     .insert(passwordResetTokens)
     .values({
       email,

@@ -1,12 +1,3 @@
-// import NextAuth from 'next-auth'
-// import { authConfig } from './auth.config'
-
-// export default NextAuth(authConfig).auth
-
-// export const config = {
-//   matcher: ['/((?!api|_next/static|_next/image|.*\\.png$).*)']
-// }
-
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
@@ -31,7 +22,6 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const { nextUrl } = request;
 
-  // Check if the pathname starts with any of the protected route prefixes
   const isAdminRoute = adminRoutes.some((route) => pathname.startsWith(route));
   const isAgentRoute = agentRoutes.some((route) => pathname.startsWith(route));
   const isApiAuthRoute = pathname.startsWith(apiAuthPrefix);
@@ -44,7 +34,7 @@ export async function middleware(request: NextRequest) {
     secret: process.env.AUTH_SECRET,
   });
 
-  // 1. Handle public routes
+  //autorise the public route
   if (isPublicRoute) {
     return NextResponse.next();
   }
@@ -79,10 +69,6 @@ export async function middleware(request: NextRequest) {
 
   // 4. Handle protected routes
   if (!token) {
-    // Redirect unauthenticated users to login
-    // const redirectUrl = new URL("/auth/login", request.url);
-    // redirectUrl.searchParams.set("callbackUrl", pathname);
-    // return NextResponse.redirect(redirectUrl);
     let callbackUrl = nextUrl.pathname;
     if (nextUrl.search) {
       callbackUrl += nextUrl.search;
@@ -96,16 +82,16 @@ export async function middleware(request: NextRequest) {
   }
 
   const userRole = token.role as string;
+  console.log(userRole);
   const roleRedirect = roleRedirects[userRole] || DEFAULT_LOGIN_REDIRECT;
 
   // 5. Handle role-based access
   if (isAdminRoute && token.role !== "ADMIN") {
     // Redirect non-admin users away from admin routes
-    return NextResponse.redirect(new URL(roleRedirect, request.url));
+    return NextResponse.redirect(new URL(roleRedirect, nextUrl));
   }
 
   if (isAgentRoute && token.role !== "AGENT") {
-    // Redirect non-agent users away from agent routes
     return NextResponse.redirect(new URL(roleRedirect, request.url));
   }
 
@@ -113,25 +99,25 @@ export async function middleware(request: NextRequest) {
     pathname === DEFAULT_LOGIN_REDIRECT &&
     roleRedirect !== DEFAULT_LOGIN_REDIRECT
   ) {
-    return NextResponse.redirect(new URL(roleRedirect, request.url));
+    return NextResponse.redirect(new URL(roleRedirect, nextUrl));
   }
   // Allow the request to proceed
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - api/auth (API routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     */
-    "/((?!api/auth|_next/static|_next/image|favicon.ico).*)",
-  ],
+  matcher: ["/((?!api/auth|_next/static|_next/image|favicon.ico|.*\\.png$).*)"],
 };
 
 // export const config = {
 //   matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
 // };
+
+// import NextAuth from 'next-auth'
+// import { authConfig } from './auth.config'
+
+// export default NextAuth(authConfig).auth
+
+// export const config = {
+//   matcher: ['/((?!api|_next/static|_next/image|.*\\.png$).*)']
+// }

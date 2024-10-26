@@ -3,12 +3,15 @@
 import * as z from "zod";
 import bcrypt from "bcryptjs";
 
+// import { update } from "@/auth";
 import { SettingsSchema } from "@/schemas";
 import { getUserByEmail, getUserById } from "@/data/user";
 import { currentUser } from "@/lib/auth";
 import { generateVerificationToken } from "@/lib/tokens";
 import { sendVerificationEmail } from "@/lib/mail";
 import { db } from "@/db/drizzle";
+import { users } from "@/db/schema";
+import { eq } from "drizzle-orm";
 
 export const settings = async (values: z.infer<typeof SettingsSchema>) => {
   const user = await currentUser();
@@ -23,12 +26,12 @@ export const settings = async (values: z.infer<typeof SettingsSchema>) => {
     return { error: "Unauthorized" };
   }
 
-  // if (user.isOAuth) {
-  values.email = undefined;
-  values.password = undefined;
-  values.newPassword = undefined;
-  values.isTwoFactorEnabled = undefined;
-  // }
+  if (user.isOAuth) {
+    values.email = undefined;
+    values.password = undefined;
+    values.newPassword = undefined;
+    values.isTwoFactorEnabled = undefined;
+  }
 
   if (values.email && values.email !== user.email) {
     const existingUser = await getUserByEmail(values.email);
@@ -39,10 +42,10 @@ export const settings = async (values: z.infer<typeof SettingsSchema>) => {
 
     const verificationToken = await generateVerificationToken(values.email);
 
-    // await sendVerificationEmail(
-    //   verificationToken.email,
-    //   verificationToken.token
-    // );
+    await sendVerificationEmail(
+      verificationToken.email,
+      verificationToken.token
+    );
 
     return { success: "Verification email sent!" };
   }
@@ -62,12 +65,12 @@ export const settings = async (values: z.infer<typeof SettingsSchema>) => {
     values.newPassword = undefined;
   }
 
-  // const updatedUser = await db.user.update({
-  //   where: { id: dbUser.id },
-  //   data: {
-  //     ...values,
-  //   },
-  // });
+  const updatedUser = await db
+    .update(users)
+    .set({
+      ...values,
+    })
+    .where(eq(users.id, dbUser.id));
 
   // update({
   //   user: {
@@ -76,5 +79,5 @@ export const settings = async (values: z.infer<typeof SettingsSchema>) => {
   //   },
   // });
 
-  return { success: "Settings Updated!" };
+  return { success: "Paramètre mis à jour!" };
 };

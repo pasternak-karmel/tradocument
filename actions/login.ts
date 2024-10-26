@@ -11,6 +11,7 @@ import {
 } from "@/lib/tokens";
 import { sendTwoFactorTokenEmail, sendVerificationEmail } from "@/lib/mail";
 import { getUserByEmail } from "@/data/user";
+import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 
 export const login = async (
   values: z.infer<typeof LoginSchema>,
@@ -79,7 +80,7 @@ export const login = async (
     await signIn("credentials", {
       email,
       password,
-      redirectTo: callbackUrl || "/",
+      redirectTo: callbackUrl || DEFAULT_LOGIN_REDIRECT,
       // redirect: false,
     });
     // const session = await auth();

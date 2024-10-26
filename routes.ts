@@ -5,12 +5,14 @@
  */
 export const publicRoutes: string[] = [
   "/",
-  "/All-Products",
-  "/All-Products/*",
-  "/categories",
-  "/categories/*",
-  "/produit",
-  "/produit/*",
+  "/apropos",
+  "/contact",
+  "/demandeDevis",
+  "/pricing",
+  "/rejoindre",
+  "/services",
+  "/translation",
+  "/transport",
   "/auth/new-verification",
 ];
 
@@ -27,8 +29,8 @@ export const authRoutes: string[] = [
   "/auth/new-password",
 ];
 
-export const adminRoutes: string[] = ["/admin/*"];
-export const agentRoutes: string[] = ["/agent/*"];
+export const adminRoutes: string[] = ["/admin"];
+export const agentRoutes: string[] = ["/traducteur"];
 
 /**
  * The prefix for API authentication routes

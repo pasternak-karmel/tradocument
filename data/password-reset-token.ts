@@ -5,7 +5,7 @@ import { passwordResetTokens } from "@/db/schema";
 
 export const getPasswordResetTokenByToken = async (token: string) => {
   try {
-    const passwordResetToken = await db
+    const [passwordResetToken] = await db
       .select()
       .from(passwordResetTokens)
       .where(eq(passwordResetTokens.token, token))
