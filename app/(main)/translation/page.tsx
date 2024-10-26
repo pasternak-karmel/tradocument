@@ -272,7 +272,7 @@ export default function PageTraduction() {
                             transition={{ delay: itemIndex * 0.1 }}
                             className="text-sm text-gray-600"
                           >
-                            <Link href="/traduction">
+                            <Link href="/demandeDevis">
                               <span className="hover:underline cursor-pointer">{item}</span>
                             </Link>
                           </motion.li>

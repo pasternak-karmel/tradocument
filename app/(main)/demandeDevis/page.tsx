@@ -315,7 +315,7 @@ export default function DemandeDevis() {
                         setShowDeliveryAddress(!showDeliveryAddress)
                       }
                     />
-                    <span>Est un document à traduire ?</span>
+                    <span>Obtenir un document administratif à faire traduire par procuration</span>
                   </div>
 
                   {showDeliveryAddress && (
