@@ -23,7 +23,7 @@ export const login = async (
     return { error: "Invalid fields!" };
   }
 
-  const { email, password, code } = validatedFields.data;
+  const { email, password } = validatedFields.data;
 
   const existingUser = await getUserByEmail(email);
 
@@ -98,12 +98,9 @@ export const login = async (
     return { success: "Logged succesufuly" };
   } catch (error) {
     if (error instanceof AuthError) {
-      switch (error.type) {
-        case "CredentialsSignin":
-          return { error: "Invalid credentials!" };
-        default:
-          return { error: "Something went wrong!" };
-      }
+      return error.type === "CredentialsSignin"
+        ? { error: "Invalid credentials!" }
+        : { error: "Something went wrong!" };
     }
 
     throw error;
