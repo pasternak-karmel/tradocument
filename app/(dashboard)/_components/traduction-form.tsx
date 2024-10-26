@@ -185,7 +185,7 @@ export function AddTraductionForm() {
           )}
         />
 
-        <MultiFileDropzone
+          <MultiFileDropzone
           value={fileStates}
           dropzoneOptions={{
             maxFiles: 1,

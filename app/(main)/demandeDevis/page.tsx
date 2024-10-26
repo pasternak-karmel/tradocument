@@ -34,13 +34,23 @@ import {
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Mail, User, Calendar, FileText, MapPin } from "lucide-react";
+import { FileState, MultiFileDropzone } from "@/components/multi-file";
+import { useEdgeStore } from "@/lib/edgestore";
+import { toast } from "sonner";
+import { getPDFPageCount } from "@/actions/calculate_montant_page";
 
 const formSchema = z.object({
-  name: z
+  firstName: z
+    .string()
+    .min(2, { message: "Le prénom doit contenir au moins 2 caractères" }),
+  lastName: z
     .string()
     .min(2, { message: "Le nom doit contenir au moins 2 caractères" }),
   email: z.string().email({ message: "Adresse email invalide" }),
   phone: z.string().min(10, { message: "Numéro de téléphone invalide" }),
+  country: z.enum(["Maroc", "Tunisie", "Algérie"], {
+    required_error: "Veuillez sélectionner un pays",
+  }),
   serviceType: z.string({
     required_error: "Veuillez sélectionner un type de service",
   }),
@@ -71,12 +81,19 @@ const formSchema = z.object({
 
 export default function DemandeDevis() {
   const [showDeliveryAddress, setShowDeliveryAddress] = useState(false);
+  const [fileStates, setFileStates] = useState<FileState[]>([]);
+  const [url, setUrl] = useState("");
+  const [montant, setMontant] = useState<number | null>(null);
+  const { edgestore } = useEdgeStore();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
+      firstName: "",
+      lastName: "",
       email: "",
       phone: "",
+      country: undefined,
       serviceType: "",
       documentType: "",
       sourceLanguage: "",
@@ -92,9 +109,46 @@ export default function DemandeDevis() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  function updateFileProgress(key: string, progress: FileState["progress"]) {
+    setFileStates((fileStates) => {
+      const newFileStates = structuredClone(fileStates);
+      const fileState = newFileStates.find(
+        (fileState) => fileState.key === key
+      );
+      if (fileState) {
+        fileState.progress = progress;
+      }
+      return newFileStates;
+    });
+  }
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
-    // Ici, vous pouvez ajouter la logique pour envoyer les données du formulaire
+    // Here you would handle form submission, including the file URL
+    if (fileStates.length === 0) {
+      toast.error("Erreur!", {
+        description: "Veuillez sélectionner le fichier à traduire",
+      });
+      return;
+    }
+
+    if (!montant) {
+      toast.error("Erreur!", {
+        description: "Montant non calculé",
+      });
+      return;
+    }
+
+    // Add your form submission logic here
+    console.log("Form data:", values);
+    console.log("File URL:", url);
+    console.log("Montant:", montant);
+
+    // Reset form and file states after submission
+    form.reset();
+    setFileStates([]);
+    setUrl("");
+    setMontant(null);
   }
 
   return (
@@ -121,22 +175,41 @@ export default function DemandeDevis() {
                   onSubmit={form.handleSubmit(onSubmit)}
                   className="space-y-6"
                 >
-                  <FormField
-                    control={form.control}
-                    name="name"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Nom complet</FormLabel>
-                        <FormControl>
-                          <div className="flex items-center">
-                            <User className="w-4 h-4 mr-2 text-gray-500" />
-                            <Input placeholder="Votre nom" {...field} />
-                          </div>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <FormField
+                      control={form.control}
+                      name="firstName"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Prénom</FormLabel>
+                          <FormControl>
+                            <div className="flex items-center">
+                              <User className="w-4 h-4 mr-2 text-gray-500" />
+                              <Input placeholder="Votre prénom" {...field} />
+                            </div>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="lastName"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Nom</FormLabel>
+                          <FormControl>
+                            <div className="flex items-center">
+                              <User className="w-4 h-4 mr-2 text-gray-500" />
+                              <Input placeholder="Votre nom" {...field} />
+                            </div>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <FormField
                       control={form.control}
@@ -178,6 +251,27 @@ export default function DemandeDevis() {
                       )}
                     />
                   </div>
+
+                  <FormField
+                    control={form.control}
+                    name="country"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Pays</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Sélectionnez votre pays" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="Maroc">Maroc</SelectItem>
+                            <SelectItem value="Tunisie">Tunisie</SelectItem>
+                            <SelectItem value="Algérie">Algérie</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
                   <FormField
                     control={form.control}
@@ -283,9 +377,9 @@ export default function DemandeDevis() {
                     name="wordCount"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Nombre de page</FormLabel>
+                        <FormLabel>Nombre de pages</FormLabel>
                         <FormControl>
-                          <Input placeholder="Ex :" {...field} />
+                          <Input placeholder="Ex : 5" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -308,11 +402,68 @@ export default function DemandeDevis() {
                       </FormItem>
                     )}
                   />
-                   <div className="flex items-center space-x-2">
+
+                  <div className="space-y-4">
+                    <FormLabel>Document à traduire</FormLabel>
+                    <MultiFileDropzone
+                      value={fileStates}
+                      dropzoneOptions={{
+                        maxFiles: 1,
+                      }}
+                      onChange={(files) => {
+                        setFileStates(files);
+                      }}
+                      
+                      onFilesAdded={async (addedFiles) => {
+                        setFileStates([...fileStates, ...addedFiles]);
+                        await Promise.all(
+                          addedFiles.map(async (addedFileState) => {
+                            try {
+                              const res = await edgestore.document.upload({
+                                options: { temporary: true },
+                                file: addedFileState.file,
+                                input: { type: "profile" },
+                                onProgressChange: async (progress) => {
+                                  updateFileProgress(addedFileState.key, progress);
+                                  if (progress === 100) {
+                                    await new Promise((resolve) =>
+                                      setTimeout(resolve, 1000)
+                                    );
+                                    updateFileProgress(addedFileState.key, "COMPLETE");
+                                  }
+                                },
+                              });
+
+                              const pageCount = await getPDFPageCount(res.url);
+                              if (!pageCount) {
+                                toast.error("Impossible de calculer le nombre de pages", {
+                                  description:
+                                    "Veuillez réessayer avec un autre fichier...",
+                                });
+                              }
+
+                              setMontant(pageCount);
+                              setUrl(res.url);
+                            } catch (err) {
+                              updateFileProgress(addedFileState.key, "ERROR");
+                            }
+                          })
+                        );
+                      }}
+                    />
+                  </div>
+
+                  {montant !== null && (
+                    <div className="mt-4">
+                      <p className="text-lg font-bold">Montant à payer : {montant} €</p>
+                    </div>
+                  )}
+
+                  <div className="flex items-center space-x-2">
                     <Checkbox
                       checked={showDeliveryAddress}
                       onCheckedChange={(checked) =>
-                        setShowDeliveryAddress(!showDeliveryAddress)
+                        setShowDeliveryAddress(checked as boolean)
                       }
                     />
                     <span>Obtenir un document administratif à faire traduire par procuration</span>
@@ -320,37 +471,36 @@ export default function DemandeDevis() {
 
                   {showDeliveryAddress && (
                     <div className="space-y-4">
-                    <FormField
-                      control={form.control}
-                      name="deliveryAddress.departureAddress"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Adresse de départ</FormLabel>
-                          <FormControl>
-                            <Input placeholder="Adresse de départ" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                      <FormField
+                        control={form.control}
+                        name="deliveryAddress.departureAddress"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Adresse de départ</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Adresse de départ" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
 
-
-<FormField
-                      control={form.control}
-                      name="deliveryAddress.shippingAddress"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Adresse d'expédition</FormLabel>
-                          <FormControl>
-                            <Input
-                              placeholder="Adresse d'expédition"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                      <FormField
+                        control={form.control}
+                        name="deliveryAddress.shippingAddress"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Adresse d'expédition</FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="Adresse d'expédition"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
                     </div>
                   )}
 
@@ -362,7 +512,7 @@ export default function DemandeDevis() {
                         <FormItem>
                           <FormControl>
                             <Checkbox
-                              defaultChecked={false}
+                              checked={field.value}
                               onCheckedChange={field.onChange}
                             />
                           </FormControl>
@@ -370,10 +520,8 @@ export default function DemandeDevis() {
                         </FormItem>
                       )}
                     />
-
                     <span>J'accepte les termes et conditions</span>
                   </div>
-                  <FormMessage />
 
                   <Button type="submit" className="w-full">
                     Soumettre
