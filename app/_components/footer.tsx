@@ -120,8 +120,7 @@ export default function Footer() {
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Tradocument</h3>
             <p className="text-sm text-gray-400">
-              Simplifying document translations for businesses and individuals
-              worldwide.
+              Simplifier les traductions de documents pour les entreprises t les particulirs du monde entiers
             </p>
             <div className="flex space-x-4">
               <SocialIcon href="#" icon={Facebook} label="Facebook" />
@@ -143,11 +142,11 @@ export default function Footer() {
             </div>
           </div>
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Contact Us</h3>
+            <h3 className="text-lg font-semibold">Contactez-nous</h3>
             <div className="flex items-center space-x-2">
               <MapPin className="h-5 w-5 text-gray-400" />
               <span className="text-sm text-gray-300">
-                123 Translation Ave, Language City, 12345
+                123 Avenue de la traduction, Ville des Langues, 12345
               </span>
             </div>
             <div className="flex items-center space-x-2">
@@ -162,7 +161,7 @@ export default function Footer() {
             </div>
           </div>
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Our Location</h3>
+            <h3 className="text-lg font-semibold">Notre emplacement</h3>
             <div className="relative h-48 rounded-lg overflow-hidden bg-gray-800">
               <div className="absolute inset-0 bg-gray-700 animate-pulse"></div>
               <div className="absolute inset-0 flex items-center justify-center">
@@ -187,27 +186,27 @@ export default function Footer() {
                 className="text-sm text-gray-400 hover:text-white transition-colors"
                 href="#"
               >
-                Privacy Policy
+                Politique de confidentialité
               </Link>
               <Link
                 className="text-sm text-gray-400 hover:text-white transition-colors"
                 href="#"
               >
-                Cookie Policy
+                Politique de Cookie
               </Link>
             </nav>
           </div>
         </div>
         <div className="mt-8">
-          <h3 className="text-lg font-semibold mb-4">Stay Updated</h3>
+          <h3 className="text-lg font-semibold mb-4">Restez à jour</h3>
           <form className="flex space-x-2">
             <Input
               className="max-w-lg flex-1 bg-gray-800 text-white placeholder:text-gray-500 border-gray-700 focus:border-blue-500"
-              placeholder="Enter your email"
+              placeholder="Entrez votre email"
               type="email"
             />
             <Button className="bg-[#F49C60] text-white" type="submit">
-              Subscribe
+              S'abonner
             </Button>
           </form>
         </div>
