@@ -237,7 +237,7 @@ export default function DemandeDevis() {
                       name="phone"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Téléphone Mobile (Whatsapp, Telegram,...)</FormLabel>
+                          <FormLabel>Téléphone Mobile (Whatsapp, Telegram,Imo...)</FormLabel>
                           <FormControl>
                             <PhoneInput
                               country={"fr"}
@@ -317,7 +317,7 @@ export default function DemandeDevis() {
                         <FormLabel>Langue source</FormLabel>
                         <Select onValueChange={field.onChange}>
                           <SelectTrigger>
-                            <SelectValue placeholder="Sélectionnez la langue source" />
+                            <SelectValue placeholder="Langue du document" />
                           </SelectTrigger>
                           <SelectContent>
                             <SelectItem value="fr">Français</SelectItem>
@@ -340,7 +340,7 @@ export default function DemandeDevis() {
                         <FormLabel>Langue cible</FormLabel>
                         <Select onValueChange={field.onChange}>
                           <SelectTrigger>
-                            <SelectValue placeholder="Sélectionnez la langue cible" />
+                            <SelectValue placeholder="Le document sera traduit en :" />
                           </SelectTrigger>
                           <SelectContent>
                             <SelectItem value="fr">Français</SelectItem>
@@ -355,22 +355,7 @@ export default function DemandeDevis() {
                     )}
                   />
 
-                  <FormField
-                    control={form.control}
-                    name="deadline"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Date limite</FormLabel>
-                        <FormControl>
-                          <div className="flex items-center">
-                            <Calendar className="w-4 h-4 mr-2 text-gray-500" />
-                            <Input type="date" {...field} />
-                          </div>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+        
 
                   <FormField
                     control={form.control}
