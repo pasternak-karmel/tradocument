@@ -5,7 +5,7 @@ import { twoFactorTokens } from "@/db/schema";
 
 export const getTwoFactorTokenByToken = async (token: string) => {
   try {
-    const twoFactorToken = await db
+    const [twoFactorToken] = await db
       .select()
       .from(twoFactorTokens)
       .where(eq(twoFactorTokens.token, token))
@@ -19,7 +19,7 @@ export const getTwoFactorTokenByToken = async (token: string) => {
 
 export const getTwoFactorTokenByEmail = async (email: string) => {
   try {
-    const twoFactorToken = await db
+    const [twoFactorToken] = await db
       .select()
       .from(twoFactorTokens)
       .where(eq(twoFactorTokens.email, email))

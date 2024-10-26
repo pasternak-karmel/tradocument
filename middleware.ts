@@ -19,11 +19,8 @@ const roleRedirects: { [key: string]: string } = {
 };
 
 export async function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
-  const { nextUrl } = request;
+  const { pathname, search } = request.nextUrl;
 
-  const isAdminRoute = adminRoutes.some((route) => pathname.startsWith(route));
-  const isAgentRoute = agentRoutes.some((route) => pathname.startsWith(route));
   const isApiAuthRoute = pathname.startsWith(apiAuthPrefix);
   const isApiRoute = pathname.startsWith(apiPrefix);
   const isPublicRoute = publicRoutes.includes(pathname);
@@ -39,19 +36,15 @@ export async function middleware(request: NextRequest) {
   console.log("Is Public Route:", isPublicRoute);
   console.log("Is Authenticated:", !!token);
 
-  //autorise the public route
   if (isPublicRoute) {
     return NextResponse.next();
   }
 
-  // 2. Handle API routes
   if (isApiRoute) {
     if (isApiAuthRoute) {
-      // Allow all API auth routes
       return NextResponse.next();
     }
 
-    // For other API routes, ensure the user is authenticated
     if (!token) {
       return new NextResponse(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,
@@ -61,10 +54,8 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // 3. Handle auth routes
   if (isAuthRoute) {
     if (token) {
-      // Redirect authenticated users away from auth routes
       const redirectUrl =
         roleRedirects[token.role as string] || DEFAULT_LOGIN_REDIRECT;
       return NextResponse.redirect(new URL(redirectUrl, request.url));
@@ -72,31 +63,28 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // 4. Handle protected routes
   if (!token) {
-    let callbackUrl = nextUrl.pathname;
-    if (nextUrl.search) {
-      callbackUrl += nextUrl.search;
-    }
-
+    const callbackUrl = `${pathname}${search}`;
     const encodedCallbackUrl = encodeURIComponent(callbackUrl);
-
-    return Response.redirect(
-      new URL(`/auth/login?callbackUrl=${encodedCallbackUrl}`, nextUrl)
+    return NextResponse.redirect(
+      new URL(`/auth/login?callbackUrl=${encodedCallbackUrl}`, request.url)
     );
   }
 
   const userRole = token.role as string;
-  // console.log(userRole);
   const roleRedirect = roleRedirects[userRole] || DEFAULT_LOGIN_REDIRECT;
 
-  // 5. Handle role-based access
-  if (isAdminRoute && token.role !== "ADMIN") {
-    // Redirect non-admin users away from admin routes
-    return NextResponse.redirect(new URL(roleRedirect, nextUrl));
+  if (
+    adminRoutes.some((route) => pathname.startsWith(route)) &&
+    token.role !== "ADMIN"
+  ) {
+    return NextResponse.redirect(new URL(roleRedirect, request.url));
   }
 
-  if (isAgentRoute && token.role !== "AGENT") {
+  if (
+    agentRoutes.some((route) => pathname.startsWith(route)) &&
+    token.role !== "TRADUCTEUR"
+  ) {
     return NextResponse.redirect(new URL(roleRedirect, request.url));
   }
 
@@ -104,9 +92,9 @@ export async function middleware(request: NextRequest) {
     pathname === DEFAULT_LOGIN_REDIRECT &&
     roleRedirect !== DEFAULT_LOGIN_REDIRECT
   ) {
-    return NextResponse.redirect(new URL(roleRedirect, nextUrl));
+    return NextResponse.redirect(new URL(roleRedirect, request.url));
   }
-  // Allow the request to proceed
+
   return NextResponse.next();
 }
 

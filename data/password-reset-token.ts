@@ -19,7 +19,7 @@ export const getPasswordResetTokenByToken = async (token: string) => {
 
 export const getPasswordResetTokenByEmail = async (email: string) => {
   try {
-    const passwordResetToken = await db
+    const [passwordResetToken] = await db
       .select()
       .from(passwordResetTokens)
       .where(eq(passwordResetTokens.email, email))

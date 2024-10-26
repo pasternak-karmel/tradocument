@@ -19,7 +19,7 @@ export const getVerificationTokenByToken = async (token: string) => {
 
 export const getVerificationTokenByEmail = async (email: string) => {
   try {
-    const verificationToken = await db
+    const [verificationToken] = await db
       .select()
       .from(verificationTokens)
       .where(eq(verificationTokens.email, email))

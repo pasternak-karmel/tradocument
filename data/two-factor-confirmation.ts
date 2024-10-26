@@ -5,7 +5,7 @@ import { twoFactorConfirmations } from "@/db/schema";
 
 export const getTwoFactorConfirmationByUserId = async (userId: string) => {
   try {
-    const twoFactorConfirmation = await db
+    const [twoFactorConfirmation] = await db
       .select()
       .from(twoFactorConfirmations)
       .where(eq(twoFactorConfirmations.userId, userId))
