@@ -310,54 +310,6 @@ export default function DemandeDevis() {
                   />
 
                   <div className="flex items-center space-x-2">
-                    <Checkbox
-                      checked={showDeliveryAddress}
-                      onCheckedChange={(checked) =>
-                        setShowDeliveryAddress(!showDeliveryAddress)
-                      }
-                    />
-                    <span>Est un colis à livrer ?</span>
-                  </div>
-
-                  {showDeliveryAddress && (
-                    <div className="space-y-4">
-                      <FormField
-                        control={form.control}
-                        name="deliveryAddress.departureAddress"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Adresse de départ</FormLabel>
-                            <FormControl>
-                              <Input
-                                placeholder="Adresse de départ"
-                                {...field}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={form.control}
-                        name="deliveryAddress.shippingAddress"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Adresse d'expédition</FormLabel>
-                            <FormControl>
-                              <Input
-                                placeholder="Adresse d'expédition"
-                                {...field}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-                  )}
-
-                  <div className="flex items-center space-x-2">
                     <FormField
                       control={form.control}
                       name="termsAccepted"
