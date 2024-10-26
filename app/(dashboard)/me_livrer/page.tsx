@@ -34,45 +34,12 @@ import {
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Mail, User, Calendar, FileText, MapPin } from "lucide-react";
-
-const formSchema = z.object({
-  name: z
-    .string()
-    .min(2, { message: "Le nom doit contenir au moins 2 caractères" }),
-  email: z.string().email({ message: "Adresse email invalide" }),
-  phone: z.string().min(10, { message: "Numéro de téléphone invalide" }),
-  serviceType: z.string({
-    required_error: "Veuillez sélectionner un type de service",
-  }),
-  documentType: z.string({
-    required_error: "Veuillez sélectionner un type de document",
-  }),
-  sourceLanguage: z.string({
-    required_error: "Veuillez sélectionner la langue source",
-  }),
-  targetLanguage: z.string({
-    required_error: "Veuillez sélectionner la langue cible",
-  }),
-  deadline: z.string().optional(),
-  wordCount: z.string().refine((val) => !Number.isNaN(parseInt(val, 10)), {
-    message: "Veuillez entrer un nombre valide",
-  }),
-  additionalInfo: z.string().optional(),
-  termsAccepted: z.boolean().refine((val) => val === true, {
-    message: "Vous devez accepter les termes et conditions",
-  }),
-  deliveryAddress: z
-    .object({
-      departureAddress: z.string().optional(),
-      shippingAddress: z.string().optional(),
-    })
-    .optional(),
-});
+import { meLivrer } from "@/schemas";
 
 export default function MeLivrer() {
   const [showDeliveryAddress, setShowDeliveryAddress] = useState(false);
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof meLivrer>>({
+    resolver: zodResolver(meLivrer),
     defaultValues: {
       name: "",
       email: "",
@@ -92,7 +59,7 @@ export default function MeLivrer() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  function onSubmit(values: z.infer<typeof meLivrer>) {
     console.log(values);
     // Ici, vous pouvez ajouter la logique pour envoyer les données du formulaire
   }
@@ -111,7 +78,7 @@ export default function MeLivrer() {
                 Me faire livrer
               </CardTitle>
               <CardDescription className="text-center">
-                Remplissez ce formulaire 
+                Remplissez ce formulaire
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -258,41 +225,38 @@ export default function MeLivrer() {
                       </FormItem>
                     )}
                   /> */}
-                   <div className="space-y-4">
-                      <FormField
-                        control={form.control}
-                        name="deliveryAddress.departureAddress"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Adresse de départ</FormLabel>
-                            <FormControl>
-                              <Input
-                                placeholder="Adresse de départ"
-                                {...field}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
+                  <div className="space-y-4">
+                    <FormField
+                      control={form.control}
+                      name="deliveryAddress.departureAddress"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Adresse de départ</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Adresse de départ" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
-                      <FormField
-                        control={form.control}
-                        name="deliveryAddress.shippingAddress"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Adresse d'expédition</FormLabel>
-                            <FormControl>
-                              <Input
-                                placeholder="Adresse d'expédition"
-                                {...field}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
+                    <FormField
+                      control={form.control}
+                      name="deliveryAddress.shippingAddress"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Adresse d'expédition</FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="Adresse d'expédition"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
 
                   <FormField
                     control={form.control}
@@ -354,50 +318,50 @@ export default function MeLivrer() {
 
                   {showDeliveryAddress && (
                     <div className="space-y-4">
-                       <FormField
-                    control={form.control}
-                    name="sourceLanguage"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Langue source</FormLabel>
-                        <Select onValueChange={field.onChange}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Sélectionnez la langue source" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="fr">Français</SelectItem>
-                            <SelectItem value="ar">Arabe</SelectItem>
-                            <SelectItem value="en">Anglais</SelectItem>
-                            <SelectItem value="es">Espagnol</SelectItem>
-                            <SelectItem value="it">Italien</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                      <FormField
+                        control={form.control}
+                        name="sourceLanguage"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Langue source</FormLabel>
+                            <Select onValueChange={field.onChange}>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Sélectionnez la langue source" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="fr">Français</SelectItem>
+                                <SelectItem value="ar">Arabe</SelectItem>
+                                <SelectItem value="en">Anglais</SelectItem>
+                                <SelectItem value="es">Espagnol</SelectItem>
+                                <SelectItem value="it">Italien</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
 
-                  <FormField
-                    control={form.control}
-                    name="targetLanguage"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Langue cible</FormLabel>
-                        <Select onValueChange={field.onChange}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Sélectionnez la langue cible" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="fr">Français</SelectItem>
-                            <SelectItem value="en">Anglais</SelectItem>
-                            <SelectItem value="es">Espagnol</SelectItem>
-                            <SelectItem value="it">Italien</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                      <FormField
+                        control={form.control}
+                        name="targetLanguage"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Langue cible</FormLabel>
+                            <Select onValueChange={field.onChange}>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Sélectionnez la langue cible" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="fr">Français</SelectItem>
+                                <SelectItem value="en">Anglais</SelectItem>
+                                <SelectItem value="es">Espagnol</SelectItem>
+                                <SelectItem value="it">Italien</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
                     </div>
                   )}
 

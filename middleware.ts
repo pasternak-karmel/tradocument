@@ -29,11 +29,6 @@ export default auth((req) => {
     nextUrl.pathname.startsWith(route)
   );
 
-  // console.log("Token on Vercel:", req);
-  // console.log("Pathname:", nextUrl);
-  // console.log("Is Public Route:", isPublicRoute);
-  // console.log("Is Authenticated:", isLoggedIn);
-
   if (isApiAuthRoute || isPublicRoute) {
     return NextResponse.next();
   }
