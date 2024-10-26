@@ -34,6 +34,11 @@ export async function middleware(request: NextRequest) {
     secret: process.env.AUTH_SECRET,
   });
 
+  console.log("Token on Vercel:", token);
+  console.log("Pathname:", pathname);
+  console.log("Is Public Route:", isPublicRoute);
+  console.log("Is Authenticated:", !!token);
+
   //autorise the public route
   if (isPublicRoute) {
     return NextResponse.next();
@@ -95,10 +100,6 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL(roleRedirect, request.url));
   }
 
-  console.log("Token on Vercel:", token);
-  console.log("Pathname:", pathname);
-  console.log("Is Public Route:", isPublicRoute);
-  console.log("Is Authenticated:", !!token);
   if (
     pathname === DEFAULT_LOGIN_REDIRECT &&
     roleRedirect !== DEFAULT_LOGIN_REDIRECT
