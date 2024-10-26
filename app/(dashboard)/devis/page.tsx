@@ -34,6 +34,7 @@ import {
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Mail, User, Calendar, FileText, MapPin } from "lucide-react";
+import Link from "next/link";
 
 const formSchema = z.object({
   name: z
@@ -69,7 +70,7 @@ const formSchema = z.object({
     .optional(),
 });
 
-export default function MeLivrer() {
+export default function DemandeDevis() {
   const [showDeliveryAddress, setShowDeliveryAddress] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -98,7 +99,7 @@ export default function MeLivrer() {
   }
 
   return (
-    <div className="bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100 py-12 px-4 sm:px-6 lg:px-8">
+    <div className=" bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -108,10 +109,11 @@ export default function MeLivrer() {
           <Card className="w-full">
             <CardHeader>
               <CardTitle className="text-2xl font-bold text-center">
-                Me faire livrer
+                Demande de Devis
               </CardTitle>
               <CardDescription className="text-center">
-                Remplissez ce formulaire 
+                Remplissez ce formulaire pour obtenir un devis personnalisé pour
+                nos services de traduction.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -163,7 +165,7 @@ export default function MeLivrer() {
                       name="phone"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Téléphone</FormLabel>
+                          <FormLabel>Téléphone Mobile (Whatsapp, Telegram,...)</FormLabel>
                           <FormControl>
                             <PhoneInput
                               country={"fr"}
@@ -214,7 +216,7 @@ export default function MeLivrer() {
                     )}
                   />
 
-                  {/* <FormField
+                  <FormField
                     control={form.control}
                     name="sourceLanguage"
                     render={({ field }) => (
@@ -249,6 +251,7 @@ export default function MeLivrer() {
                           </SelectTrigger>
                           <SelectContent>
                             <SelectItem value="fr">Français</SelectItem>
+                            <SelectItem value="ar">Arabe</SelectItem>
                             <SelectItem value="en">Anglais</SelectItem>
                             <SelectItem value="es">Espagnol</SelectItem>
                             <SelectItem value="it">Italien</SelectItem>
@@ -257,42 +260,7 @@ export default function MeLivrer() {
                         <FormMessage />
                       </FormItem>
                     )}
-                  /> */}
-                   <div className="space-y-4">
-                      <FormField
-                        control={form.control}
-                        name="deliveryAddress.departureAddress"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Adresse de départ</FormLabel>
-                            <FormControl>
-                              <Input
-                                placeholder="Adresse de départ"
-                                {...field}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={form.control}
-                        name="deliveryAddress.shippingAddress"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Adresse d'expédition</FormLabel>
-                            <FormControl>
-                              <Input
-                                placeholder="Adresse d'expédition"
-                                {...field}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
+                  />
 
                   <FormField
                     control={form.control}
@@ -343,63 +311,10 @@ export default function MeLivrer() {
                   />
 
                   <div className="flex items-center space-x-2">
-                    <Checkbox
-                      checked={showDeliveryAddress}
-                      onCheckedChange={(checked) =>
-                        setShowDeliveryAddress(!showDeliveryAddress)
-                      }
-                    />
-                    <span>Est un document à traduire ?</span>
+                    <Link href="/me_livrer">
+                    <span>Me faire livrer un document</span>
+                    </Link>
                   </div>
-
-                  {showDeliveryAddress && (
-                    <div className="space-y-4">
-                       <FormField
-                    control={form.control}
-                    name="sourceLanguage"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Langue source</FormLabel>
-                        <Select onValueChange={field.onChange}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Sélectionnez la langue source" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="fr">Français</SelectItem>
-                            <SelectItem value="ar">Arabe</SelectItem>
-                            <SelectItem value="en">Anglais</SelectItem>
-                            <SelectItem value="es">Espagnol</SelectItem>
-                            <SelectItem value="it">Italien</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="targetLanguage"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Langue cible</FormLabel>
-                        <Select onValueChange={field.onChange}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Sélectionnez la langue cible" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="fr">Français</SelectItem>
-                            <SelectItem value="en">Anglais</SelectItem>
-                            <SelectItem value="es">Espagnol</SelectItem>
-                            <SelectItem value="it">Italien</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                    </div>
-                  )}
 
                   <div className="flex items-center space-x-2">
                     <FormField

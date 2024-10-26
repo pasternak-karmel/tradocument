@@ -164,7 +164,7 @@ export default function DemandeDevis() {
                       name="phone"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Téléphone</FormLabel>
+                          <FormLabel>Téléphone Mobile (Whatsapp, Telegram,...)</FormLabel>
                           <FormControl>
                             <PhoneInput
                               country={"fr"}
@@ -250,6 +250,7 @@ export default function DemandeDevis() {
                           </SelectTrigger>
                           <SelectContent>
                             <SelectItem value="fr">Français</SelectItem>
+                            <SelectItem value="ar">Arabe</SelectItem>
                             <SelectItem value="en">Anglais</SelectItem>
                             <SelectItem value="es">Espagnol</SelectItem>
                             <SelectItem value="it">Italien</SelectItem>
