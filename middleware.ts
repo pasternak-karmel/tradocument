@@ -1,51 +1,45 @@
+import NextAuth from "next-auth";
 import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
-import { getToken } from "next-auth/jwt";
 
 import {
-  publicRoutes,
+  DEFAULT_LOGIN_REDIRECT,
+  apiAuthPrefix,
   authRoutes,
+  publicRoutes,
+  apiPrefix,
   adminRoutes,
   agentRoutes,
-  apiAuthPrefix,
-  apiPrefix,
-  DEFAULT_LOGIN_REDIRECT,
-} from "./routes";
+} from "@/routes";
+import { authConfig } from "./auth.config";
 
-const roleRedirects: { [key: string]: string } = {
-  ADMIN: "/admin/dashboard",
-  AGENT: "/agent/dashboard",
-  USER: "/dashboard",
-};
+const { auth } = NextAuth(authConfig);
 
-export async function middleware(request: NextRequest) {
-  const { pathname, search } = request.nextUrl;
+export default auth((req) => {
+  const { nextUrl } = req;
+  const isLoggedIn = !!req.auth;
 
-  const isApiAuthRoute = pathname.startsWith(apiAuthPrefix);
-  const isApiRoute = pathname.startsWith(apiPrefix);
-  const isPublicRoute = publicRoutes.includes(pathname);
-  const isAuthRoute = authRoutes.includes(pathname);
+  const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
+  const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
+  const isAuthRoute = authRoutes.includes(nextUrl.pathname);
+  const isApiRoute = nextUrl.pathname.startsWith(apiPrefix);
+  const isAdminRoute = adminRoutes.some((route) =>
+    nextUrl.pathname.startsWith(route)
+  );
+  const isAgentRoute = agentRoutes.some((route) =>
+    nextUrl.pathname.startsWith(route)
+  );
 
-  const token = await getToken({
-    req: request,
-    secret: process.env.AUTH_SECRET,
-  });
+  // console.log("Token on Vercel:", req);
+  // console.log("Pathname:", nextUrl);
+  // console.log("Is Public Route:", isPublicRoute);
+  // console.log("Is Authenticated:", isLoggedIn);
 
-  console.log("Token on Vercel:", token);
-  console.log("Pathname:", pathname);
-  console.log("Is Public Route:", isPublicRoute);
-  console.log("Is Authenticated:", !!token);
-
-  if (isPublicRoute) {
+  if (isApiAuthRoute || isPublicRoute) {
     return NextResponse.next();
   }
 
   if (isApiRoute) {
-    if (isApiAuthRoute) {
-      return NextResponse.next();
-    }
-
-    if (!token) {
+    if (!isLoggedIn) {
       return new NextResponse(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,
         headers: { "Content-Type": "application/json" },
@@ -55,62 +49,33 @@ export async function middleware(request: NextRequest) {
   }
 
   if (isAuthRoute) {
-    if (token) {
-      const redirectUrl =
-        roleRedirects[token.role as string] || DEFAULT_LOGIN_REDIRECT;
-      return NextResponse.redirect(new URL(redirectUrl, request.url));
+    if (isLoggedIn) {
+      return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
     }
     return NextResponse.next();
   }
 
-  if (!token) {
-    const callbackUrl = `${pathname}${search}`;
+  if (!isLoggedIn) {
+    const callbackUrl = `${nextUrl.pathname}${nextUrl.search}`;
     const encodedCallbackUrl = encodeURIComponent(callbackUrl);
     return NextResponse.redirect(
-      new URL(`/auth/login?callbackUrl=${encodedCallbackUrl}`, request.url)
+      new URL(`/auth/login?callbackUrl=${encodedCallbackUrl}`, nextUrl)
     );
   }
 
-  const userRole = token.role as string;
-  const roleRedirect = roleRedirects[userRole] || DEFAULT_LOGIN_REDIRECT;
+  const userRole = req.auth?.user?.role;
 
-  if (
-    adminRoutes.some((route) => pathname.startsWith(route)) &&
-    token.role !== "ADMIN"
-  ) {
-    return NextResponse.redirect(new URL(roleRedirect, request.url));
+  if (isAdminRoute && userRole !== "ADMIN") {
+    return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
   }
 
-  if (
-    agentRoutes.some((route) => pathname.startsWith(route)) &&
-    token.role !== "TRADUCTEUR"
-  ) {
-    return NextResponse.redirect(new URL(roleRedirect, request.url));
-  }
-
-  if (
-    pathname === DEFAULT_LOGIN_REDIRECT &&
-    roleRedirect !== DEFAULT_LOGIN_REDIRECT
-  ) {
-    return NextResponse.redirect(new URL(roleRedirect, request.url));
+  if (isAgentRoute && userRole !== "TRADUCTEUR") {
+    return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
   }
 
   return NextResponse.next();
-}
+});
 
 export const config = {
-  matcher: ["/((?!api/auth|_next/static|_next/image|favicon.ico|.*\\.png$).*)"],
+  matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
 };
-
-// export const config = {
-//   matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
-// };
-
-// import NextAuth from 'next-auth'
-// import { authConfig } from './auth.config'
-
-// export default NextAuth(authConfig).auth
-
-// export const config = {
-//   matcher: ['/((?!api|_next/static|_next/image|.*\\.png$).*)']
-// }
