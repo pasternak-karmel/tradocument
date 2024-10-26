@@ -42,20 +42,20 @@ export default async function RootLayout({
   const session = await auth();
   return (
     <SessionProvider session={session}>
-      <html lang="en">
-        <body className={`${font.className} ${geistMono.variable} antialiased`}>
-          <QueryProviders>
-            <EdgeStoreProvider>
-              <ReCaptchaProvider
-                reCaptchaKey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
-              >
-                {children}
-              </ReCaptchaProvider>
-            </EdgeStoreProvider>
-          </QueryProviders>
-          <Toaster />
-        </body>
-      </html>
+      <ReCaptchaProvider
+        reCaptchaKey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
+      >
+        <html lang="en">
+          <body
+            className={`${font.className} ${geistMono.variable} antialiased`}
+          >
+            <QueryProviders>
+              <EdgeStoreProvider>{children}</EdgeStoreProvider>
+            </QueryProviders>
+            <Toaster />
+          </body>
+        </html>
+      </ReCaptchaProvider>
     </SessionProvider>
   );
 }
