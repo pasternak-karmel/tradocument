@@ -263,9 +263,9 @@ export default function DemandeDevis() {
                             <SelectValue placeholder="Sélectionnez votre pays" />
                           </SelectTrigger>
                           <SelectContent>
+                            <SelectItem value="Algérie">Algérie</SelectItem>
                             <SelectItem value="Maroc">Maroc</SelectItem>
                             <SelectItem value="Tunisie">Tunisie</SelectItem>
-                            <SelectItem value="Algérie">Algérie</SelectItem>
                           </SelectContent>
                         </Select>
                         <FormMessage />
@@ -314,10 +314,10 @@ export default function DemandeDevis() {
                     name="sourceLanguage"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Langue source</FormLabel>
+                        <FormLabel>Langue du document</FormLabel>
                         <Select onValueChange={field.onChange}>
                           <SelectTrigger>
-                            <SelectValue placeholder="Langue du document" />
+                            <SelectValue placeholder="Sélectionnez la langue source" />
                           </SelectTrigger>
                           <SelectContent>
                             <SelectItem value="fr">Français</SelectItem>
@@ -337,10 +337,10 @@ export default function DemandeDevis() {
                     name="targetLanguage"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Langue cible</FormLabel>
+                        <FormLabel>Le document sera traduit en :</FormLabel>
                         <Select onValueChange={field.onChange}>
                           <SelectTrigger>
-                            <SelectValue placeholder="Le document sera traduit en :" />
+                            <SelectValue placeholder="Sélectionnez la langue cible" />
                           </SelectTrigger>
                           <SelectContent>
                             <SelectItem value="fr">Français</SelectItem>
@@ -355,7 +355,7 @@ export default function DemandeDevis() {
                     )}
                   />
 
-        
+                 
 
                   <FormField
                     control={form.control}
