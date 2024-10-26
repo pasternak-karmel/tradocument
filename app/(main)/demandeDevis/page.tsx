@@ -389,7 +389,7 @@ export default function DemandeDevis() {
                   />
 
                   <div className="space-y-4">
-                    <FormLabel>Document à traduire</FormLabel>
+                    <FormLabel>Télécharger le document à traduire</FormLabel>
                     <MultiFileDropzone
                       value={fileStates}
                       dropzoneOptions={{

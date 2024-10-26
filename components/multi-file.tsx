@@ -147,7 +147,7 @@ const MultiFileDropzone = React.forwardRef<HTMLInputElement, InputProps>(
               <div className="flex flex-col items-center justify-center text-xs text-gray-400">
                 <UploadCloudIcon className="mb-1 h-7 w-7" />
                 <div className="text-gray-400">
-                  drag & drop or click to upload
+                  Cliquez pour télécharger
                 </div>
               </div>
             </div>
