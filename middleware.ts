@@ -82,7 +82,7 @@ export async function middleware(request: NextRequest) {
   }
 
   const userRole = token.role as string;
-  console.log(userRole);
+  // console.log(userRole);
   const roleRedirect = roleRedirects[userRole] || DEFAULT_LOGIN_REDIRECT;
 
   // 5. Handle role-based access
