@@ -56,15 +56,15 @@ export default function DemandeDevis() {
   const [url, setUrl] = useState("");
   const [distance, setDistance] = useState<number | null>(null);
 
-  const [nom, prenom] = user?.name.split(" ").map((item: any) => item.trim());
+  const personne = user?.name?.split(" ").map((item: any) => item.trim()) || [];
 
   const { executeRecaptcha } = useReCaptcha();
 
   const form = useForm<z.infer<typeof demandeDevis>>({
     resolver: zodResolver(demandeDevis),
     defaultValues: {
-      firstName: nom || undefined,
-      lastName: prenom || undefined,
+      firstName: personne[0] || undefined,
+      lastName: personne[1] || undefined,
       email: user?.email || undefined,
       phone: "",
       country: undefined,
