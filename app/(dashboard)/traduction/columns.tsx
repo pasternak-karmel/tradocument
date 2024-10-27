@@ -87,8 +87,9 @@ export const Columns: ColumnDef<Article>[] = [
   {
     accessorKey: "montant",
     header: "montant",
+    cell: ({ row }) => <p>{row.original.montant} €</p>,
   },
-  // prix
+  // prix €
   {
     accessorKey: "status",
     header: "status",

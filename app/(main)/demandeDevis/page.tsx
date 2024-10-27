@@ -1,16 +1,29 @@
 "use client";
 
-import React, { useState } from "react";
-import { motion } from "framer-motion";
+import z from "zod";
+import React, { useState, useCallback } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { motion } from "framer-motion";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
-import * as z from "zod";
+
+import { FileState, MultiFileDropzone } from "@/components/multi-file";
+import { useEdgeStore } from "@/lib/edgestore";
+import { toast } from "sonner";
+
+import { useReCaptcha } from "next-recaptcha-v3";
+
+import { useCurrentUser } from "@/hooks/use-current-user";
+
+import { demandeDevis } from "@/schemas";
+import { calculateDistance } from "@/actions/calculate_distance";
+
 import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -33,65 +46,26 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Mail, User, Calendar, FileText, MapPin } from "lucide-react";
-import { FileState, MultiFileDropzone } from "@/components/multi-file";
-import { useEdgeStore } from "@/lib/edgestore";
-import { toast } from "sonner";
-import { getPDFPageCount } from "@/actions/calculate_montant_page";
-
-const formSchema = z.object({
-  firstName: z
-    .string()
-    .min(2, { message: "Le prénom doit contenir au moins 2 caractères" }),
-  lastName: z
-    .string()
-    .min(2, { message: "Le nom doit contenir au moins 2 caractères" }),
-  email: z.string().email({ message: "Adresse email invalide" }),
-  phone: z.string().min(10, { message: "Numéro de téléphone invalide" }),
-  country: z.enum(["Maroc", "Tunisie", "Algérie"], {
-    required_error: "Veuillez sélectionner un pays",
-  }),
-  serviceType: z.string({
-    required_error: "Veuillez sélectionner un type de service",
-  }),
-  documentType: z.string({
-    required_error: "Veuillez sélectionner un type de document",
-  }),
-  sourceLanguage: z.string({
-    required_error: "Veuillez sélectionner la langue source",
-  }),
-  targetLanguage: z.string({
-    required_error: "Veuillez sélectionner la langue cible",
-  }),
-  deadline: z.string().optional(),
-  wordCount: z.string().refine((val) => !Number.isNaN(parseInt(val, 10)), {
-    message: "Veuillez entrer un nombre valide",
-  }),
-  additionalInfo: z.string().optional(),
-  termsAccepted: z.boolean().refine((val) => val === true, {
-    message: "Vous devez accepter les termes et conditions",
-  }),
-  deliveryAddress: z
-    .object({
-      departureAddress: z.string().optional(),
-      shippingAddress: z.string().optional(),
-    })
-    .optional(),
-});
+import { Mail, User } from "lucide-react";
 
 export default function DemandeDevis() {
+  const user = useCurrentUser();
+
   const [showDeliveryAddress, setShowDeliveryAddress] = useState(false);
   const [fileStates, setFileStates] = useState<FileState[]>([]);
   const [url, setUrl] = useState("");
-  const [montant, setMontant] = useState<number | null>(null);
-  const { edgestore } = useEdgeStore();
+  const [distance, setDistance] = useState<number | null>(null);
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const [nom, prenom] = user?.name.split(" ").map((item: any) => item.trim());
+
+  const { executeRecaptcha } = useReCaptcha();
+
+  const form = useForm<z.infer<typeof demandeDevis>>({
+    resolver: zodResolver(demandeDevis),
     defaultValues: {
-      firstName: "",
-      lastName: "",
-      email: "",
+      firstName: nom || undefined,
+      lastName: prenom || undefined,
+      email: user?.email || undefined,
       phone: "",
       country: undefined,
       serviceType: "",
@@ -122,33 +96,53 @@ export default function DemandeDevis() {
     });
   }
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-    // Here you would handle form submission, including the file URL
-    if (fileStates.length === 0) {
-      toast.error("Erreur!", {
-        description: "Veuillez sélectionner le fichier à traduire",
+  async function onSubmit(values: z.infer<typeof demandeDevis>) {
+    const token = await executeRecaptcha("form_submit_demande_devis");
+
+    const response = await fetch("/api/recaptcha", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ token }),
+    });
+
+    if (response.ok) {
+      if (values.deliveryAddress) {
+        try {
+          const cost = await calculateDistance({
+            departLocation: values.deliveryAddress.departureAddress!,
+            arriverLocation: values.deliveryAddress.shippingAddress!,
+          });
+          setDistance(cost);
+        } catch (error) {
+          console.error("Error calculating distance:", error);
+          setDistance(null);
+        }
+      }
+    } else {
+      toast.error("Erreur!!!", {
+        description: "reCAPTCHA validation failed. Please try again.",
       });
-      return;
     }
 
-    if (!montant) {
-      toast.error("Erreur!", {
-        description: "Montant non calculé",
-      });
-      return;
-    }
+    // if (fileStates.length === 0) {
+    //   toast.error("Erreur!", {
+    //     description: "Veuillez sélectionner le fichier à traduire",
+    //   });
+    //   return;
+    // }
 
-    // Add your form submission logic here
-    console.log("Form data:", values);
-    console.log("File URL:", url);
-    console.log("Montant:", montant);
+    // if (!montant) {
+    //   toast.error("Erreur!", {
+    //     description: "Montant non calculé",
+    //   });
+    //   return;
+    // }
 
-    // Reset form and file states after submission
     form.reset();
     setFileStates([]);
     setUrl("");
-    setMontant(null);
   }
 
   return (
@@ -237,7 +231,9 @@ export default function DemandeDevis() {
                       name="phone"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Téléphone Mobile (Whatsapp, Telegram,Imo...)</FormLabel>
+                          <FormLabel>
+                            Téléphone Mobile (Whatsapp, Telegram,Imo...)
+                          </FormLabel>
                           <FormControl>
                             <PhoneInput
                               country={"fr"}
@@ -258,7 +254,10 @@ export default function DemandeDevis() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Pays</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
                           <SelectTrigger>
                             <SelectValue placeholder="Sélectionnez votre pays" />
                           </SelectTrigger>
@@ -354,9 +353,6 @@ export default function DemandeDevis() {
                       </FormItem>
                     )}
                   />
-
-                 
-
                   <FormField
                     control={form.control}
                     name="wordCount"
@@ -398,60 +394,24 @@ export default function DemandeDevis() {
                       onChange={(files) => {
                         setFileStates(files);
                       }}
-                      
                       onFilesAdded={async (addedFiles) => {
                         setFileStates([...fileStates, ...addedFiles]);
-                        await Promise.all(
-                          addedFiles.map(async (addedFileState) => {
-                            try {
-                              const res = await edgestore.document.upload({
-                                options: { temporary: true },
-                                file: addedFileState.file,
-                                input: { type: "profile" },
-                                onProgressChange: async (progress) => {
-                                  updateFileProgress(addedFileState.key, progress);
-                                  if (progress === 100) {
-                                    await new Promise((resolve) =>
-                                      setTimeout(resolve, 1000)
-                                    );
-                                    updateFileProgress(addedFileState.key, "COMPLETE");
-                                  }
-                                },
-                              });
-
-                              const pageCount = await getPDFPageCount(res.url);
-                              if (!pageCount) {
-                                toast.error("Impossible de calculer le nombre de pages", {
-                                  description:
-                                    "Veuillez réessayer avec un autre fichier...",
-                                });
-                              }
-
-                              setMontant(pageCount);
-                              setUrl(res.url);
-                            } catch (err) {
-                              updateFileProgress(addedFileState.key, "ERROR");
-                            }
-                          })
-                        );
                       }}
                     />
                   </div>
 
-                  {montant !== null && (
-                    <div className="mt-4">
-                      <p className="text-lg font-bold">Montant à payer : {montant} €</p>
-                    </div>
-                  )}
-
                   <div className="flex items-center space-x-2">
                     <Checkbox
+                      id="delivery"
                       checked={showDeliveryAddress}
                       onCheckedChange={(checked) =>
                         setShowDeliveryAddress(checked as boolean)
                       }
                     />
-                    <span>Obtenir un document administratif à faire traduire par procuration</span>
+                    <label htmlFor="delivery">
+                      Obtenir un document administratif à faire traduire par
+                      procuration
+                    </label>
                   </div>
 
                   {showDeliveryAddress && (
@@ -463,7 +423,10 @@ export default function DemandeDevis() {
                           <FormItem>
                             <FormLabel>Adresse de départ</FormLabel>
                             <FormControl>
-                              <Input placeholder="Adresse de départ" {...field} />
+                              <Input
+                                placeholder="eg: France, Paris"
+                                {...field}
+                              />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -478,7 +441,7 @@ export default function DemandeDevis() {
                             <FormLabel>Adresse d'expédition</FormLabel>
                             <FormControl>
                               <Input
-                                placeholder="Adresse d'expédition"
+                                placeholder="eg: Maroc, rabat"
                                 {...field}
                               />
                             </FormControl>
@@ -497,6 +460,7 @@ export default function DemandeDevis() {
                         <FormItem>
                           <FormControl>
                             <Checkbox
+                              id="terms"
                               checked={field.value}
                               onCheckedChange={field.onChange}
                             />
@@ -505,7 +469,9 @@ export default function DemandeDevis() {
                         </FormItem>
                       )}
                     />
-                    <span>J'accepte les termes et conditions</span>
+                    <label htmlFor="terms">
+                      J'accepte les termes et conditions
+                    </label>
                   </div>
 
                   <Button type="submit" className="w-full">
@@ -514,6 +480,14 @@ export default function DemandeDevis() {
                 </form>
               </Form>
             </CardContent>
+            <CardFooter>
+              {distance !== null && (
+                <div className="mt-4">
+                  <h3>Coût du transport:</h3>
+                  <pre>{distance.toFixed(2)}€ a payer</pre>
+                </div>
+              )}
+            </CardFooter>
           </Card>
         </motion.div>
       </div>

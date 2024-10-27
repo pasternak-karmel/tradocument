@@ -153,10 +153,13 @@ export const traduction = pgTable("traduction", {
   userId: text("userId")
     .notNull()
     .references(() => users.id),
+  nom: text("nom").notNull(),
+  prenom: text("prenom").notNull(),
+  email: text("email").notNull(),
   fichier: text("fichier").unique().notNull(),
+  fichierTraduis: text("fichier_traduis").unique(),
   traducteur: text("traducteur")
     .unique()
-    // .notNull()
     .references(() => users.id),
   montant: integer("montant").notNull(),
   created_at: timestamp("createdAT", { mode: "date" }).notNull().defaultNow(),
@@ -168,3 +171,34 @@ export const traduction = pgTable("traduction", {
 });
 
 export const InsertTraduction = createInsertSchema(traduction);
+
+export const DemandeDevis = pgTable("demande_devis", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  userId: text("userId")
+    .notNull()
+    .references(() => users.id),
+  nom: text("nom").notNull(),
+  prenom: text("prenom").notNull(),
+  numero: text("numero").notNull(),
+  email: text("email").notNull(),
+  pays: text("pays").notNull(),
+  typeDocument: text("type_document").notNull(),
+  langueSource: text("langue_source").notNull(),
+  langueTraduit: text("langue_traduit").notNull(),
+  page: text("page").notNull(),
+  infoSupl: text("information_supplementaire"),
+  fichier: text("fichier").unique().notNull(),
+  fichierTraduis: text("fichier_traduis").unique().notNull(),
+  traducteur: text("traducteur")
+    .unique()
+    .references(() => users.id),
+  adresseDepart: text("adresse_depart").notNull(),
+  adresseArriver: text("adresse_arriver").notNull(),
+  montant: integer("montant").notNull(),
+  created_at: timestamp("createdAT", { mode: "date" }).notNull().defaultNow(),
+  delivered_at: timestamp("deliveredAT", { mode: "date" }),
+  status: text("status").default("traitement").notNull(),
+  payer: boolean("payer").default(false),
+});

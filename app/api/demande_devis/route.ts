@@ -24,16 +24,6 @@ export async function POST(req: Request) {
       await db.select().from(users).where(eq(users.id, userId))
     )[0];
 
-    // if (!userProfile?.emailVerified) {
-    //   return NextResponse.json(
-    //     {
-    //       success: false,
-    //       message: "Veuillez vérifier votre email avant de pourvoir continuer",
-    //     },
-    //     { status: 400 }
-    //   );
-    // }
-
     const values = await req.json();
     const { nom, prenom, email, fichier, montant, traduire_de, traduire_pour } =
       values;
