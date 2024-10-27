@@ -77,9 +77,9 @@ export const authConfig: NextAuthConfig = {
       return token;
     },
     async session({ session, token }) {
-      if (token?.accessToken) {
-        session.accessToken = token.accessToken;
-      }
+      // if (token?.accessToken) {
+      //   session.accessToken = token.accessToken;
+      // }
 
       if (token.sub && session.user) {
         session.user.id = token.sub;
