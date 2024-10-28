@@ -702,7 +702,10 @@ import {
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Mail, User } from "lucide-react";
-import { getPDFPageCount } from "@/actions/calculate_montant_page";
+import {
+  calculateMontantPage,
+  getPDFPageCount,
+} from "@/actions/calculate_montant_page";
 import { showError } from "@/function/notification-toast";
 import { acceptedFileTypes } from "@/type";
 import { toast } from "sonner";
@@ -798,7 +801,7 @@ const DevisForm = () => {
                 updateFileProgress(fileState.key, progress),
             });
             if (res?.url) {
-              const pageCount = await getPDFPageCount(res.url);
+              const pageCount = await calculateMontantPage(res.url);
               if (pageCount) {
                 calculatedMontant = pageCount;
                 setUrl(res.url);
