@@ -365,13 +365,14 @@ const DevisForm = () => {
                     control={form.control}
                     name="country"
                     render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Pays</FormLabel>
+                      <FormItem >
+                        <FormLabel>Pays: </FormLabel>
                         {/* <ComboboxDemo /> */}
                         <Popover>
                           <PopoverTrigger asChild>
                             <FormControl>
                               <Button
+                              style={{ borderWidth: 1, borderColor: "black" }}
                                 variant="outline"
                                 role="combobox"
                                 className={cn(
@@ -384,7 +385,9 @@ const DevisForm = () => {
                                       (language) =>
                                         language.value === field.value
                                     )?.label
-                                  : "Select a country"}
+                                  : "Selectionnez votre pays"
+                                  }
+                                  
                                 <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                               </Button>
                             </FormControl>
@@ -394,6 +397,7 @@ const DevisForm = () => {
                               <CommandInput
                                 placeholder="Search country..."
                                 className="h-9"
+                                style={inputStyle}
                               />
                               <CommandList>
                                 <CommandEmpty>No country found.</CommandEmpty>
