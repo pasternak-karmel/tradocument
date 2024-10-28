@@ -31,14 +31,7 @@ import { useEdgeStore } from "@/lib/edgestore";
 import { toast } from "sonner";
 import { getPDFPageCount } from "@/actions/calculate_montant_page";
 import { Input } from "@/components/ui/input";
-
-const acceptedFileTypes = {
-  "application/pdf": [".pdf"],
-  "application/msword": [".doc"],
-  "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [
-    ".docx",
-  ],
-};
+import { acceptedFileTypes } from "@/type";
 
 export function AddTraductionForm() {
   const user = useCurrentUser();

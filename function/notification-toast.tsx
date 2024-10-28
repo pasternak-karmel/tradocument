@@ -12,3 +12,11 @@ export function ToastRessuable({ titre, description }: ToastProps) {
     action: { label: "Fermer", onClick: () => console.log("Undo") },
   });
 }
+
+function showError(message: string) {
+  toast.error("Erreur!", { description: message });
+}
+function showSuccess(message: string) {
+  toast.success("Succès!", { description: message });
+}
+export { showError, showSuccess };
