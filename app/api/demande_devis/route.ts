@@ -41,15 +41,13 @@ export async function POST(req: Request) {
       url,
     } = values;
 
-    const total = montant + distance;
-
     const traductionValues = {
       userId,
       nom: lastName,
       prenom: firstName,
       email,
       fichier: url,
-      montant: total,
+      montant,
       numero: phone,
       pays: country,
       typeDocument: documentType,

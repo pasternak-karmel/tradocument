@@ -175,7 +175,7 @@ const DevisForm = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...values,
-          montant,
+          montant: distance + montant,
           distance,
           url,
         }),
@@ -611,8 +611,13 @@ const DevisForm = () => {
                   {distance !== null && montant !== null && (
                     <div className="mt-4">
                       <h3>Total a payer:</h3>
-                      <pre>{distance.toFixed(2)}€ a payer</pre>
-                      <pre>{montant.toFixed(2)}€ a payer</pre>
+                      <pre>{(distance + montant).toFixed(2)}€ a payer</pre>
+                      <pre>
+                        {distance.toFixed(2)}€ pour la distance (0.25€/km)
+                      </pre>
+                      <pre>
+                        {montant.toFixed(2)}€ (40€/page) du document importé{" "}
+                      </pre>
                     </div>
                   )}
                   {distance !== null && montant !== null ? (
