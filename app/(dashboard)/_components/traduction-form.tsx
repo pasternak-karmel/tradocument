@@ -32,6 +32,14 @@ import { toast } from "sonner";
 import { getPDFPageCount } from "@/actions/calculate_montant_page";
 import { Input } from "@/components/ui/input";
 
+const acceptedFileTypes = {
+  "application/pdf": [".pdf"],
+  "application/msword": [".doc"],
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [
+    ".docx",
+  ],
+};
+
 export function AddTraductionForm() {
   const user = useCurrentUser();
   const [montant, setMontant] = useState<number | null>(null);
@@ -278,7 +286,7 @@ export function AddTraductionForm() {
 
         <MultiFileDropzone
           value={fileStates}
-          dropzoneOptions={{ maxFiles: 1 }}
+          dropzoneOptions={{ maxFiles: 1, accept: acceptedFileTypes }}
           onChange={(files) => setFileStates(files)}
           onFilesAdded={(addedFiles) =>
             setFileStates([...fileStates, ...addedFiles])

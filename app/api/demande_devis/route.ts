@@ -1,9 +1,8 @@
-import { InsertTraduction, traduction } from "@/db/schema";
 import { auth } from "@/auth";
 import { db } from "@/db/drizzle";
 import { NextResponse } from "next/server";
 import { eq } from "drizzle-orm";
-import { users } from "@/db/schema";
+import { DemandeDevis } from "@/db/schema";
 
 export async function POST(req: Request) {
   try {
@@ -20,27 +19,48 @@ export async function POST(req: Request) {
     }
     const userId = session.user.id;
 
-    const userProfile = (
-      await db.select().from(users).where(eq(users.id, userId))
-    )[0];
+    // const userProfile = (
+    //   await db.select().from(users).where(eq(users.id, userId))
+    // )[0];
 
     const values = await req.json();
-    const { nom, prenom, email, fichier, montant, traduire_de, traduire_pour } =
-      values;
+    const {
+      firstName,
+      lastName,
+      email,
+      phone,
+      country,
+      documentType,
+      sourceLanguage,
+      targetLanguage,
+      wordCount,
+      additionalInfo,
+      deliveryAddress,
+      montant,
+      distance,
+      url,
+    } = values;
 
     const traductionValues = {
       userId,
-      nom,
-      prenom,
+      nom: lastName,
+      prenom: firstName,
       email,
-      fichier,
-      traduction_from: traduire_de,
-      traduction_to: traduire_pour,
-      montant,
+      fichier: url,
+      montant: montant + distance,
+      numero: phone,
+      pays: country,
+      typeDocument: documentType,
+      langueSource: sourceLanguage,
+      langueTraduit: targetLanguage,
+      page: wordCount,
+      infoSupl: additionalInfo,
+      adresseDepart: deliveryAddress.departureAddress,
+      adresseArriver: deliveryAddress.shippingAddress,
     };
 
     const [result] = await db
-      .insert(traduction)
+      .insert(DemandeDevis)
       .values(traductionValues)
       .returning();
 

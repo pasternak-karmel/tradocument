@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+
 import { motion } from "framer-motion";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -72,30 +73,34 @@ const formSchema = z.object({
 
 export default function DemandeDevis() {
   const [showDeliveryAddress, setShowDeliveryAddress] = useState(false);
+
+  const [defaultValues, setDefaultValues] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    serviceType: "",
+    documentType: "",
+    sourceLanguage: "",
+    targetLanguage: "",
+    deadline: "",
+    wordCount: "",
+    additionalInfo: "",
+    termsAccepted: false,
+    deliveryAddress: {
+      departureAddress: "",
+      shippingAddress: "",
+    },
+  });
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      email: "",
-      phone: "",
-      serviceType: "",
-      documentType: "",
-      sourceLanguage: "",
-      targetLanguage: "",
-      deadline: "",
-      wordCount: "",
-      additionalInfo: "",
-      termsAccepted: false,
-      deliveryAddress: {
-        departureAddress: "",
-        shippingAddress: "",
-      },
+      ...defaultValues,
     },
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
-    // Ici, vous pouvez ajouter la logique pour envoyer les données du formulaire
   }
 
   return (
@@ -165,7 +170,9 @@ export default function DemandeDevis() {
                       name="phone"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Téléphone Mobile (Whatsapp, Telegram,...)</FormLabel>
+                          <FormLabel>
+                            Téléphone Mobile (Whatsapp, Telegram,...)
+                          </FormLabel>
                           <FormControl>
                             <PhoneInput
                               country={"fr"}
@@ -312,7 +319,7 @@ export default function DemandeDevis() {
 
                   <div className="flex items-center space-x-2">
                     <Link href="/me_livrer">
-                    <span>Me faire livrer un document</span>
+                      <span>Me faire livrer un document</span>
                     </Link>
                   </div>
 

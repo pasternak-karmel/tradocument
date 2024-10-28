@@ -189,14 +189,14 @@ export const DemandeDevis = pgTable("demande_devis", {
   langueTraduit: text("langue_traduit").notNull(),
   page: text("page").notNull(),
   infoSupl: text("information_supplementaire"),
-  fichier: text("fichier").unique().notNull(),
-  fichierTraduis: text("fichier_traduis").unique().notNull(),
+  fichier: text("fichier").unique().notNull(), //
+  fichierTraduis: text("fichier_traduis").unique(),
   traducteur: text("traducteur")
-    .unique()
+    // .unique()
     .references(() => users.id),
-  adresseDepart: text("adresse_depart").notNull(),
-  adresseArriver: text("adresse_arriver").notNull(),
-  montant: integer("montant").notNull(),
+  adresseDepart: text("adresse_depart"),
+  adresseArriver: text("adresse_arriver"),
+  montant: integer("montant").notNull(),  //
   created_at: timestamp("createdAT", { mode: "date" }).notNull().defaultNow(),
   delivered_at: timestamp("deliveredAT", { mode: "date" }),
   status: text("status").default("traitement").notNull(),

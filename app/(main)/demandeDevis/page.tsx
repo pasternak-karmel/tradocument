@@ -1,8 +1,9 @@
 "use client";
 
 import z from "zod";
-import React, { useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { motion } from "framer-motion";
 import PhoneInput from "react-phone-input-2";
@@ -47,18 +48,36 @@ import {
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Mail, User } from "lucide-react";
+import { getPDFPageCount } from "@/actions/calculate_montant_page";
+
+function showError(message: string) {
+  toast.error("Erreur!", { description: message });
+}
+function showSuccess(message: string) {
+  toast.success("Succès!", { description: message });
+}
+
+const acceptedFileTypes = {
+  "application/pdf": [".pdf"],
+  "application/msword": [".doc"],
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [
+    ".docx",
+  ],
+};
 
 export default function DemandeDevis() {
   const user = useCurrentUser();
+  const { executeRecaptcha } = useReCaptcha();
+  const router = useRouter();
+  const { edgestore } = useEdgeStore();
 
   const [showDeliveryAddress, setShowDeliveryAddress] = useState(false);
   const [fileStates, setFileStates] = useState<FileState[]>([]);
   const [url, setUrl] = useState("");
+  const [montant, setMontant] = useState<number | null>(null);
   const [distance, setDistance] = useState<number | null>(null);
 
   const personne = user?.name?.split(" ").map((item: any) => item.trim()) || [];
-
-  const { executeRecaptcha } = useReCaptcha();
 
   const form = useForm<z.infer<typeof demandeDevis>>({
     resolver: zodResolver(demandeDevis),
@@ -97,52 +116,75 @@ export default function DemandeDevis() {
   }
 
   async function onSubmit(values: z.infer<typeof demandeDevis>) {
+    if (!user) return router.push(`/devis`);
+
+    if (fileStates.length === 0)
+      return showError("Veuillez sélectionner le fichier à traduire");
+    if (!values.termsAccepted)
+      return showError("Veuillez accepter les termes et conditions");
+
     const token = await executeRecaptcha("form_submit_demande_devis");
+    if (token) {
+      try {
+        let calculatedDistance = null;
+        let calculatedMontant = null;
+        let fileUrl = null;
 
-    const response = await fetch("/api/recaptcha", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ token }),
-    });
-
-    if (response.ok) {
-      if (values.deliveryAddress) {
-        try {
-          const cost = await calculateDistance({
+        if (values.deliveryAddress) {
+          calculatedDistance = await calculateDistance({
             departLocation: values.deliveryAddress.departureAddress!,
             arriverLocation: values.deliveryAddress.shippingAddress!,
           });
-          setDistance(cost);
-        } catch (error) {
-          console.error("Error calculating distance:", error);
-          setDistance(null);
         }
+
+        await Promise.all(
+          fileStates.map(async (fileState) => {
+            const res = await edgestore.document.upload({
+              options: { temporary: true },
+              file: fileState.file,
+              input: { type: "profile" },
+              onProgressChange: (progress) =>
+                updateFileProgress(fileState.key, progress),
+            });
+            if (res?.url) {
+              const pageCount = await getPDFPageCount(res.url);
+              if (pageCount) {
+                calculatedMontant = pageCount;
+                fileUrl = res.url;
+              }
+            }
+          })
+        );
+
+        if (calculatedDistance === null)
+          return showError("Distance non existante");
+        if (calculatedMontant === null)
+          return showError("Montant non existant");
+
+        const response = await fetch("/api/demande_devis", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            ...values,
+            montant: calculatedMontant,
+            distance: calculatedDistance,
+            url: fileUrl,
+          }),
+        });
+
+        if (response.ok) {
+          form.reset();
+          setFileStates([]);
+          router.push(`/dashboard`);
+        } else {
+          showError("Erreur lors de la validation du fichier");
+        }
+      } catch (error) {
+        showError("Erreur lors de la soumission");
       }
-    } else {
-      toast.error("Erreur!!!", {
-        description: "reCAPTCHA validation failed. Please try again.",
-      });
+      return;
     }
-
-    // if (fileStates.length === 0) {
-    //   toast.error("Erreur!", {
-    //     description: "Veuillez sélectionner le fichier à traduire",
-    //   });
-    //   return;
-    // }
-
-    // if (!montant) {
-    //   toast.error("Erreur!", {
-    //     description: "Montant non calculé",
-    //   });
-    //   return;
-    // }
-
-    form.reset();
-    setFileStates([]);
-    setUrl("");
+    showError("Validation reCAPTCHA échouée.");
   }
 
   return (
@@ -390,12 +432,18 @@ export default function DemandeDevis() {
                       value={fileStates}
                       dropzoneOptions={{
                         maxFiles: 1,
+                        accept: acceptedFileTypes,
                       }}
                       onChange={(files) => {
                         setFileStates(files);
                       }}
                       onFilesAdded={async (addedFiles) => {
-                        setFileStates([...fileStates, ...addedFiles]);
+                        const updatedFiles = [...fileStates, ...addedFiles];
+                        setFileStates(updatedFiles);
+
+                        // for (const fileState of addedFiles) {
+                        //   await handleFileUpload(fileState);
+                        // }
                       }}
                     />
                   </div>
@@ -451,7 +499,6 @@ export default function DemandeDevis() {
                       />
                     </div>
                   )}
-
                   <div className="flex items-center space-x-2">
                     <FormField
                       control={form.control}
@@ -473,7 +520,6 @@ export default function DemandeDevis() {
                       J'accepte les termes et conditions
                     </label>
                   </div>
-
                   <Button type="submit" className="w-full">
                     Soumettre
                   </Button>
@@ -481,10 +527,12 @@ export default function DemandeDevis() {
               </Form>
             </CardContent>
             <CardFooter>
-              {distance !== null && (
+              {distance !== null && montant !== null && (
                 <div className="mt-4">
-                  <h3>Coût du transport:</h3>
+                  <h3>Total a payer:</h3>
                   <pre>{distance.toFixed(2)}€ a payer</pre>
+                  <pre>{montant.toFixed(2)}€ a payer</pre>
+                  <pre>{url} </pre>
                 </div>
               )}
             </CardFooter>
@@ -494,3 +542,15 @@ export default function DemandeDevis() {
     </div>
   );
 }
+
+// const encodedValues = encodeURIComponent(JSON.stringify(values));
+
+// router.push(`/devis?callback=${encodedValues}`);
+
+// useEffect(() => {
+//   if (personne.length > 1) {
+//     form.setValue("firstName", personne[0]);
+//     form.setValue("lastName", personne[1]);
+//   }
+//   form.setValue("email", user?.email || "");
+// }, [user, form, personne]);

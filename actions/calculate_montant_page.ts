@@ -1,9 +1,9 @@
-// import mammoth from "mammoth";
 "use server";
 
-import { auth } from "@/auth";
 import axios from "axios";
 import { PDFDocument } from "pdf-lib";
+import mammoth from "mammoth";
+import { auth } from "@/auth";
 
 export async function getPDFPageCount(fileUrl: string) {
   try {
@@ -29,14 +29,21 @@ export async function getPDFPageCount(fileUrl: string) {
   }
 }
 
-// async function getDocxPageCount(file: File): Promise<number> {
-//   const arrayBuffer = await file.arrayBuffer();
-//   const result = await mammoth.extractRawText({ arrayBuffer });
-//   const wordCount = result.value.split(/\s+/).length;
-//   const wordsPerPage = 300; // Par exemple, 300 mots par page
-//   const pageCount = Math.ceil(wordCount / wordsPerPage);
-//   return pageCount;
-// }
+async function getDocxPageCount(fileUrl: string): Promise<number> {
+  const token = await auth();
+  const response = await axios(fileUrl, {
+    responseType: "arraybuffer",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  const arrayBuffer = response.data;
+  const result = await mammoth.extractRawText({ arrayBuffer });
+  const wordCount = result.value.split(/\s+/).length;
+  const wordsPerPage = 300;
+  const pageCount = Math.ceil(wordCount / wordsPerPage);
+  return pageCount * 40;
+}
 
 // export const calculateMontantPage = async (
 //   fileUrl: string
