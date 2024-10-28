@@ -1,7 +1,6 @@
 // "use client";
-
 // import z from "zod";
-// import React, { useState } from "react";
+// import React, { useState, useEffect } from "react";
 // import { zodResolver } from "@hookform/resolvers/zod";
 // import { useRouter } from "next/navigation";
 // import { useForm } from "react-hook-form";
@@ -47,7 +46,10 @@
 // } from "@/components/ui/select";
 // import { Checkbox } from "@/components/ui/checkbox";
 // import { Mail, User } from "lucide-react";
-// import { getPDFPageCount } from "@/actions/calculate_montant_page";
+// import {
+//   calculateMontantPage,
+//   getPDFPageCount,
+// } from "@/actions/calculate_montant_page";
 // import { showError } from "@/function/notification-toast";
 // import { acceptedFileTypes } from "@/type";
 // import { toast } from "sonner";
@@ -65,6 +67,7 @@
 //   const [url, setUrl] = useState("");
 //   const [montant, setMontant] = useState<number | null>(null);
 //   const [distance, setDistance] = useState<number | null>(null);
+//   const [totalAmount, setTotalAmount] = useState<number | null>(null);
 
 //   const personne = user?.name?.split(" ").map((item: any) => item.trim()) || [];
 
@@ -90,6 +93,14 @@
 //       },
 //     },
 //   });
+
+//   useEffect(() => {
+//     if (montant !== null) {
+//       setTotalAmount(
+//         showDeliveryAddress && distance !== null ? distance + montant : montant
+//       );
+//     }
+//   }, [montant, distance, showDeliveryAddress]);
 
 //   function updateFileProgress(key: string, progress: FileState["progress"]) {
 //     setFileStates((fileStates) => {
@@ -118,9 +129,8 @@
 //         setLoading(true);
 //         let calculatedDistance = null;
 //         let calculatedMontant = null;
-//         // let fileUrl = null;
 
-//         if (values.deliveryAddress) {
+//         if (showDeliveryAddress && values.deliveryAddress) {
 //           calculatedDistance = await calculateDistance({
 //             departLocation: values.deliveryAddress.departureAddress!,
 //             arriverLocation: values.deliveryAddress.shippingAddress!,
@@ -137,17 +147,16 @@
 //                 updateFileProgress(fileState.key, progress),
 //             });
 //             if (res?.url) {
-//               const pageCount = await getPDFPageCount(res.url);
+//               const pageCount = await calculateMontantPage(res.url);
 //               if (pageCount) {
 //                 calculatedMontant = pageCount;
-//                 // fileUrl = res.url;
 //                 setUrl(res.url);
 //               }
 //             }
 //           })
 //         );
 
-//         if (calculatedDistance === null)
+//         if (showDeliveryAddress && calculatedDistance === null)
 //           return showError("Distance non existante");
 //         if (calculatedMontant === null)
 //           return showError("Montant non existant");
@@ -166,7 +175,8 @@
 
 //   const validate = async (values: z.infer<typeof demandeDevis>) => {
 //     if (!montant) return showError("Montant non calculé");
-//     if (!distance) return showError("Distance non calculé");
+//     if (showDeliveryAddress && !distance)
+//       return showError("Distance non calculée");
 //     setLoading(true);
 
 //     try {
@@ -175,8 +185,9 @@
 //         headers: { "Content-Type": "application/json" },
 //         body: JSON.stringify({
 //           ...values,
-//           montant: values.deliveryAddress ? distance + montant : montant,
-//           distance,
+//           // montant: totalAmount,
+//           montant: showDeliveryAddress ? totalAmount : montant,
+//           distance: showDeliveryAddress ? distance : null,
 //           url,
 //         }),
 //       });
@@ -212,6 +223,7 @@
 //       setLoading(false);
 //     }
 //   };
+
 //   return (
 //     <div className="mt-10 bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100 py-12 px-4 sm:px-6 lg:px-8">
 //       <div className="max-w-3xl mx-auto">
@@ -247,12 +259,9 @@
 //                             <div className="flex items-center">
 //                               <User className="w-4 h-4 mr-2 text-gray-500" />
 //                               <Input
-//                                 disabled={
-//                                   distance !== null ||
-//                                   montant !== null ||
-//                                   loading
-//                                 }
+//                                 disabled={montant !== null || loading}
 //                                 placeholder="Votre prénom"
+//                                 style={{borderWidth:3,borderColor:"black"}}
 //                                 {...field}
 //                               />
 //                             </div>
@@ -271,12 +280,9 @@
 //                             <div className="flex items-center">
 //                               <User className="w-4 h-4 mr-2 text-gray-500" />
 //                               <Input
-//                                 disabled={
-//                                   distance !== null ||
-//                                   montant !== null ||
-//                                   loading
-//                                 }
+//                                 disabled={montant !== null || loading}
 //                                 placeholder="Votre nom"
+//                                 style={{borderWidth:3,borderColor:"black"}}
 //                                 {...field}
 //                               />
 //                             </div>
@@ -301,11 +307,8 @@
 //                                 type="email"
 //                                 placeholder="votre@email.com"
 //                                 {...field}
-//                                 disabled={
-//                                   distance !== null ||
-//                                   montant !== null ||
-//                                   loading
-//                                 }
+//                                 disabled={montant !== null || loading}
+//                                 style={{borderWidth:3,borderColor:"black"}} 
 //                               />
 //                             </div>
 //                           </FormControl>
@@ -324,13 +327,12 @@
 //                           </FormLabel>
 //                           <FormControl>
 //                             <PhoneInput
-//                               disabled={
-//                                 distance !== null || montant !== null || loading
-//                               }
+//                               disabled={montant !== null || loading}
 //                               country={"fr"}
 //                               value={field.value}
 //                               onChange={field.onChange}
 //                               inputStyle={{ width: "100%" }}
+//                               style={{borderWidth:3,borderColor:"black"}}
 //                             />
 //                           </FormControl>
 //                           <FormMessage />
@@ -348,11 +350,9 @@
 //                         <Select
 //                           onValueChange={field.onChange}
 //                           defaultValue={field.value}
-//                           disabled={
-//                             distance !== null || montant !== null || loading
-//                           }
+//                           disabled={montant !== null || loading}
 //                         >
-//                           <SelectTrigger>
+//                           <SelectTrigger style={{borderWidth:3,borderColor:"black"}}>
 //                             <SelectValue placeholder="Sélectionnez votre pays" />
 //                           </SelectTrigger>
 //                           <SelectContent>
@@ -370,15 +370,14 @@
 //                     control={form.control}
 //                     name="documentType"
 //                     render={({ field }) => (
-//                       <FormItem>
+//                       <FormItem >
 //                         <FormLabel>Type de document</FormLabel>
 //                         <Select
-//                           disabled={
-//                             distance !== null || montant !== null || loading
-//                           }
+//                           disabled={montant !== null || loading}
 //                           onValueChange={field.onChange}
+//                           style={{borderWidth:3,borderColor:"black"}}
 //                         >
-//                           <SelectTrigger>
+//                           <SelectTrigger style={{borderWidth:3,borderColor:"black"}}>
 //                             <SelectValue placeholder="Sélectionnez un document" />
 //                           </SelectTrigger>
 //                           <SelectContent>
@@ -414,12 +413,10 @@
 //                       <FormItem>
 //                         <FormLabel>Langue du document</FormLabel>
 //                         <Select
-//                           disabled={
-//                             distance !== null || montant !== null || loading
-//                           }
+//                           disabled={montant !== null || loading}
 //                           onValueChange={field.onChange}
 //                         >
-//                           <SelectTrigger>
+//                           <SelectTrigger style={{borderWidth:3,borderColor:"black"}}>
 //                             <SelectValue placeholder="Sélectionnez la langue source" />
 //                           </SelectTrigger>
 //                           <SelectContent>
@@ -442,12 +439,10 @@
 //                       <FormItem>
 //                         <FormLabel>Le document sera traduit en :</FormLabel>
 //                         <Select
-//                           disabled={
-//                             distance !== null || montant !== null || loading
-//                           }
+//                           disabled={montant !== null || loading}
 //                           onValueChange={field.onChange}
 //                         >
-//                           <SelectTrigger>
+//                           <SelectTrigger style={{borderWidth:3,borderColor:"black"}}>
 //                             <SelectValue placeholder="Sélectionnez la langue cible" />
 //                           </SelectTrigger>
 //                           <SelectContent>
@@ -470,11 +465,10 @@
 //                         <FormLabel>Nombre de pages</FormLabel>
 //                         <FormControl>
 //                           <Input
-//                             disabled={
-//                               distance !== null || montant !== null || loading
-//                             }
+//                             disabled={montant !== null || loading}
 //                             placeholder="Ex : 5"
 //                             {...field}
+//                             style={{borderWidth:3,borderColor:"black"}}
 //                           />
 //                         </FormControl>
 //                         <FormMessage />
@@ -490,11 +484,10 @@
 //                         <FormLabel>Informations supplémentaires</FormLabel>
 //                         <FormControl>
 //                           <Textarea
-//                             disabled={
-//                               distance !== null || montant !== null || loading
-//                             }
+//                             disabled={montant !== null || loading}
 //                             placeholder="Ajoutez des détails supplémentaires sur votre demande."
 //                             {...field}
+//                             style={{borderWidth:3,borderColor:"black"}}
 //                           />
 //                         </FormControl>
 //                         <FormMessage />
@@ -505,9 +498,7 @@
 //                   <div className="space-y-4">
 //                     <FormLabel>Télécharger le document à traduire</FormLabel>
 //                     <MultiFileDropzone
-//                       disabled={
-//                         distance !== null || montant !== null || loading
-//                       }
+//                       disabled={montant !== null || loading}
 //                       value={fileStates}
 //                       dropzoneOptions={{
 //                         maxFiles: 1,
@@ -527,12 +518,13 @@
 //                     <Checkbox
 //                       id="delivery"
 //                       checked={showDeliveryAddress}
-//                       onCheckedChange={(checked) =>
-//                         setShowDeliveryAddress(checked as boolean)
-//                       }
-//                       disabled={
-//                         distance !== null || montant !== null || loading
-//                       }
+//                       onCheckedChange={(checked) => {
+//                         setShowDeliveryAddress(checked as boolean);
+//                         if (!checked) {
+//                           setDistance(null);
+//                         }
+//                       }}
+//                       disabled={montant !== null || loading}
 //                     />
 //                     <label htmlFor="delivery">
 //                       Obtenir un document administratif à faire traduire par
@@ -546,16 +538,13 @@
 //                         control={form.control}
 //                         name="deliveryAddress.departureAddress"
 //                         render={({ field }) => (
-//                           <FormItem>
+//                           <FormItem >
 //                             <FormLabel>Adresse de départ</FormLabel>
 //                             <FormControl>
 //                               <Input
-//                                 disabled={
-//                                   distance !== null ||
-//                                   montant !== null ||
-//                                   loading
-//                                 }
+//                                 disabled={montant !== null || loading}
 //                                 placeholder="eg: France, Paris"
+//                                 style={{borderWidth:3,borderColor:"black"}}
 //                                 {...field}
 //                               />
 //                             </FormControl>
@@ -572,12 +561,9 @@
 //                             <FormLabel>Adresse d'expédition</FormLabel>
 //                             <FormControl>
 //                               <Input
-//                                 disabled={
-//                                   distance !== null ||
-//                                   montant !== null ||
-//                                   loading
-//                                 }
+//                                 disabled={montant !== null || loading}
 //                                 placeholder="eg: Maroc, rabat"
+//                                 style={{borderWidth:3,borderColor:"black"}}
 //                                 {...field}
 //                               />
 //                             </FormControl>
@@ -595,9 +581,7 @@
 //                         <FormItem>
 //                           <FormControl>
 //                             <Checkbox
-//                               disabled={
-//                                 distance !== null || montant !== null || loading
-//                               }
+//                               disabled={montant !== null || loading}
 //                               id="terms"
 //                               checked={field.value}
 //                               onCheckedChange={field.onChange}
@@ -611,19 +595,21 @@
 //                       J'accepte les termes et conditions
 //                     </label>
 //                   </div>
-//                   {distance !== null && montant !== null && (
+//                   {montant !== null && (
 //                     <div className="mt-4">
-//                       <h3>Montant total a payer:</h3>
-//                       <pre>{(distance + montant).toFixed(2)}€ soit:</pre>
+//                       <h3>Montant total à payer:</h3>
+//                       <pre>{totalAmount?.toFixed(2)}€ soit:</pre>
+//                       {showDeliveryAddress && distance !== null && (
+//                         <pre>
+//                           {distance.toFixed(2)}€ pour le transport (0.25€/km)
+//                         </pre>
+//                       )}
 //                       <pre>
-//                         {distance.toFixed(2)}€ pour le transport (0.25€/km)
-//                       </pre>
-//                       <pre>
-//                         {montant.toFixed(2)}€ (40€/page) du document importé{" "}
+//                         {montant.toFixed(2)}€ (40€/page) du document importé
 //                       </pre>
 //                     </div>
 //                   )}
-//                   {distance !== null && montant !== null ? (
+//                   {montant !== null ? (
 //                     <Button
 //                       type="button"
 //                       disabled={loading}
@@ -650,7 +636,10 @@
 //     </div>
 //   );
 // };
+
 // export default DevisForm;
+
+
 
 "use client";
 
@@ -709,6 +698,31 @@ import { showError } from "@/function/notification-toast";
 import { acceptedFileTypes } from "@/type";
 import { toast } from "sonner";
 import { BeatLoader } from "react-spinners";
+
+// List of all countries in the world
+const countries = [
+  "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia", "Australia", "Austria",
+  "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bhutan",
+  "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei", "Bulgaria", "Burkina Faso", "Burundi", "Cambodia",
+  "Cameroon", "Canada", "Cape Verde", "Central African Republic", "Chad", "Chile", "China", "Colombia", "Comoros",
+  "Congo", "Costa Rica", "Croatia", "Cuba", "Cyprus", "Czech Republic", "Democratic Republic of the Congo", "Denmark",
+  "Djibouti", "Dominica", "Dominican Republic", "East Timor", "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea",
+  "Eritrea", "Estonia", "Ethiopia", "Fiji", "Finland", "France", "Gabon", "Gambia", "Georgia", "Germany", "Ghana",
+  "Greece", "Grenada", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana", "Haiti", "Honduras", "Hungary", "Iceland",
+  "India", "Indonesia", "Iran", "Iraq", "Ireland", "Israel", "Italy", "Ivory Coast", "Jamaica", "Japan", "Jordan",
+  "Kazakhstan", "Kenya", "Kiribati", "Kuwait", "Kyrgyzstan", "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya",
+  "Liechtenstein", "Lithuania", "Luxembourg", "Macedonia", "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta",
+  "Marshall Islands", "Mauritania", "Mauritius", "Mexico", "Micronesia", "Moldova", "Monaco", "Mongolia", "Montenegro",
+  "Morocco", "Mozambique", "Myanmar", "Namibia", "Nauru", "Nepal", "Netherlands", "New Zealand", "Nicaragua", "Niger",
+  "Nigeria", "North Korea", "Norway", "Oman", "Pakistan", "Palau", "Palestine", "Panama", "Papua New Guinea", "Paraguay",
+  "Peru", "Philippines", "Poland", "Portugal", "Qatar", "Romania", "Russia", "Rwanda", "Saint Kitts and Nevis", "Saint Lucia",
+  "Saint Vincent and the Grenadines", "Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia", "Senegal", "Serbia",
+  "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands", "Somalia", "South Africa",
+  "South Korea", "South Sudan", "Spain", "Sri Lanka", "Sudan", "Suriname", "Swaziland", "Sweden", "Switzerland", "Syria",
+  "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Togo", "Tonga", "Trinidad and Tobago", "Tunisia", "Turkey", "Turkmenistan",
+  "Tuvalu", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United States", "Uruguay", "Uzbekistan",
+  "Vanuatu", "Vatican City", "Venezuela", "Vietnam", "Yemen", "Zambia", "Zimbabwe"
+];
 
 const DevisForm = () => {
   const user = useCurrentUser();
@@ -840,7 +854,6 @@ const DevisForm = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...values,
-          // montant: totalAmount,
           montant: showDeliveryAddress ? totalAmount : montant,
           distance: showDeliveryAddress ? distance : null,
           url,
@@ -877,6 +890,14 @@ const DevisForm = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const inputStyle = {
+    borderWidth: "2 px",
+    borderColor: "black",
+    borderRadius: "0.375rem",
+    padding: "0.5rem",
+    width: "100%",
   };
 
   return (
@@ -916,6 +937,7 @@ const DevisForm = () => {
                               <Input
                                 disabled={montant !== null || loading}
                                 placeholder="Votre prénom"
+                                style={inputStyle}
                                 {...field}
                               />
                             </div>
@@ -936,6 +958,7 @@ const DevisForm = () => {
                               <Input
                                 disabled={montant !== null || loading}
                                 placeholder="Votre nom"
+                                style={inputStyle}
                                 {...field}
                               />
                             </div>
@@ -961,6 +984,7 @@ const DevisForm = () => {
                                 placeholder="votre@email.com"
                                 {...field}
                                 disabled={montant !== null || loading}
+                                style={inputStyle}
                               />
                             </div>
                           </FormControl>
@@ -980,10 +1004,12 @@ const DevisForm = () => {
                           <FormControl>
                             <PhoneInput
                               disabled={montant !== null || loading}
+                
                               country={"fr"}
                               value={field.value}
                               onChange={field.onChange}
-                              inputStyle={{ width: "100%" }}
+                              inputStyle={{ ...inputStyle, width: "100%" }}
+                              containerStyle={{ width: "100%" }}
                             />
                           </FormControl>
                           <FormMessage />
@@ -1003,13 +1029,15 @@ const DevisForm = () => {
                           defaultValue={field.value}
                           disabled={montant !== null || loading}
                         >
-                          <SelectTrigger>
+                          <SelectTrigger style={inputStyle}>
                             <SelectValue placeholder="Sélectionnez votre pays" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="Algérie">Algérie</SelectItem>
-                            <SelectItem value="Maroc">Maroc</SelectItem>
-                            <SelectItem value="Tunisie">Tunisie</SelectItem>
+                            {countries.map((country) => (
+                              <SelectItem key={country} value={country}>
+                                {country}
+                              </SelectItem>
+                            ))}
                           </SelectContent>
                         </Select>
                         <FormMessage />
@@ -1027,7 +1055,7 @@ const DevisForm = () => {
                           disabled={montant !== null || loading}
                           onValueChange={field.onChange}
                         >
-                          <SelectTrigger>
+                          <SelectTrigger style={inputStyle}>
                             <SelectValue placeholder="Sélectionnez un document" />
                           </SelectTrigger>
                           <SelectContent>
@@ -1066,7 +1094,7 @@ const DevisForm = () => {
                           disabled={montant !== null || loading}
                           onValueChange={field.onChange}
                         >
-                          <SelectTrigger>
+                          <SelectTrigger style={inputStyle}>
                             <SelectValue placeholder="Sélectionnez la langue source" />
                           </SelectTrigger>
                           <SelectContent>
@@ -1092,7 +1120,7 @@ const DevisForm = () => {
                           disabled={montant !== null || loading}
                           onValueChange={field.onChange}
                         >
-                          <SelectTrigger>
+                          <SelectTrigger style={inputStyle}>
                             <SelectValue placeholder="Sélectionnez la langue cible" />
                           </SelectTrigger>
                           <SelectContent>
@@ -1118,6 +1146,7 @@ const DevisForm = () => {
                             disabled={montant !== null || loading}
                             placeholder="Ex : 5"
                             {...field}
+                            style={inputStyle}
                           />
                         </FormControl>
                         <FormMessage />
@@ -1136,6 +1165,7 @@ const DevisForm = () => {
                             disabled={montant !== null || loading}
                             placeholder="Ajoutez des détails supplémentaires sur votre demande."
                             {...field}
+                            style={inputStyle}
                           />
                         </FormControl>
                         <FormMessage />
@@ -1192,6 +1222,7 @@ const DevisForm = () => {
                               <Input
                                 disabled={montant !== null || loading}
                                 placeholder="eg: France, Paris"
+                                style={inputStyle}
                                 {...field}
                               />
                             </FormControl>
@@ -1210,6 +1241,7 @@ const DevisForm = () => {
                               <Input
                                 disabled={montant !== null || loading}
                                 placeholder="eg: Maroc, rabat"
+                                style={inputStyle}
                                 {...field}
                               />
                             </FormControl>
