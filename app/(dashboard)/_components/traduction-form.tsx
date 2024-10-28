@@ -29,7 +29,10 @@ import { FileState, MultiFileDropzone } from "@/components/multi-file";
 import { useState } from "react";
 import { useEdgeStore } from "@/lib/edgestore";
 import { toast } from "sonner";
-import { getPDFPageCount } from "@/actions/calculate_montant_page";
+import {
+  calculateMontantPage,
+  getPDFPageCount,
+} from "@/actions/calculate_montant_page";
 import { Input } from "@/components/ui/input";
 import { acceptedFileTypes } from "@/type";
 
@@ -90,20 +93,19 @@ export function AddTraductionForm() {
           },
         });
 
-        const pageCount = await getPDFPageCount(res.url);
+        const pageCount = await calculateMontantPage(res.url);
         if (!pageCount) {
-          toast.error("Impossible de calculer le nombre de pages", {
+          return toast.error("Impossible de calculer le nombre de pages", {
             description:
               "Veuillez réessayer avec un autre fichier PDF, Word, ou Excel",
           });
-          return;
         }
 
         setMontant(pageCount);
         setUrl(res.url);
       }
     } catch (error) {
-      toast.error("Une erreur s'est produite", {
+      return toast.error("Une erreur s'est produite", {
         description: "Veuillez réessayer plus tard",
       });
     } finally {
@@ -183,7 +185,11 @@ export function AddTraductionForm() {
               <FormItem>
                 <FormLabel>Nom</FormLabel>
                 <FormControl>
-                  <Input placeholder="Votre nom" {...field} />
+                  <Input
+                    disabled={montant !== null || loading}
+                    placeholder="Votre nom"
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -196,7 +202,11 @@ export function AddTraductionForm() {
               <FormItem>
                 <FormLabel>Prénom</FormLabel>
                 <FormControl>
-                  <Input placeholder="Votre prénom" {...field} />
+                  <Input
+                    disabled={montant !== null || loading}
+                    placeholder="Votre prénom"
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -209,7 +219,11 @@ export function AddTraductionForm() {
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input placeholder="Email de réception" {...field} />
+                  <Input
+                    disabled={montant !== null || loading}
+                    placeholder="Email de réception"
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -224,7 +238,7 @@ export function AddTraductionForm() {
                 <FormLabel>Langue du document</FormLabel>
                 <FormControl>
                   <Select
-                    disabled={loading}
+                    disabled={montant !== null || loading}
                     onValueChange={field.onChange}
                     defaultValue={field.value}
                   >
@@ -254,7 +268,7 @@ export function AddTraductionForm() {
                 <FormLabel>Le document sera traduit en:</FormLabel>
                 <FormControl>
                   <Select
-                    disabled={loading}
+                    disabled={montant !== null || loading}
                     onValueChange={field.onChange}
                     defaultValue={field.value}
                   >
@@ -278,6 +292,7 @@ export function AddTraductionForm() {
         </div>
 
         <MultiFileDropzone
+          disabled={montant !== null || loading}
           value={fileStates}
           dropzoneOptions={{ maxFiles: 1, accept: acceptedFileTypes }}
           onChange={(files) => setFileStates(files)}
