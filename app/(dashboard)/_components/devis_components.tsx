@@ -630,7 +630,7 @@
 //                       onClick={() => validate(form.getValues())}
 //                     >
 //                       {loading ? <BeatLoader /> : "Valider la demande"}
-//                     </Button>                     
+//                     </Button>
 //                   ) : (
 //                     <Button
 //                       type="button"
@@ -651,7 +651,6 @@
 //   );
 // };
 // export default DevisForm;
-
 
 "use client";
 
@@ -752,7 +751,9 @@ const DevisForm = () => {
 
   useEffect(() => {
     if (montant !== null) {
-      setTotalAmount(showDeliveryAddress && distance !== null ? distance + montant : montant);
+      setTotalAmount(
+        showDeliveryAddress && distance !== null ? distance + montant : montant
+      );
     }
   }, [montant, distance, showDeliveryAddress]);
 
@@ -829,7 +830,8 @@ const DevisForm = () => {
 
   const validate = async (values: z.infer<typeof demandeDevis>) => {
     if (!montant) return showError("Montant non calculé");
-    if (showDeliveryAddress && !distance) return showError("Distance non calculée");
+    if (showDeliveryAddress && !distance)
+      return showError("Distance non calculée");
     setLoading(true);
 
     try {
@@ -838,7 +840,8 @@ const DevisForm = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...values,
-          montant: totalAmount,
+          // montant: totalAmount,
+          montant: showDeliveryAddress ? totalAmount : montant,
           distance: showDeliveryAddress ? distance : null,
           url,
         }),
@@ -1083,9 +1086,8 @@ const DevisForm = () => {
                     control={form.control}
                     name="targetLanguage"
                     render={({ field }) => (
-                      
                       <FormItem>
-                        <FormLabel>Le document sera traduit en  :</FormLabel>
+                        <FormLabel>Le document sera traduit en :</FormLabel>
                         <Select
                           disabled={montant !== null || loading}
                           onValueChange={field.onChange}
