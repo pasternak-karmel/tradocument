@@ -118,7 +118,7 @@ const DevisForm = () => {
         setLoading(true);
         let calculatedDistance = null;
         let calculatedMontant = null;
-        let fileUrl = null;
+        // let fileUrl = null;
 
         if (values.deliveryAddress) {
           calculatedDistance = await calculateDistance({
@@ -140,7 +140,7 @@ const DevisForm = () => {
               const pageCount = await getPDFPageCount(res.url);
               if (pageCount) {
                 calculatedMontant = pageCount;
-                fileUrl = res.url;
+                // fileUrl = res.url;
                 setUrl(res.url);
               }
             }
@@ -175,7 +175,7 @@ const DevisForm = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...values,
-          montant: distance + montant,
+          montant: values.deliveryAddress ? distance + montant : montant,
           distance,
           url,
         }),
@@ -505,6 +505,9 @@ const DevisForm = () => {
                   <div className="space-y-4">
                     <FormLabel>Télécharger le document à traduire</FormLabel>
                     <MultiFileDropzone
+                      disabled={
+                        distance !== null || montant !== null || loading
+                      }
                       value={fileStates}
                       dropzoneOptions={{
                         maxFiles: 1,
