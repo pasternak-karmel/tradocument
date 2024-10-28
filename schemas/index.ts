@@ -151,8 +151,8 @@ export const demandeDevis = z.object({
     .min(2, { message: "Le nom doit contenir au moins 2 caractères" }),
   email: z.string().email({ message: "Adresse email invalide" }),
   phone: z.string().min(10, { message: "Numéro de téléphone invalide" }),
-  country: z.enum(["Maroc", "Tunisie", "Algérie"], {
-    required_error: "Veuillez sélectionner un pays",
+  country: z.string({
+    required_error: "Please select a country.",
   }),
   serviceType: z.string({
     required_error: "Veuillez sélectionner un type de service",

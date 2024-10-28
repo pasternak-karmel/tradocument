@@ -1,43 +1,9 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-
-import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import {
-  InputOTP,
-  InputOTPGroup,
-  InputOTPSlot,
-} from "@/components/ui/input-otp";
 import QRCodeDisplay from "@/components/qr_codeDisplay";
 
-const FormSchema = z.object({
-  pin: z.string().min(6, {
-    message: "Le code doit être de 6 caractères.",
-  }),
-});
 
 export default function Test() {
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
-    defaultValues: {
-      pin: "",
-    },
-  });
-
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    console.log(data);
-  }
 
   return (
     // <Form {...form}>

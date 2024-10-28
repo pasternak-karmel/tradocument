@@ -47,7 +47,7 @@ export async function POST(req: Request) {
       prenom: firstName,
       email,
       fichier: url,
-      montant,
+      montant: Math.floor(montant),
       numero: phone,
       pays: country,
       typeDocument: documentType,
