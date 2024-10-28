@@ -24,7 +24,7 @@ export const generateTwoFactorToken = async (email: string) => {
     await db.delete(twoFactorTokens).where(eq(twoFactorTokens.email, email));
   }
 
-  const twoFactorToken = await db
+  const [twoFactorToken] = await db
     .insert(twoFactorTokens)
     .values({
       email,

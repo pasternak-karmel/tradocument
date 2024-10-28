@@ -133,7 +133,8 @@ export const calculateDistance = async ({
 
   try {
     const response = await axiosInstance.request(options);
-    const distanceKm = response.data?.route?.sea?.distance;
+    // const distanceKm = response.data?.route?.sea?.distance;
+    const distanceKm = response.data?.route?.greatCircle;
 
     if (!distanceKm) {
       throw new Error("Distance calculation failed");

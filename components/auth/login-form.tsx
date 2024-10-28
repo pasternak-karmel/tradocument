@@ -30,7 +30,7 @@ export const LoginForm = () => {
   const callbackUrl = searchParams.get("callbackUrl");
   const urlError =
     searchParams.get("error") === "OAuthAccountNotLinked"
-      ? "Email already in use with different provider!"
+      ? "Email déjà utiliser avec un autre provider!"
       : "";
 
   const [showTwoFactor, setShowTwoFactor] = useState(false);
@@ -64,6 +64,10 @@ export const LoginForm = () => {
           if (data?.success) {
             form.reset();
             setSuccess(data.success);
+          }
+
+          if (data?.twoFactor) {
+            setShowTwoFactor(true);
           }
         })
         .catch(() => setError("Something went wrong"));

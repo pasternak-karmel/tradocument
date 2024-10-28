@@ -30,6 +30,8 @@ export const users = pgTable("user", {
   password: text("password"),
   salt: text("salt"),
   role: text("role").notNull().default("user"),
+  two_factor_secret: text("two_factor_secret"),
+  two_factor_enabled: boolean("two_factor_enabled").default(false),
 });
 
 export const InsertUserSchema = createInsertSchema(users);
@@ -196,7 +198,7 @@ export const DemandeDevis = pgTable("demande_devis", {
     .references(() => users.id),
   adresseDepart: text("adresse_depart"),
   adresseArriver: text("adresse_arriver"),
-  montant: integer("montant").notNull(),  //
+  montant: integer("montant").notNull(), //
   created_at: timestamp("createdAT", { mode: "date" }).notNull().defaultNow(),
   delivered_at: timestamp("deliveredAT", { mode: "date" }),
   status: text("status").default("traitement").notNull(),
