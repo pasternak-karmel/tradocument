@@ -38,7 +38,7 @@ export default function RejoignezNous() {
       icon: <GraduationCap className="h-6 w-6 text-purple-500" />,
       title: "Traduction de qualité",
       description:
-        "Bénéficiez d'une traduction optimale de l'Arabe au Francais et du Francais en Arabe",
+        "Bénéficiez d'une traduction optimale de l'Arabe au Français et du Français en Arabe",
     },
     {
       icon: <Globe className="h-6 w-6 text-pink-500" />,
@@ -123,7 +123,7 @@ export default function RejoignezNous() {
                   <Input placeholder="Pays" />
                   <Input placeholder="Ville" />
                   <Input placeholder="Adresse" />
-                  <Input placeholder="Numéero de téléphone" />
+                  <Input placeholder="Numéro de téléphone" />
                 </div>
                 <Input type="email" placeholder="E mail:" />
                 <Select>

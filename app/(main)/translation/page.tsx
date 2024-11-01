@@ -145,8 +145,8 @@ const translationCategories = [
     icon: <FileText className="h-6 w-6 text-blue-500" />,
     color: "bg-blue-100",
     items: [
-      "Acte de mariage", 
       "Acte de naissance", 
+      "Acte de mariage", 
       "Acte de décès",
       "Acte de Naturalisation/Nationalité",
       "Acte de reconnaissance",
