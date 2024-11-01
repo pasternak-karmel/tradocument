@@ -12,6 +12,7 @@ export const publicRoutes: string[] = [
   "/rejoindre",
   "/services",
   "/translation",
+  "/procuration",
   "/transport",
   "/auth/new-verification",
 ];

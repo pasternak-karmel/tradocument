@@ -473,15 +473,15 @@ const Navbar = () => {
 
         {/* Menu Hamburger (Mobile uniquement) */}
         <div className="md:hidden">
-          {!menuOpen ? (
-            <MenuIcon
-              className="text-white cursor-pointer"
-              onClick={() => setMenuOpen(true)}
-            />
-          ) : (
+          {menuOpen ? (
             <XIcon
               className="text-white cursor-pointer"
               onClick={() => setMenuOpen(false)}
+            />
+          ) : (
+            <MenuIcon
+              className="text-white cursor-pointer"
+              onClick={() => setMenuOpen(true)}
             />
           )}
         </div>

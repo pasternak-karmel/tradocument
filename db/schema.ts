@@ -31,7 +31,7 @@ export const users = pgTable("user", {
   salt: text("salt"),
   role: text("role").notNull().default("user"),
   two_factor_secret: text("two_factor_secret"),
-  two_factor_enabled: boolean("two_factor_enabled").default(true)
+  two_factor_enabled: boolean("two_factor_enabled").default(true),
 });
 
 export const InsertUserSchema = createInsertSchema(users);
@@ -110,7 +110,7 @@ export const passwordResetTokens = pgTable(
     id: text("id").primaryKey().default("cuid()"),
     email: text("email").notNull(),
     token: text("token").notNull(),
-    expires: integer("expires").notNull(),
+    expires: timestamp("expires", { mode: "date" }).notNull(),
   },
   (table) => ({
     uniqueEmailToken: uniqueIndex("unique_email_token").on(
@@ -124,10 +124,13 @@ export const passwordResetTokens = pgTable(
 export const twoFactorTokens = pgTable(
   "two_factor_tokens",
   {
-    id: text("id").$defaultFn(() => crypto.randomUUID()),
+    id: text("id")
+      .$defaultFn(() => crypto.randomUUID())
+      .notNull(),
     email: text("email").notNull(),
     token: text("token").notNull(),
-    expires: integer("expires").notNull(),
+    // expires: integer("expires").notNull(),
+    expires: timestamp("expires", { mode: "date" }).notNull(),
   },
   (table) => ({
     compositePK: primaryKey({
@@ -198,7 +201,7 @@ export const DemandeDevis = pgTable("demande_devis", {
     .references(() => users.id),
   adresseDepart: text("adresse_depart"),
   adresseArriver: text("adresse_arriver"),
-  montant: integer("montant").notNull(),  //
+  montant: integer("montant").notNull(), //
   created_at: timestamp("createdAT", { mode: "date" }).notNull().defaultNow(),
   delivered_at: timestamp("deliveredAT", { mode: "date" }),
   status: text("status").default("traitement").notNull(),
