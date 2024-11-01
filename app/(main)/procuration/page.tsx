@@ -133,7 +133,7 @@ export default function ProcurationComplete() {
       <div className="flex items-center space-x-2">
         <Input
           id={`${name}-input`}
-          name={`${name}-input`}
+          name={name}
           value={
             formData[name as keyof FormData] instanceof Date
               ? format(formData[name as keyof FormData] as Date, "dd/MM/yyyy")
@@ -247,10 +247,6 @@ export default function ProcurationComplete() {
                   </div>
                 </div>
                 {renderDateInput("dateNaissanceMandant", "Date de naissance")}
-                <DatetimePicker
-                  // onChange={setFormData()}
-                  format={[["months", "days", "years"]]}
-                />
                 <div>
                   <Label htmlFor="lieuNaissanceMandant">
                     Lieu de naissance
@@ -378,7 +374,7 @@ export default function ProcurationComplete() {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="prenomMandataire">Prénom</Label>
+                    <Label  htmlFor="prenomMandataire">Prénom</Label>
                     <Input
                       id="prenomMandataire"
                       name="prenomMandataire"
@@ -396,7 +392,6 @@ export default function ProcurationComplete() {
                   <Label htmlFor="lieuNaissanceMandataire">
                     Lieu de naissance
                   </Label>
-
                   <Input
                     id="lieuNaissanceMandataire"
                     name="lieuNaissanceMandataire"
