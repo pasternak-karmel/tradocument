@@ -49,9 +49,6 @@ export default function RejoignezNous() {
 
   const specialties = [
     "Traducteur/trice agréé",
-    "Avocat/e agréé",
-    "Notaire agréé",
-    "Huissier de Justice agréé",
     "Coursier Taxi",
     "Coursier Privé",
   ];
