@@ -114,14 +114,14 @@ export default function RejoignezNous() {
             <CardContent>
               <form className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <Input placeholder="Nom" className="border-2 border-gray"/>
-                  <Input placeholder="Prénom" className="border-2 border-gray"/>
-                  <Input placeholder="Pays" className="border-2 border-gray"/>
-                  <Input placeholder="Ville" className="border-2 border-gray"/>
-                  <Input placeholder="Adresse" className="border-2 border-gray" />
-                  <Input placeholder="Numéro de téléphone" className="border-2 border-gray" />
+                  <Input placeholder="Nom" className="border-2 border-gray" required/>
+                  <Input placeholder="Prénom" className="border-2 border-gray" required/>
+                  <Input placeholder="Pays" className="border-2 border-gray "required/>
+                  <Input placeholder="Ville" className="border-2 border-gray" required/>
+                  <Input placeholder="Adresse" className="border-2 border-gray" required/>
+                  <Input placeholder="Numéro de téléphone(Whatsapp, Imo, Télégram)" className="border-2 border-gray"  required/>
                 </div>
-                <Input type="email" placeholder="E mail:"className="border-2 border-gray" />
+                <Input type="email" placeholder="E mail:"className="border-2 border-gray" required/>
                 <Select>
                   <SelectTrigger className="w-full border-2 border-gray">
                     <SelectValue placeholder="Choisissez votre spécialité" />
@@ -131,7 +131,7 @@ export default function RejoignezNous() {
                       <SelectItem
                         key={index}
                         value={specialty.toLowerCase().replace(/ /g, "-")}
-                      >
+                        >
                         {specialty}
                       </SelectItem>
                     ))}
@@ -160,6 +160,7 @@ export default function RejoignezNous() {
                       strokeWidth="1.5"
                       stroke="currentColor"
                       className="h-10 w-10 text-blue-700 mb-2"
+                      
                     >
                       <path
                         strokeLinecap="round"
