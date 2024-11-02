@@ -48,7 +48,7 @@ export default function RejoignezNous() {
   ];
 
   const specialties = [
-    "Traducteur/trice agréé",
+    "Traducteur/Traductrice agréé(e)",
     "Transport Coursier",
   ];
 
@@ -114,16 +114,16 @@ export default function RejoignezNous() {
             <CardContent>
               <form className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <Input placeholder="Nom" />
-                  <Input placeholder="Prénom" />
-                  <Input placeholder="Pays" />
-                  <Input placeholder="Ville" />
-                  <Input placeholder="Adresse" />
-                  <Input placeholder="Numéro de téléphone" />
+                  <Input placeholder="Nom" className="border-2 border-gray"/>
+                  <Input placeholder="Prénom" className="border-2 border-gray"/>
+                  <Input placeholder="Pays" className="border-2 border-gray"/>
+                  <Input placeholder="Ville" className="border-2 border-gray"/>
+                  <Input placeholder="Adresse" className="border-2 border-gray" />
+                  <Input placeholder="Numéro de téléphone" className="border-2 border-gray" />
                 </div>
-                <Input type="email" placeholder="E mail:" />
+                <Input type="email" placeholder="E mail:"className="border-2 border-gray" />
                 <Select>
-                  <SelectTrigger className="w-full">
+                  <SelectTrigger className="w-full border-2 border-gray">
                     <SelectValue placeholder="Choisissez votre spécialité" />
                   </SelectTrigger>
                   <SelectContent>
@@ -137,6 +137,15 @@ export default function RejoignezNous() {
                     ))}
                   </SelectContent>
                 </Select>
+                <label className='flex flex-col'>
+            <span className='text-black font-medium mb-4 '></span>
+            <textarea
+            rows={7}
+              name='message'
+              placeholder='Avez-vous un commentaires ?'
+              className=' py-4 px-6 text-black border-2 border-gray rounded-lg  font-medium'
+            />
+            </label>
                 <div className="flex flex-col items-center space-y-2">
                   <label
                     htmlFor="certificate"
@@ -167,6 +176,7 @@ export default function RejoignezNous() {
                   </label>
                   <input id="certificate" type="file" className="hidden" />
                 </div>
+              
                 <Button className="w-500 ml-5 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105">
                   <Send className="mr-2 h-4 w-4" /> Envoyer ma candidature
                 </Button>
