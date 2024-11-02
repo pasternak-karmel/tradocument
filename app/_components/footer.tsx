@@ -178,19 +178,19 @@ export default function Footer() {
             <nav className="flex space-x-4">
               <Link
                 className="text-sm text-gray-400 hover:text-white transition-colors"
-                href="#"
+                href="/termes-et-services"
               >
                 Termes et services
               </Link>
               <Link
                 className="text-sm text-gray-400 hover:text-white transition-colors"
-                href="#"
+                href="/politique-de-confidentialite"
               >
                 Politique de confidentialité
               </Link>
               <Link
                 className="text-sm text-gray-400 hover:text-white transition-colors"
-                href="#"
+                href="/politique-de-cookies"
               >
                 Politique de Cookie
               </Link>
