@@ -114,16 +114,16 @@ export default function RejoignezNous() {
             <CardContent>
               <form className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <Input placeholder="Nom" className="border-2 border-gray" required/>
-                  <Input placeholder="Prénom" className="border-2 border-gray" required/>
-                  <Input placeholder="Pays" className="border-2 border-gray "required/>
-                  <Input placeholder="Ville" className="border-2 border-gray" required/>
-                  <Input placeholder="Adresse" className="border-2 border-gray" required/>
-                  <Input placeholder="Numéro de téléphone(Whatsapp, Imo, Télégram)" className="border-2 border-gray"  required/>
+                  <Input placeholder="Nom" className="border-2 border-black" required/>
+                  <Input placeholder="Prénom" className="border-2 border-black" required/>
+                  <Input placeholder="Pays" className="border-2 border-black "required/>
+                  <Input placeholder="Ville" className="border-2 border-black" required/>
+                  <Input placeholder="Adresse" className="border-2 border-black" required/>
+                  <Input placeholder="Numéro de téléphone(Whatsapp, Imo, Télégram)" className="border-2 border-black"  required/>
                 </div>
-                <Input type="email" placeholder="E mail:"className="border-2 border-gray" required/>
+                <Input type="email" placeholder="E mail:"className="border-2 border-black" required/>
                 <Select>
-                  <SelectTrigger className="w-full border-2 border-gray">
+                  <SelectTrigger className="w-full border-2 border-black">
                     <SelectValue placeholder="Choisissez votre spécialité" />
                   </SelectTrigger>
                   <SelectContent>
@@ -143,7 +143,7 @@ export default function RejoignezNous() {
             rows={7}
               name='message'
               placeholder='Avez-vous un commentaires ?'
-              className=' py-4 px-6 text-black border-2 border-gray rounded-lg  font-medium'
+              className=' py-4 px-6 text-black border-2 border-black rounded-lg  font-medium'
             />
             </label>
                 <div className="flex flex-col items-center space-y-2">
