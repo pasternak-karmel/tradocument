@@ -49,8 +49,7 @@ export default function RejoignezNous() {
 
   const specialties = [
     "Traducteur/trice agréé",
-    "Coursier Taxi",
-    "Coursier Privé",
+    "Transport Coursier",
   ];
 
   return (
