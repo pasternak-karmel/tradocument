@@ -4,6 +4,7 @@ import { Users } from "@/app/(dashboard)/data/schema";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { GetAdminTraduction } from "@/actions/getTraductions";
+import { AssignTraduction } from "@/lib/mail";
 
 export function useAdmin() {
   const queryClient = useQueryClient();
@@ -53,18 +54,6 @@ export function useAdmin() {
         queryClient.setQueryData<Users[]>(["getTableau"], (old) => {
           if (!old) return [];
           return old.map((semester) => {
-            // if (semester.id === semesterId) {
-            //   return {
-            //     ...semester,
-            //     courses: [
-            //       ...semester.,
-            //       {
-            //         id: `temp-id-${Date.now()}`,
-            //         ...courseData,
-            //       },
-            //     ],
-            //   };
-            // }
             return semester;
           });
         });
@@ -78,7 +67,8 @@ export function useAdmin() {
       }
       toast.error(error.message);
     },
-    onSuccess: () => {
+    onSuccess: async (userId) => {
+      await AssignTraduction(userId?.email!);
       toast.success("Fichier assigné");
       queryClient.invalidateQueries({ queryKey: ["getTableau"] });
     },

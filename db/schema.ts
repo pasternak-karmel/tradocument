@@ -31,7 +31,7 @@ export const users = pgTable("user", {
   salt: text("salt"),
   role: text("role").notNull().default("user"),
   two_factor_secret: text("two_factor_secret"),
-  two_factor_enabled: boolean("two_factor_enabled").default(true),
+  two_factor_enabled: boolean("two_factor_enabled").default(false),
 });
 
 export const InsertUserSchema = createInsertSchema(users);
