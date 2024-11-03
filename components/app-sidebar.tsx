@@ -69,6 +69,18 @@ const data = {
       icon: Settings2,
     },
   ],
+  navMainAdmin: [
+    {
+      title: "Dashboard",
+      url: "/dashboard",
+      icon: SquareTerminal,
+    },
+    {
+      title: "Settings",
+      url: "/settings",
+      icon: Settings2,
+    },
+  ],
   navSecondary: [
     {
       title: "Support",
@@ -106,6 +118,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     name: session?.user?.name!,
     email: session?.user?.email!,
     // avatar: session?.user?.avatar!,
+    role: session?.user?.role!,
   };
   return (
     <Sidebar variant="inset" {...props}>
@@ -127,12 +140,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
-        {/* <NavProjects projects={data.projects} /> */}
+        {user.role === "admin" ? (
+          <NavMain items={data.navMainAdmin} />
+        ) : (
+          <NavMain items={data.navMain} />
+        )}
+        {/* <NavMain items={data.navMain} /> */}
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
-        {/* <NavUser user={data.user} /> */}
         <NavUser user={user} />
       </SidebarFooter>
     </Sidebar>

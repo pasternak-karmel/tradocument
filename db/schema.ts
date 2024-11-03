@@ -174,6 +174,7 @@ export const traduction = pgTable("traduction", {
   traduction_to: text("traduction_to").notNull(),
   payer: boolean("payer").default(false),
 });
+export type TRADUCTION = typeof traduction.$inferSelect;
 
 export const InsertTraduction = createInsertSchema(traduction);
 
