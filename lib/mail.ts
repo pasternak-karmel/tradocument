@@ -1,4 +1,4 @@
-import { getUserById } from "@/data/user";
+// import { getUserById } from "@/data/user";
 import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);

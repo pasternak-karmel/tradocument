@@ -6,6 +6,7 @@ export default async function Page() {
   const session = await auth();
   if (!session) return redirect("/auth/login");
   if (session.user.role === "admin") return <AdminOverview />;
+  if (session.user.role === "traducteur") return <AdminOverview />;
 
   return (
     <div>

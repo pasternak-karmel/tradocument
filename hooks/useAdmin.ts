@@ -68,7 +68,7 @@ export function useAdmin() {
       toast.error(error.message);
     },
     onSuccess: async (userId) => {
-      await AssignTraduction(userId?.email!);
+      // await AssignTraduction(userId?.email!);
       toast.success("Fichier assigné");
       queryClient.invalidateQueries({ queryKey: ["getTableau"] });
     },

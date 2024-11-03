@@ -8,6 +8,7 @@ import {
   Frame,
   LifeBuoy,
   Map,
+  Navigation,
   PieChart,
   Send,
   Settings2,
@@ -76,6 +77,23 @@ const data = {
       icon: SquareTerminal,
     },
     {
+      title: "Autorisation",
+      url: "/autorisation",
+      icon: Navigation,
+    },
+    {
+      title: "Settings",
+      url: "/settings",
+      icon: Settings2,
+    },
+  ],
+  navMainTraducteur: [
+    {
+      title: "Dashboard",
+      url: "/dashboard",
+      icon: SquareTerminal,
+    },
+    {
       title: "Settings",
       url: "/settings",
       icon: Settings2,
@@ -117,7 +135,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const user = {
     name: session?.user?.name!,
     email: session?.user?.email!,
-    // avatar: session?.user?.avatar!,
     role: session?.user?.role!,
   };
   return (
@@ -142,6 +159,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent>
         {user.role === "admin" ? (
           <NavMain items={data.navMainAdmin} />
+        ) : user.role === "traducteur" ? (
+          <NavMain items={data.navMainTraducteur} />
         ) : (
           <NavMain items={data.navMain} />
         )}
