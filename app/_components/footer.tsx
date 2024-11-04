@@ -120,7 +120,7 @@ export default function Footer() {
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Tradocument</h3>
             <p className="text-sm text-gray-400">
-              Simplifier les traductions de documents pour les entreprises t les particulirs du monde entiers
+              Simplifier les traductions de documents pour les entreprises et les particuliers du monde entiers
             </p>
             <div className="flex space-x-4">
               <SocialIcon href="#" icon={Facebook} label="Facebook" />
