@@ -1,10 +1,11 @@
-import { neon } from "@neondatabase/serverless";
-import { drizzle } from "drizzle-orm/neon-http";
-// import { config } from "dotenv";
+import { createPool } from "@vercel/postgres";
+import { drizzle } from "drizzle-orm/vercel-postgres";
+import { config } from "dotenv";
 
-// config({ path: ".env.local" });
+config({ path: ".env.local" });
 
-// console.log("Database URL:", process.env.DATABASE_URL);
-export const sql = neon(process.env.DATABASE_URL || "");
+const pool = createPool({
+  connectionString: process.env.DATABASE_URL,
+});
 
-export const db = drizzle(sql);
+export const db = drizzle(pool);
