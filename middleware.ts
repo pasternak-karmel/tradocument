@@ -57,8 +57,8 @@ export default auth((req) => {
       new URL(`/auth/login?callbackUrl=${encodedCallbackUrl}`, nextUrl)
     );
   }
-
   const userRole = req.auth?.user?.role;
+  console.log(userRole);
 
   if (isAdminRoute && userRole !== "admin") {
     return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));

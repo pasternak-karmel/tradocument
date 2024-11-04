@@ -1,83 +1,111 @@
-"use client"
+"use client";
 
-import React, { useState } from 'react'
-import { Button } from "@/components/ui/button"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Badge } from "@/components/ui/badge"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { Eye, Upload, Send, Check, FileText } from 'lucide-react'
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Eye, Upload, Send, Check, FileText } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
-type TranslationStatus = 'À traduire' | 'Envoyé' | 'Traduction approuvée'
+type TranslationStatus = "À traduire" | "Envoyé" | "Traduction approuvée";
 
 type TranslationJob = {
-  id: string
+  id: string;
   translator: {
-    firstName: string
-    lastName: string
-  }
-  originalDocument: File | null
-  translatedDocument: File | null
-  status: TranslationStatus
-}
+    firstName: string;
+    lastName: string;
+  };
+  originalDocument: File | null;
+  translatedDocument: File | null;
+  status: TranslationStatus;
+};
 
-export default function TranslatorDashboard() {
+const TraducteurOverview = () => {
   const [jobs, setJobs] = useState<TranslationJob[]>([
     {
-      id: '1',
-      translator: { firstName: 'Jean', lastName: 'Dupont' },
+      id: "1",
+      translator: { firstName: "Jean", lastName: "Dupont" },
       originalDocument: null,
       translatedDocument: null,
-      status: 'À traduire'
+      status: "À traduire",
     },
     {
-      id: '2',
-      translator: { firstName: 'Marie', lastName: 'Martin' },
+      id: "2",
+      translator: { firstName: "Marie", lastName: "Martin" },
       originalDocument: null,
       translatedDocument: null,
-      status: 'Envoyé'
+      status: "Envoyé",
     },
     {
-      id: '3',
-      translator: { firstName: 'Pierre', lastName: 'Bernard' },
+      id: "3",
+      translator: { firstName: "Pierre", lastName: "Bernard" },
       originalDocument: null,
       translatedDocument: null,
-      status: 'Traduction approuvée'
+      status: "Traduction approuvée",
     },
-  ])
+  ]);
 
-  const handleFileUpload = (jobId: string, fileType: 'original' | 'translated') => (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
-    if (file) {
-      setJobs(jobs.map(job => 
-        job.id === jobId 
-          ? { ...job, [fileType === 'original' ? 'originalDocument' : 'translatedDocument']: file } 
-          : job
-      ))
-    }
-  }
+  const handleFileUpload =
+    (jobId: string, fileType: "original" | "translated") =>
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const file = event.target.files?.[0];
+      if (file) {
+        setJobs(
+          jobs.map((job) =>
+            job.id === jobId
+              ? {
+                  ...job,
+                  [fileType === "original"
+                    ? "originalDocument"
+                    : "translatedDocument"]: file,
+                }
+              : job
+          )
+        );
+      }
+    };
 
   const submitTranslation = (jobId: string) => {
-    setJobs(jobs.map(job => 
-      job.id === jobId && job.translatedDocument ? { ...job, status: 'Envoyé' } : job
-    ))
-  }
+    setJobs(
+      jobs.map((job) =>
+        job.id === jobId && job.translatedDocument
+          ? { ...job, status: "Envoyé" }
+          : job
+      )
+    );
+  };
 
   const getStatusBadge = (status: TranslationStatus) => {
     switch (status) {
-      case 'À traduire':
-        return <Badge variant="secondary">À traduire</Badge>
-      case 'Envoyé':
-        return <Badge variant="primary">Envoyé</Badge>
-      case 'Traduction approuvée':
-        return <Badge variant="success">Approuvé</Badge>
+      case "À traduire":
+        return <Badge variant="secondary">À traduire</Badge>;
+      case "Envoyé":
+        return <Badge variant="default">Envoyé</Badge>;
+      case "Traduction approuvée":
+        return <Badge variant="destructive">Approuvé</Badge>;
     }
-  }
+  };
 
   return (
     <div className="container mx-auto py-10">
-      <h1 className="text-3xl font-bold mb-6">Tableau de bord des traducteurs</h1>
+      <h1 className="text-3xl font-bold mb-6">
+        Tableau de bord des traducteurs
+      </h1>
       <Table>
         <TableHeader>
           <TableRow>
@@ -90,7 +118,9 @@ export default function TranslatorDashboard() {
         <TableBody>
           {jobs.map((job) => (
             <TableRow key={job.id}>
-              <TableCell>{job.translator.firstName} {job.translator.lastName}</TableCell>
+              <TableCell>
+                {job.translator.firstName} {job.translator.lastName}
+              </TableCell>
               <TableCell>
                 <Dialog>
                   <DialogTrigger asChild>
@@ -114,11 +144,13 @@ export default function TranslatorDashboard() {
                       )}
                     </div>
                     <div className="mt-4">
-                      <Label htmlFor={`upload-original-${job.id}`}>Télécharger le document original</Label>
+                      <Label htmlFor={`upload-original-${job.id}`}>
+                        Télécharger le document original
+                      </Label>
                       <Input
                         id={`upload-original-${job.id}`}
                         type="file"
-                        onChange={handleFileUpload(job.id, 'original')}
+                        onChange={handleFileUpload(job.id, "original")}
                         className="mt-2"
                       />
                     </div>
@@ -129,7 +161,9 @@ export default function TranslatorDashboard() {
                 <Dialog>
                   <DialogTrigger asChild>
                     <Button variant="outline" size="sm">
-                      {job.status === 'À traduire' ? 'Traduire' : 'Voir la traduction'}
+                      {job.status === "À traduire"
+                        ? "Traduire"
+                        : "Voir la traduction"}
                     </Button>
                   </DialogTrigger>
                   <DialogContent>
@@ -147,20 +181,25 @@ export default function TranslatorDashboard() {
                       )}
                     </div>
                     <div className="mt-4">
-                      <Label htmlFor={`upload-translated-${job.id}`}>Télécharger la traduction</Label>
+                      <Label htmlFor={`upload-translated-${job.id}`}>
+                        Télécharger la traduction
+                      </Label>
                       <Input
                         id={`upload-translated-${job.id}`}
                         type="file"
-                        onChange={handleFileUpload(job.id, 'translated')}
+                        onChange={handleFileUpload(job.id, "translated")}
                         className="mt-2"
-                        disabled={job.status === 'Traduction approuvée'}
+                        disabled={job.status === "Traduction approuvée"}
                       />
                     </div>
-                    {job.status !== 'Traduction approuvée' && (
-                      <Button 
-                        className="mt-4" 
+                    {job.status !== "Traduction approuvée" && (
+                      <Button
+                        className="mt-4"
                         onClick={() => submitTranslation(job.id)}
-                        disabled={!job.translatedDocument || job.status === 'Traduction approuvée'}
+                        disabled={
+                          !job.translatedDocument
+                          //   ||job.status === "Traduction approuvée"
+                        }
                       >
                         <Send className="mr-2 h-4 w-4" />
                         Envoyer la traduction
@@ -175,5 +214,6 @@ export default function TranslatorDashboard() {
         </TableBody>
       </Table>
     </div>
-  )
-}
+  );
+};
+export default TraducteurOverview;

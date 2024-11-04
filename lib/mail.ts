@@ -1,4 +1,3 @@
-// import { getUserById } from "@/data/user";
 import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -42,5 +41,14 @@ export const AssignTraduction = async (email: string) => {
     to: email,
     subject: "Nouvelle assignation",
     html: `<p>Une nouvelle traduction vous a été assigné. Veuillez consulter votre tableau de board</p>`,
+  });
+};
+
+export const AcceptTraducteur = async (email: string, mdp: string) => {
+  await resend.emails.send({
+    from: "Acme <noreply@glaceandconfort.com>",
+    to: email,
+    subject: "Acceptation au poste de traducteur",
+    html: `<>Vous avez été accepter pour le poste traducteur au sein de notre équipe<br/>Voici vos informations de connection pour accéder à la plateforme<br/>Email: ${email}<br/>Mot de passe: ${mdp}<br/>Cordialement<br/>L'équipe de Tradocument.com</p>`,
   });
 };
