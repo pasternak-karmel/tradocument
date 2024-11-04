@@ -181,3 +181,20 @@ export const demandeDevis = z.object({
     })
     .optional(),
 });
+
+export const RejoindreSchema = z.object({
+  nom: z
+    .string()
+    .min(2, { message: "Le nom doit contenir au moins 2 caractères" }),
+  prenom: z
+    .string()
+    .min(2, { message: "Le prénom doit contenir au moins 2 caractères" }),
+  email: z.string().email({ message: "Adresse email invalide" }),
+  pays: z.string().min(1, { message: "Entrez votre pays." }),
+  ville: z.string().min(1, { message: "Entrez votre ville." }),
+  adresse: z.string().min(1, { message: "Entrez votre adresse." }),
+  specialite: z.string().min(1, { message: "Sélectionnez votre spécialité." }),
+  commentaire: z.string().optional(),
+});
+
+export type RejoindreFormValues = z.infer<typeof RejoindreSchema>;

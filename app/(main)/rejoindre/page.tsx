@@ -1,11 +1,21 @@
 "use client";
 
 import React from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import {
   Select,
   SelectContent,
@@ -13,16 +23,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Users,
-  Briefcase,
-  GraduationCap,
-  Globe,
-  Send,
-  Upload,
-} from "lucide-react";
+import { Users, Briefcase, GraduationCap, Globe, Send } from "lucide-react";
+import { RejoindreFormValues, RejoindreSchema } from "@/schemas";
+import { UserRejoindre } from "@/actions/rejoindre";
+import { toast } from "sonner";
+
+// Validation schema using Zod
 
 export default function RejoignezNous() {
+  const form = useForm<RejoindreFormValues>({
+    resolver: zodResolver(RejoindreSchema),
+  });
+
   const benefits = [
     {
       icon: <Users className="h-6 w-6 text-blue-500" />,
@@ -47,10 +59,26 @@ export default function RejoignezNous() {
     },
   ];
 
-  const specialties = [
-    "Traducteur/Traductrice agréé(e)",
-    "Transport Coursier",
-  ];
+  const specialties = ["Traducteur/Traductrice agréé(e)", "Transport Coursier"];
+
+  async function onSubmit(data: RejoindreFormValues) {
+    const result = await UserRejoindre(data);
+    if (result.error)
+      return toast("Erreur!!!", {
+        description: result.error,
+        action: {
+          label: "Fermer",
+          onClick: () => console.log("Toast fermé"),
+        },
+      });
+    return toast("Succès", {
+      description: "Votre demande a été envoyé avec succès",
+      action: {
+        label: "Fermer",
+        onClick: () => console.log("Toast fermé"),
+      },
+    });
+  }
 
   return (
     <div className="mt-10 min-h-screen bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100 py-12 px-4 sm:px-6 lg:px-8">
@@ -112,76 +140,146 @@ export default function RejoignezNous() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <form className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <Input placeholder="Nom" className="border-2 border-black" required/>
-                  <Input placeholder="Prénom" className="border-2 border-black" required/>
-                  <Input placeholder="Pays" className="border-2 border-black "required/>
-                  <Input placeholder="Ville" className="border-2 border-black" required/>
-                  <Input placeholder="Adresse" className="border-2 border-black" required/>
-                  <Input placeholder="Numéro de téléphone(Whatsapp, Imo, Télégram)" className="border-2 border-black"  required/>
-                </div>
-                <Input type="email" placeholder="E mail:"className="border-2 border-black" required/>
-                <Select>
-                  <SelectTrigger className="w-full border-2 border-black">
-                    <SelectValue placeholder="Choisissez votre spécialité" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {specialties.map((specialty, index) => (
-                      <SelectItem
-                        key={index}
-                        value={specialty.toLowerCase().replace(/ /g, "-")}
+              <Form {...form}>
+                <form
+                  onSubmit={form.handleSubmit(onSubmit)}
+                  className="space-y-4"
+                >
+                  <FormField
+                    control={form.control}
+                    name="nom"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Nom</FormLabel>
+                        <FormControl>
+                          <Input {...field} placeholder="Nom" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="prenom"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Prénom</FormLabel>
+                        <FormControl>
+                          <Input {...field} placeholder="Prénom" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Email</FormLabel>
+                        <FormControl>
+                          <Input {...field} placeholder="Email" type="email" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="pays"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Pays</FormLabel>
+                        <FormControl>
+                          <Input {...field} placeholder="Pays" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="ville"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Ville</FormLabel>
+                        <FormControl>
+                          <Input {...field} placeholder="Ville" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="adresse"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Adresse</FormLabel>
+                        <FormControl>
+                          <Input {...field} placeholder="Adresse" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="specialite"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Spécialité</FormLabel>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
                         >
-                        {specialty}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <label className='flex flex-col'>
-            <span className='text-black font-medium mb-4 '></span>
-            <textarea
-            rows={7}
-              name='message'
-              placeholder='Avez-vous un commentaires ?'
-              className=' py-4 px-6 text-black border-2 border-black rounded-lg  font-medium'
-            />
-            </label>
-                <div className="flex flex-col items-center space-y-2">
-                  <label
-                    htmlFor="certificate"
-                    className="cursor-pointer flex flex-col items-center justify-center w-full p-4 border border-dashed border-blue-400 rounded-lg bg-blue-50 hover:bg-blue-100 transition duration-300 ease-in-out"
+                          <FormControl>
+                            <SelectTrigger className="w-full">
+                              <SelectValue placeholder="Choisissez votre spécialité" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {specialties.map((specialty, index) => (
+                              <SelectItem
+                                key={index}
+                                value={specialty
+                                  .toLowerCase()
+                                  .replace(/ /g, "-")}
+                              >
+                                {specialty}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="commentaire"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Commentaires</FormLabel>
+                        <FormControl>
+                          <textarea
+                            {...field}
+                            rows={4}
+                            placeholder="Avez-vous un commentaire ?"
+                            className="block w-full p-2 border rounded"
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                  <Button
+                    type="submit"
+                    className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-2 rounded-full"
                   >
-                    {" "}
-                    Téléchargez votre certificat
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth="1.5"
-                      stroke="currentColor"
-                      className="h-10 w-10 text-blue-700 mb-2"
-                      
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M3 16.5v4.5h4.5m-4.5-4.5L20.25 3m0 0h-6.75M20.25 3v6.75"
-                      />
-                    </svg>
-                    <span className="text-sm text-blue-700 font-medium">
-                      Cliquez pour télécharger un fichier
-                    </span>
-                    <span className="text-xs text-gray-500 mt-1">
-                      Formats acceptés : PDF, JPG, PNG (max 5MB)
-                    </span>
-                  </label>
-                  <input id="certificate" type="file" className="hidden" />
-                </div>
-              
-                <Button className="w-500 ml-5 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105">
-                  <Send className="mr-2 h-4 w-4" /> Envoyer ma candidature
-                </Button>
-              </form>
+                    <Send className="mr-2 h-4 w-4" /> Envoyer ma candidature
+                  </Button>
+                </form>
+              </Form>
             </CardContent>
           </Card>
         </motion.div>

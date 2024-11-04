@@ -1,61 +1,121 @@
-"use client"
+"use client";
 
-import React, { useState } from 'react'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Badge } from "@/components/ui/badge"
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { Check, X, Eye, Trash2, UserPlus } from 'lucide-react'
+import React, { useState } from "react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Check, X, Eye, Trash2, UserPlus } from "lucide-react";
 
 type TranslatedDocument = {
-  id: string
-  title: string
-  translator: string
-  status: 'En attente' | 'Approuvé' | 'Refusé'
-}
+  id: string;
+  title: string;
+  translator: string;
+  status: "En attente" | "Approuvé" | "Refusé";
+};
 
 type User = {
-  id: string
-  username: string
-  role: 'Traducteur' | 'Admin'
-}
+  id: string;
+  username: string;
+  role: "Traducteur" | "Admin";
+};
 
 export default function AdminAuthorization() {
   const [documents, setDocuments] = useState<TranslatedDocument[]>([
-    { id: '1', title: 'Document 1', translator: 'Jean Dupont', status: 'En attente' },
-    { id: '2', title: 'Document 2', translator: 'Marie Martin', status: 'En attente' },
-    { id: '3', title: 'Document 3', translator: 'Pierre Bernard', status: 'Approuvé' },
-  ])
+    {
+      id: "1",
+      title: "Document 1",
+      translator: "Jean Dupont",
+      status: "En attente",
+    },
+    {
+      id: "2",
+      title: "Document 2",
+      translator: "Marie Martin",
+      status: "En attente",
+    },
+    {
+      id: "3",
+      title: "Document 3",
+      translator: "Pierre Bernard",
+      status: "Approuvé",
+    },
+  ]);
 
   const [users, setUsers] = useState<User[]>([
-    { id: '1', username: 'jean.dupont', role: 'Traducteur' },
-    { id: '2', username: 'marie.martin', role: 'Traducteur' },
-    { id: '3', username: 'admin1', role: 'Admin' },
-  ])
+    { id: "1", username: "jean.dupont", role: "Traducteur" },
+    { id: "2", username: "marie.martin", role: "Traducteur" },
+    { id: "3", username: "admin1", role: "Admin" },
+  ]);
 
-  const [newUser, setNewUser] = useState({ username: '', password: '', role: 'Traducteur' as 'Traducteur' | 'Admin' })
+  const [newUser, setNewUser] = useState({
+    username: "",
+    password: "",
+    role: "Traducteur" as "Traducteur" | "Admin",
+  });
 
-  const handleDocumentAction = (documentId: string, action: 'approve' | 'reject') => {
-    setDocuments(documents.map(doc => 
-      doc.id === documentId ? { ...doc, status: action === 'approve' ? 'Approuvé' : 'Refusé' } : doc
-    ))
-  }
+  const handleDocumentAction = (
+    documentId: string,
+    action: "approve" | "reject"
+  ) => {
+    setDocuments(
+      documents.map((doc) =>
+        doc.id === documentId
+          ? { ...doc, status: action === "approve" ? "Approuvé" : "Refusé" }
+          : doc
+      )
+    );
+  };
 
   const handleAddUser = () => {
     if (newUser.username && newUser.password) {
-      setUsers([...users, { id: Date.now().toString(), username: newUser.username, role: newUser.role }])
-      setNewUser({ username: '', password: '', role: 'Traducteur' })
+      setUsers([
+        ...users,
+        {
+          id: Date.now().toString(),
+          username: newUser.username,
+          role: newUser.role,
+        },
+      ]);
+      setNewUser({ username: "", password: "", role: "Traducteur" });
     }
-  }
+  };
 
   const handleDeleteUser = (userId: string) => {
-    setUsers(users.filter(user => user.id !== userId))
-  }
+    setUsers(users.filter((user) => user.id !== userId));
+  };
 
   return (
     <div className="container mx-auto py-10">
@@ -69,7 +129,9 @@ export default function AdminAuthorization() {
           <Card>
             <CardHeader>
               <CardTitle>Documents traduits en attente d'approbation</CardTitle>
-              <CardDescription>Approuvez ou refusez les documents traduits</CardDescription>
+              <CardDescription>
+                Approuvez ou refusez les documents traduits
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <Table>
@@ -87,7 +149,15 @@ export default function AdminAuthorization() {
                       <TableCell>{doc.title}</TableCell>
                       <TableCell>{doc.translator}</TableCell>
                       <TableCell>
-                        <Badge variant={doc.status === 'Approuvé' ? 'success' : doc.status === 'Refusé' ? 'destructive' : 'secondary'}>
+                        <Badge
+                          variant={
+                            doc.status === "Approuvé"
+                              ? "default"
+                              : doc.status === "Refusé"
+                              ? "destructive"
+                              : "secondary"
+                          }
+                        >
                           {doc.status}
                         </Badge>
                       </TableCell>
@@ -103,17 +173,30 @@ export default function AdminAuthorization() {
                             <DialogContent>
                               <DialogHeader>
                                 <DialogTitle>{doc.title}</DialogTitle>
-                                <DialogDescription>Traduit par {doc.translator}</DialogDescription>
+                                <DialogDescription>
+                                  Traduit par {doc.translator}
+                                </DialogDescription>
                               </DialogHeader>
                               <div className="mt-4">
                                 <p>Contenu du document traduit...</p>
                               </div>
                               <DialogFooter className="mt-4">
-                                <Button onClick={() => handleDocumentAction(doc.id, 'approve')} disabled={doc.status !== 'En attente'}>
+                                <Button
+                                  onClick={() =>
+                                    handleDocumentAction(doc.id, "approve")
+                                  }
+                                  disabled={doc.status !== "En attente"}
+                                >
                                   <Check className="mr-2 h-4 w-4" />
                                   Approuver
                                 </Button>
-                                <Button onClick={() => handleDocumentAction(doc.id, 'reject')} variant="destructive" disabled={doc.status !== 'En attente'}>
+                                <Button
+                                  onClick={() =>
+                                    handleDocumentAction(doc.id, "reject")
+                                  }
+                                  variant="destructive"
+                                  disabled={doc.status !== "En attente"}
+                                >
                                   <X className="mr-2 h-4 w-4" />
                                   Refuser
                                 </Button>
@@ -133,18 +216,24 @@ export default function AdminAuthorization() {
           <Card>
             <CardHeader>
               <CardTitle>Gestion des utilisateurs</CardTitle>
-              <CardDescription>Créez, modifiez ou supprimez des comptes utilisateurs</CardDescription>
+              <CardDescription>
+                Créez, modifiez ou supprimez des comptes utilisateurs
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="mb-6 space-y-4">
-                <h3 className="text-lg font-semibold">Ajouter un nouvel utilisateur</h3>
+                <h3 className="text-lg font-semibold">
+                  Ajouter un nouvel utilisateur
+                </h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>
                     <Label htmlFor="username">Nom d'utilisateur</Label>
                     <Input
                       id="username"
                       value={newUser.username}
-                      onChange={(e) => setNewUser({ ...newUser, username: e.target.value })}
+                      onChange={(e) =>
+                        setNewUser({ ...newUser, username: e.target.value })
+                      }
                     />
                   </div>
                   <div>
@@ -153,14 +242,18 @@ export default function AdminAuthorization() {
                       id="password"
                       type="password"
                       value={newUser.password}
-                      onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
+                      onChange={(e) =>
+                        setNewUser({ ...newUser, password: e.target.value })
+                      }
                     />
                   </div>
                   <div>
                     <Label htmlFor="role">Rôle</Label>
                     <Select
                       value={newUser.role}
-                      onValueChange={(value: 'Traducteur' | 'Admin') => setNewUser({ ...newUser, role: value })}
+                      onValueChange={(value: "Traducteur" | "Admin") =>
+                        setNewUser({ ...newUser, role: value })
+                      }
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Sélectionnez un rôle" />
@@ -191,7 +284,11 @@ export default function AdminAuthorization() {
                       <TableCell>{user.username}</TableCell>
                       <TableCell>{user.role}</TableCell>
                       <TableCell>
-                        <Button onClick={() => handleDeleteUser(user.id)} variant="destructive" size="sm">
+                        <Button
+                          onClick={() => handleDeleteUser(user.id)}
+                          variant="destructive"
+                          size="sm"
+                        >
                           <Trash2 className="mr-2 h-4 w-4" />
                           Supprimer
                         </Button>
@@ -205,5 +302,5 @@ export default function AdminAuthorization() {
         </TabsContent>
       </Tabs>
     </div>
-  )
+  );
 }

@@ -52,7 +52,6 @@ import { traduction, TRADUCTION } from "@/db/schema";
 
 export async function updatedTraduction(
   TraductionId: string,
-  //   courseData: Partial<TRADUCTION>
   traducteurId: string
 ): Promise<ServerActionResponse<TRADUCTION>> {
   try {

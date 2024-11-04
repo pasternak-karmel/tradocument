@@ -208,3 +208,34 @@ export const DemandeDevis = pgTable("demande_devis", {
   status: text("status").default("traitement").notNull(),
   payer: boolean("payer").default(false),
 });
+
+export const rejoindrEquipe = pgTable("rejoindreEquipe", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  userId: text("userId")
+    // .notNull()
+    .references(() => users.id),
+  nom: text("nom").notNull(),
+  prenom: text("prenom").notNull(),
+  email: text("email").notNull().unique(),
+  pays: text("pays").notNull(),
+  ville: text("ville").notNull(),
+  specialite: text("specialite").notNull(),
+  commentaire: text("commentaire"),
+  cv: text("cv"),
+  created_at: timestamp("createdAT", { mode: "date" }).notNull().defaultNow(),
+  approved_at: timestamp("approved_at", { mode: "date" }),
+  status: text("status").default("attente").notNull(),
+  isAccepter: boolean("isAccepter").default(false),
+});
+
+export const contact = pgTable("contact", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  nom: text("nom").notNull(),
+  email: text("email").notNull(),
+  sujet: text("sujet").notNull(),
+  message: text("message").notNull(),
+});
