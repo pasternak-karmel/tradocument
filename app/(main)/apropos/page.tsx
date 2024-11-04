@@ -373,16 +373,6 @@ export default function TradocumentPage() {
           </motion.div>
         </motion.section>
 
-        {/* Button Section */}
-        <motion.div className="text-center" variants={fadeInUp}>
-          <motion.button
-            className="mb-2 bg-[#F49C60] text-white px-6 py-3 rounded-full font-semibold flex items-center justify-center mx-auto hover:bg-blue-700 transition-colors duration-300"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            Demandez un devis gratuit
-          </motion.button>
-        </motion.div>
       </motion.div>
     </div>
   );
