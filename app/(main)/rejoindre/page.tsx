@@ -80,6 +80,14 @@ export default function RejoignezNous() {
     });
   }
 
+  const inputStyle = {
+    borderWidth: "2 px",
+    borderColor: "black",
+    borderRadius: "0.375rem",
+    padding: "0.5rem",
+    width: "100%",
+  };
+ 
   return (
     <div className="mt-10 min-h-screen bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
@@ -152,7 +160,7 @@ export default function RejoignezNous() {
                       <FormItem>
                         <FormLabel>Nom</FormLabel>
                         <FormControl>
-                          <Input {...field} placeholder="Nom" />
+                          <Input {...field} placeholder="Nom" style={inputStyle} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -165,7 +173,7 @@ export default function RejoignezNous() {
                       <FormItem>
                         <FormLabel>Prénom</FormLabel>
                         <FormControl>
-                          <Input {...field} placeholder="Prénom" />
+                          <Input {...field} placeholder="Prénom" style={inputStyle} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -178,7 +186,7 @@ export default function RejoignezNous() {
                       <FormItem>
                         <FormLabel>Email</FormLabel>
                         <FormControl>
-                          <Input {...field} placeholder="Email" type="email" />
+                          <Input {...field} placeholder="Email" type="email" style={inputStyle} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -191,7 +199,7 @@ export default function RejoignezNous() {
                       <FormItem>
                         <FormLabel>Pays</FormLabel>
                         <FormControl>
-                          <Input {...field} placeholder="Pays" />
+                          <Input {...field} placeholder="Pays" style={inputStyle}/>
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -204,7 +212,7 @@ export default function RejoignezNous() {
                       <FormItem>
                         <FormLabel>Ville</FormLabel>
                         <FormControl>
-                          <Input {...field} placeholder="Ville" />
+                          <Input {...field} placeholder="Ville" style={inputStyle}/>
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -217,7 +225,7 @@ export default function RejoignezNous() {
                       <FormItem>
                         <FormLabel>Adresse</FormLabel>
                         <FormControl>
-                          <Input {...field} placeholder="Adresse" />
+                          <Input {...field} placeholder="Adresse" style={inputStyle}/>
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -228,14 +236,14 @@ export default function RejoignezNous() {
                     name="specialite"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Spécialité</FormLabel>
+                        <FormLabel >Spécialité</FormLabel>
                         <Select
                           onValueChange={field.onChange}
                           defaultValue={field.value}
                         >
                           <FormControl>
                             <SelectTrigger className="w-full">
-                              <SelectValue placeholder="Choisissez votre spécialité" />
+                              <SelectValue placeholder="Choisissez votre spécialité" style={inputStyle} />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
@@ -267,6 +275,7 @@ export default function RejoignezNous() {
                             rows={4}
                             placeholder="Avez-vous un commentaire ?"
                             className="block w-full p-2 border rounded"
+                            style={inputStyle}
                           />
                         </FormControl>
                       </FormItem>
