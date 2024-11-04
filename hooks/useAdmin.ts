@@ -19,6 +19,7 @@ export function useAdmin() {
       return data;
     },
   });
+  
   const GetTraductionQuery = useQuery<Users[]>({
     queryKey: ["getTraducteur"],
     queryFn: async () => {

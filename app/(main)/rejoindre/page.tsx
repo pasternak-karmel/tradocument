@@ -71,6 +71,7 @@ export default function RejoignezNous() {
           onClick: () => console.log("Toast fermé"),
         },
       });
+    form.reset();
     return toast("Succès", {
       description: "Votre demande a été envoyé avec succès",
       action: {
