@@ -60,11 +60,11 @@ export default auth((req) => {
 
   const userRole = req.auth?.user?.role;
 
-  if (isAdminRoute && userRole !== "ADMIN") {
+  if (isAdminRoute && userRole !== "admin") {
     return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
   }
 
-  if (isAgentRoute && userRole !== "TRADUCTEUR") {
+  if (isAgentRoute && userRole !== "traducteur") {
     return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
   }
 

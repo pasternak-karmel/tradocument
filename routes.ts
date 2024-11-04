@@ -5,6 +5,7 @@
  */
 export const publicRoutes: string[] = [
   "/",
+  "/karmel",
   "/apropos",
   "/contact",
   "/demandeDevis",
@@ -30,7 +31,7 @@ export const authRoutes: string[] = [
   "/auth/new-password",
 ];
 
-export const adminRoutes: string[] = ["/admin"];
+export const adminRoutes: string[] = ["/autorisation"];
 export const agentRoutes: string[] = ["/traducteur"];
 
 /**
