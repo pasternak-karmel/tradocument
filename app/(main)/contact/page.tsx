@@ -40,9 +40,12 @@ export default function ContactPage() {
               </CardHeader>
               <CardContent>
                 <form onSubmit={handleSubmit} className="space-y-4">
-                  <Input placeholder="Votre nom" required />
-                  <Input type="email" placeholder="Votre email" required />
-                  <Input placeholder="Sujet" required />
+                  <Input placeholder="Nom et prénom" required />
+                  <Input type="email" placeholder="Email" required />
+                  <Input placeholder= "Pays" required/>
+                  <Input placeholder= "Ville" required/>
+                  <Input type="string" placeholder="Numéro de téléphone"/>
+                  <Input placeholder="Objet" required />
                   <Textarea placeholder="Votre message" required className="min-h-[100px]" />
                   <Button type="submit" className="w-full">
                     {isSubmitted ? "Message envoyé !" : "Envoyer"}

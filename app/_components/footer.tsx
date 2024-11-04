@@ -158,7 +158,12 @@ export default function Footer() {
               <span className="text-sm text-gray-300">
                 info@tradocument.com
               </span>
-            </div>
+              </div>
+              <div className="flex items-center space-x-2">
+              <Link href="/contact">Envoyer un message</Link>
+              </div>
+
+            
           </div>
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Notre emplacement</h3>
