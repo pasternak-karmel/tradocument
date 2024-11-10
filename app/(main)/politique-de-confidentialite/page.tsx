@@ -1,51 +1,234 @@
 "use client"
-import React from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
-const TermesEtServices = () => {
+export default function Component() {
   return (
-    <div style={{ padding: '20px' }}>
-      <h1>Termes et Services</h1>
-      <p><strong>Dernière mise à jour : [Date]</strong></p>
-      <p>Bienvenue sur <strong>Tradocument</strong>. En accédant à notre site ou en utilisant nos services, vous acceptez de respecter et d&apos;être lié par les termes et conditions décrits ci-dessous. Nous vous encourageons à lire attentivement ces Termes et Services.</p>
-      
-      <h2>1. Utilisation des Services</h2>
-      <p><strong>Description des Services</strong> : Tradocument propose des services de traduction professionnelle entre les langues arabe et français, destinés aux particuliers, aux entreprises et aux professionnels (notaires, avocats, huissiers, etc.).</p>
-      <p><strong>Téléchargement des documents</strong> : Les utilisateurs peuvent télécharger les documents à traduire directement sur notre plateforme. Seules les pages au format A4 (21x27 cm) sont acceptées à raison d&apos;une page par fichier.</p>
-      <p><strong>Éligibilité</strong> : Nos services sont réservés aux utilisateurs majeurs (18 ans et plus) ayant la capacité légale de s&apos;engager contractuellement.</p>
+    <div className="container mx-auto p-4 md:p-6 lg:p-8 max-w-4xl m-6">
+      <Card className="bg-background">
+        <CardHeader className="text-center">
+          <CardTitle className="text-2xl font-bold">
+          Politique de Confidentialité et de Protection des Données
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="text-sm">
+          Politique de Confidentialité et de Protection des Données
+          </div>
+          <div className="text-sm">
+          Introduction
+          </div>
+          
+          <p className="text-sm text-muted-foreground">
+          Bienvenue sur « tradocument.com ». Nous sommes conscients de l&apos;importance 
+          de la protection de votre vie privée et nous nous engageons à protéger les 
+          informations personnelles que vous partagez avec nous. Cette politique de 
+          confidentialité explique quelles informations sont collectées, comment elles 
+          sont utilisées et protégées, ainsi que vos droits concernant vos données personnelles.
+          </p>
+          <p className="text-sm text-muted-foreground">
+          En utilisant « tradocument.com », vous acceptez les pratiques 
+          décrites dans cette politique de confidentialité. Si vous avez des questions ou 
+          des préoccupations, n&apos;hésitez pas à nous contacter.
+          </p>
 
-      <h2>2. Tarification et Paiement</h2>
-      <p><strong>Tarifs</strong> : Les traductions sont facturées à 45 € par page. Les frais peuvent varier en fonction du type de service ou d&apos;options supplémentaires.</p>
-      <p><strong>Abonnements</strong> : Les professionnels peuvent souscrire à des abonnements mensuels ou annuels pour accéder à des fonctionnalités avancées.</p>
-      <ul>
-        <li><strong>1 mois</strong> : 44,14 €</li>
-        <li><strong>3 mois</strong> : 88,30 €</li>
-        <li><strong>12 mois</strong> : 176,62 €</li>
-      </ul>
-      <p><strong>Mode de paiement</strong> : Les paiements peuvent être effectués par carte bancaire, PayPal, ou autres options proposées sur le site.</p>
+          <div className="space-y-4">
+            <div>
+              <h2 className="text-lg font-semibold mb-2">1. Responsable du Traitement des Données</h2>
+              <p className="text-sm text-muted-foreground">
+              « Tradocument.com » est responsable de la collecte et du
+               traitement de vos données personnelles dans le cadre des services
+                que nous proposons. Vous pouvez nous contacter pour toute question relative
+                 à cette politique de confidentialité 
+                 via l&pos;adresse : [email@tradocument.com](mailto:email@tradocument.com).
+              </p>
+            </div>
 
-      <h2>3. Livraison et Transport</h2>
-      <p><strong>Modes de livraison</strong> : Les clients ont le choix entre plusieurs options de livraison.</p>
-      <ul>
-        <li><strong>Coursier privé</strong> : 0,18 €/km ou forfait de 90 € pour les distances jusqu&apos;à 500 km.</li>
-        <li><strong>Taxi ou bus</strong> : Tarif fixe de 25 €.</li>
-        <li><strong>DHL</strong> : Livraison pour l&apos;envoi de documents originaux et traduits.</li>
-      </ul>
-      
-      <h2>4. Annulation et Remboursement</h2>
-      <p><strong>Annulation</strong> : Une commande peut être annulée avant le début de la traduction. Aucun remboursement n&apos;est possible une fois la traduction commencée.</p>
-      <p><strong>Remboursement</strong> : Les remboursements peuvent être émis en cas d&apos;erreur technique de notre part.</p>
+            <div>
+              <h2 className="text-lg font-semibold mb-2">2. Données Collectées</h2>
+              <p className="text-sm text-muted-foreground mb-2">
+              Nous collectons et traitons différentes catégories de 
+              données pour assurer le bon fonctionnement de nos services et améliorer 
+              l&apos;expérience utilisateur sur notre site.
+              </p>
+              <p className="text-sm text-muted-foreground mb-2">
+              Les types de données que nous collectons incluent :
+              </p>
+              <ul className="space-y-3 text-sm text-muted-foreground pl-4">
+                <li>
+                  <span className="font-medium">- Traduction de documents : </span> en différentes langues, en fonction des besoins de l&apos;utilisateur. 
+                </li>
+                <li>
+                  <span className="font-medium">- Demande de devis: </span> possibilité de 
+                  soumettre une demande de devis détaillée.
+                </li>
+                <li>
+                  <span className="font-medium">- Informations d&apos;identité: </span>  nom, prénom, adresse e-mail, et numéro de téléphone.
+                </li>
+                <li>
+                  <span className="font-medium">- Informations de paiement:  </span> détails de carte 
+                  de crédit ou compte PayPal pour le traitement des transactions.
+                </li>
+                <li>
+                  <span className="font-medium">- Informations sur les projets:  </span> documents et 
+                  informations nécessaires à la traduction, que vous nous confiez pour traitement.
+                </li>
+                <li>
+                  <span className="font-medium">- Données de connexion :  </span> adresse IP, 
+                  type de navigateur, pages consultées, et durée des visites pour des raisons de 
+                  sécurité et d&apos;amélioration du service.
+                </li>
+                <li>
+                  <span className="font-medium">- Cookies :  </span> technologies de suivi 
+                  pour analyser l&apos;usage du site et améliorer votre expérience.
+                </li>
+              </ul>
+            </div>
 
-      <h2>5. Propriété et Confidentialité des Documents</h2>
-      <p><strong>Propriété des documents</strong> : Les documents fournis par les clients restent leur propriété exclusive.</p>
-      <p><strong>Confidentialité</strong> : Tous les documents et informations fournis sont traités de manière strictement confidentielle.</p>
+            <div>
+              <h2 className="text-lg font-semibold mb-2">3. Utilisation des Données</h2>
+              <p className="text-sm text-muted-foreground">
+              Nous utilisons vos données personnelles dans les buts suivants :
+              </p>
+              <ul className="space-y-3 text-sm text-muted-foreground pl-4">
+                <li>
+                  <span className="font-medium">- Prestation de services :  </span> pour gérer et traiter vos 
+                  demandes de traduction et vos commandes. 
+                </li>
+                <li>
+                  <span className="font-medium">- Paiement :  </span> pour traiter les transactions 
+                  effectuées sur notre site via carte bancaire ou PayPal.
+                </li>
+                <li>
+                  <span className="font-medium">- Communication :  </span>  pour vous informer de l&apos;état de 
+                  vos commandes, 
+                  des offres promotionnelles ou des actualités de tradocument.com.
+                </li>
+                <li>
+                  <span className="font-medium">- Amélioration de nos services :   </span> pour analyser 
+                  l&apos;utilisation
+                   de notre site et optimiser son fonctionnement.
+                </li>
+                <li>
+                  <span className="font-medium">- Sécurité :  </span> pour détecter et
+                   prévenir les activités frauduleuses ou malveillantes.
+                </li>               
+              </ul>
+            </div>
 
-      <h2>6. Limitation de Responsabilité</h2>
-      <p><strong>Exactitude des traductions</strong> : Tradocument garantit une traduction de qualité, mais ne peut être tenu responsable pour les interprétations du contenu traduit.</p>
-      <p><strong>Dommages</strong> : Tradocument n&apos;est pas responsable des dommages résultant de l&apos;utilisation de nos services.</p>
+            <div>
+              <h2 className="text-lg font-semibold mb-2">4. Partage de Vos Données</h2>
+              <div className="space-y-3 text-sm text-muted-foreground">
+                <p>
+                Nous nous engageons à ne pas vendre, louer ou divulguer vos données personnelles à des tiers sans
+                 votre consentement, sauf dans les cas suivants :
+                </p>
+                <ul className="space-y-3 text-sm text-muted-foreground pl-4">
+                <li>
+                  <span className="font-medium">- Sous-traitants et partenaires :  </span> nous partageons 
+                  certaines données avec nos prestataires 
+                  pour le traitement des paiements, la traduction ou la livraison.
+                </li>
+                <li>
+                  <span className="font-medium">- Obligations légales:  </span> nous pouvons divulguer vos informations 
+                  si la loi nous y oblige ou en 
+                  réponse à des demandes légitimes des autorités publiques.
+                </li>
+                
+              </ul>
+              </div>
+            </div>
 
-      <p>En utilisant nos services, vous acceptez ces termes et conditions. Pour toute question, contactez-nous via notre formulaire de contact.</p>
+            <div>
+              <h2 className="text-lg font-semibold mb-2">5. Sécurité des Données</h2>
+              <div className="space-y-3 text-sm text-muted-foreground">
+                <p>
+                Nous mettons en œuvre toutes les mesures de sécurité techniques 
+                et organisationnelles pour protéger vos données personnelles contre 
+                l&apos;accès non autorisé, la perte, la destruction ou la divulgation. 
+                Vos informations sont stockées sur des serveurs sécurisés et protégés par des 
+                systèmes de cryptage et des protocoles de sécurité de haut niveau.
+                </p>
+              </div>
+            </div>
+            <div>
+              <h2 className="text-lg font-semibold mb-2">6. Conservation des Données</h2>
+              <div className="space-y-3 text-sm text-muted-foreground">
+                <p>
+                Vos données personnelles sont conservées uniquement le temps 
+                nécessaire pour accomplir les finalités pour lesquelles elles ont été collectées, 
+                et conformément aux exigences légales en vigueur. Une fois vos 
+                données devenues inutiles, nous les supprimons ou les anonymisons.
+                </p>
+              </div>
+            </div>
+            <div>
+              <h2 className="text-lg font-semibold mb-2">7. Vos Droits</h2>
+              <div className="space-y-3 text-sm text-muted-foreground">
+                <p>
+                En vertu de la réglementation sur la protection des données, 
+                vous disposez des droits suivants :
+                </p>
+                <ul className="space-y-3 text-sm text-muted-foreground pl-4">
+                <li>
+                - Droit d&apos;accès : vous pouvez demander à savoir quelles informations nous détenons sur vous. 
+                </li>
+                <li>
+                - Droit de rectification : vous pouvez demander la correction
+                 des informations inexactes ou incomplètes.
+                </li>
+                <li>
+                - Droit de suppression: vous pouvez demander
+                 la suppression de vos données personnelles, dans les limites prévues par la loi.
+                </li>
+                <li>
+                - Droit d&apos;opposition: vous pouvez vous opposer au 
+                traitement de vos données dans certains cas.
+                </li>
+                <li>
+                - Droit à la portabilité : vous pouvez demander 
+                à recevoir vos données dans un format structuré.
+                </li>
+                </ul>
+                <p>Pour exercer ces droits, veuillez nous contacter à l&apos;adresse
+                   [email@tradocument.com](mailto:email@tradocument.com). Nous 
+                   répondrons à vos demandes dans les délais prévus par la législation applicable.</p>
+              </div>
+            </div>
+            <div>
+              <h2 className="text-lg font-semibold mb-2">8. Utilisation des Cookies</h2>
+              <div className="space-y-3 text-sm text-muted-foreground">
+                <p>
+                « Tradocument.com » utilise des cookies pour analyser l&apos;utilisation de
+                 notre site, optimiser votre expérience utilisateur et personnaliser nos
+                  contenus. Vous avez la possibilité de gérer vos préférences en matière
+                   de cookies via les paramètres de votre navigateur.
+                </p>               
+              </div>
+            </div>
+            <div>
+              <h2 className="text-lg font-semibold mb-2">9. Modifications de la Politique de Confidentialité</h2>
+              <div className="space-y-3 text-sm text-muted-foreground">
+                <p>
+                Nous nous réservons le droit de modifier cette politique
+                 de confidentialité pour refléter les changements apportés
+                  à nos pratiques de traitement de données. Toute modification
+                   sera publiée sur cette page, et nous vous encourageons à la consulter régulièrement.
+                </p>
+              </div>
+            </div>
+            <div>
+              <h2 className="text-lg font-semibold mb-2">10. Contact</h2>
+              <div className="space-y-3 text-sm text-muted-foreground">
+                <p>
+                Si vous avez des questions ou des préoccupations concernant
+                 notre politique de confidentialité, vous pouvez nous contacter
+                  à l&apos;adresse [email@tradocument.com](mailto:email@tradocument.com).
+                </p>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
-  );
-};
-
-export default TermesEtServices;
+  )
+}

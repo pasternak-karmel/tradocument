@@ -1,38 +1,112 @@
 "use client"
-import React from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
-const PolitiqueDeConfidentialite = () => {
+export default function Component() {
   return (
-    <div style={{ padding: '20px' }}>
-      <h1>Politique de Confidentialité</h1>
-      <p><strong>Dernière mise à jour : [Date]</strong></p>
-      <p>Chez <strong>Tradocument</strong>, nous respectons la vie privée de nos utilisateurs et nous nous engageons à protéger leurs données personnelles.</p>
+    <div className="container mx-auto p-4 md:p-6 lg:p-8 max-w-4xl m-6">
+      <Card className="bg-background">
+        <CardHeader className="text-center">
+          <CardTitle className="text-2xl font-bold">
+            Politique de Gestion des Cookies
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="text-sm">
+            Politique de Gestion des Cookies
+          </div>
+          
+          <p className="text-sm text-muted-foreground">
+            Cette Politique de Gestion des Cookies s&apos;applique au site tradconnect.com et explique comment 
+            nous utilisons les cookies et autres technologies similaires. En utilisant notre site, vous consentez à 
+            l&apos;utilisation des cookies comme décrit dans cette politique. Nous vous recommandons de lire 
+            attentivement cette politique pour comprendre comment nous gérons vos informations.
+          </p>
 
-      <h2>1. Informations Collectées</h2>
-      <p><strong>Informations personnelles</strong> : Nous collectons des informations comme votre nom, prénom, adresse, email, et numéro de téléphone lors de la demande de services.</p>
-      <p><strong>Documents de traduction</strong> : Les documents confiés sont traités avec le plus haut niveau de confidentialité.</p>
-      <p><strong>Informations de paiement</strong> : Nous collectons uniquement les informations nécessaires pour traiter la transaction, en utilisant des prestataires externes.</p>
+          <div className="space-y-4">
+            <div>
+              <h2 className="text-lg font-semibold mb-2">1. Qu&apos;est-ce qu&apos;un Cookie ?</h2>
+              <p className="text-sm text-muted-foreground">
+                Les cookies sont de petits fichiers texte que les sites web placent sur votre appareil (ordinateur, 
+                tablette, smartphone) lorsque vous les visitez. Ils permettent de stocker des informations concernant 
+                votre navigation et vos préférences pour améliorer votre expérience utilisateur.
+              </p>
+            </div>
 
-      <h2>2. Utilisation des Informations</h2>
-      <p><strong>Exécution des services</strong> : Les informations sont utilisées pour fournir les services demandés et gérer les abonnements.</p>
-      <p><strong>Communication</strong> : Nous utilisons vos coordonnées pour vous informer sur votre commande.</p>
-      <p><strong>Amélioration de nos services</strong> : Les informations anonymisées peuvent être utilisées pour optimiser l&apos;expérience utilisateur.</p>
+            <div>
+              <h2 className="text-lg font-semibold mb-2">2. Types de Cookies Utilisés</h2>
+              <p className="text-sm text-muted-foreground mb-2">
+                Nous utilisons plusieurs types de cookies pour différentes finalités :
+              </p>
+              <ul className="space-y-3 text-sm text-muted-foreground pl-4">
+                <li>
+                  <span className="font-medium">- Cookies Essentiels:</span> Ces cookies sont nécessaires pour le bon fonctionnement de 
+                  « tradconnect.com » et vous permettent d&apos;accéder aux fonctionnalités de base, comme la connexion 
+                  sécurisée aux espaces de devis et de gestion de projets.
+                </li>
+                <li>
+                  <span className="font-medium">- Cookies de Performance:</span> Ces cookies collectent des informations sur la manière dont vous 
+                  utilisez notre site, comme les pages que vous visitez le plus souvent et les éventuels messages 
+                  d&apos;erreur. Ces données nous aident à améliorer le fonctionnement du site et l&apos;expérience utilisateur.
+                </li>
+                <li>
+                  <span className="font-medium">- Cookies Fonctionnels:</span> Ces cookies permettent à notre site de se souvenir de vos choix (comme la 
+                  langue ou la région) pour vous offrir une expérience personnalisée.
+                </li>
+                <li>
+                  <span className="font-medium">- Cookies de Publicité:</span> Ces cookies peuvent être utilisés pour diffuser des publicités plus 
+                  personnalisées ou pour suivre l&apos;efficacité de nos campagnes publicitaires. Ils enregistrent les 
+                  pages que vous avez visitées pour adapter les annonces en conséquence.
+                </li>
+              </ul>
+            </div>
 
-      <h2>3. Partage des Informations</h2>
-      <p><strong>Partenaires</strong> : Les documents peuvent être partagés avec des traducteurs certifiés sous contrat de confidentialité.</p>
-      <p><strong>Obligations légales</strong> : Nous pouvons divulguer des informations si la loi l&apos;exige.</p>
+            <div>
+              <h2 className="text-lg font-semibold mb-2">3. Durée de Conservation des Cookies</h2>
+              <p className="text-sm text-muted-foreground">
+                Les cookies sont conservés pendant une durée qui dépend de leur type. Certains sont supprimés dès 
+                que vous fermez votre navigateur (cookies de session), tandis que d&apos;autres sont conservés plus 
+                longtemps (cookies persistants).
+              </p>
+            </div>
 
-      <h2>4. Sécurité des Données</h2>
-      <p><strong>Mesures de sécurité</strong> : Tradocument utilise le cryptage SSL pour sécuriser les données. Des mesures de protection sont mises en place pour éviter tout accès non autorisé.</p>
-      <p><strong>Conservation des données</strong> : Vos informations sont conservées aussi longtemps que nécessaire.</p>
+            <div>
+              <h2 className="text-lg font-semibold mb-2">4. Gestion et Désactivation des Cookies</h2>
+              <div className="space-y-3 text-sm text-muted-foreground">
+                <p>
+                  Vous avez la possibilité de gérer et de désactiver les cookies en modifiant les paramètres de votre 
+                  navigateur. La plupart des navigateurs vous permettent d&apos;accepter ou de refuser les cookies, de 
+                  supprimer les cookies existants, ou d&apos;être informé lorsque des cookies sont placés sur votre 
+                  appareil.
+                </p>
+                <p>
+                  Pour en savoir plus sur la gestion des cookies, vous pouvez consulter la section d&apos;aide de votre 
+                  navigateur.
+                </p>
+              </div>
+            </div>
 
-      <h2>5. Droits des Utilisateurs</h2>
-      <p><strong>Accès et rectification</strong> : Vous pouvez demander l&apos;accès, la correction ou la suppression de vos informations personnelles.</p>
-      <p><strong>Retrait du consentement</strong> : Vous pouvez retirer votre consentement à tout moment.</p>
-
-      <p>Pour toute question concernant cette politique, veuillez nous contacter.</p>
+            <div>
+              <h2 className="text-lg font-semibold mb-2">5. Consentement et Modification de la Politique</h2>
+              <div className="space-y-3 text-sm text-muted-foreground">
+                <p>
+                En continuant à utiliser « tradocument.com », vous consentez à notre utilisation 
+                des cookies comme décrite dans cette politique. Nous pouvons occasionnellement 
+                mettre à jour notre politique de gestion des cookies. Nous vous recommandons 
+                de consulter régulièrement cette page pour rester informé des changements.
+                </p>
+              </div>
+            </div>
+            <div>
+              <h2 className="text-lg font-semibold mb-2">6. Contact</h2>
+              <div className="space-y-3 text-sm text-muted-foreground">
+                <p>
+                Si vous avez des questions ou des préoccupations concernant notre politique de gestion des cookies, vous pouvez nous contacter par mail à l&apos;adresse suivante : [contact@tradocument.com]
+                </p>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
-  );
-};
-
-export default PolitiqueDeConfidentialite;
+  )
+}
