@@ -120,7 +120,7 @@ export default function Footer() {
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Tradocument</h3>
             <p className="text-sm text-gray-400">
-              Simplifier les traductions de documents pour les entreprises et les particuliers du monde entiers
+              Simplifier les traductions de documents pour les entreprises et les particuliers du monde entier.
             </p>
             <div className="flex space-x-4">
               <SocialIcon href="#" icon={Facebook} label="Facebook" />
@@ -142,8 +142,8 @@ export default function Footer() {
             </div>
           </div>
           <div className="space-y-4">
-          <Link href="/contact">
-          <h3 className="text-lg font-semibold">Contactez-nous</h3>
+            <Link href="/contact">
+              <h3 className="text-lg font-semibold">Contactez-nous</h3>
             </Link>
             <div className="flex items-center space-x-2">
               <MapPin className="h-5 w-5 text-gray-400" />
@@ -157,11 +157,8 @@ export default function Footer() {
             </div>
             <div className="flex items-center space-x-2">
               <Mail className="h-5 w-5 text-gray-400" />
-              <span className="text-sm text-gray-300">
-                info@tradocument.com
-              </span>
-              </div>
- 
+              <span className="text-sm text-gray-300">info@tradocument.com</span>
+            </div>
           </div>
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Notre emplacement</h3>
@@ -173,41 +170,43 @@ export default function Footer() {
             </div>
           </div>
         </div>
-        <div className="mt-8 pt-8 border-t border-gray-800">
-          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <p className="text-sm text-center md:text-left text-gray-400">
-              © 2024 Tradocument. Tout droit réservés.
-            </p>
-            <nav className="flex space-x-4">
-              <Link
-                className="text-sm text-gray-400 hover:text-white transition-colors"
-                href="/legalTerms"
-              >
-                Mentions Légales
-              </Link>
-              <Link
-                className="text-sm text-gray-400 hover:text-white transition-colors"
-                href="/termes-et-services"
-              >
-                Conditions générales d'utilisation
-              </Link>
+        <div className="mt-8 pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center md:items-start">
+          <p className="text-sm text-center md:text-left text-gray-400 mb-4 md:mb-0">
+            © 2024 Tradocument. Tout droit réservés.
+          </p>
+          <nav className="flex flex-col space-y-2 text-xs text-gray-500 md:text-right md:space-y-1">
 
-              <Link
-                className="text-sm text-gray-400 hover:text-white transition-colors"
-                href="/politique-de-cookies"
-              >
-                Politique de gestion des cookies
-              </Link>
-
-              <Link
-                className="text-sm text-gray-400 hover:text-white transition-colors"
-                href="/politique-de-confidentialite"
-              >
-                Politique de Confidentialité et de Protection des données
-              </Link>
-              
-            </nav>
-          </div>
+            <Link
+              href="/apropos"
+              className="hover:text-gray-300 text-xl transition-colors"
+            >
+              A propos
+            </Link>
+            <Link
+              href="/legalTerms"
+              className="hover:text-gray-300 transition-colors"
+            >
+              Mentions Légales
+            </Link>
+            <Link
+              href="/termes-et-services"
+              className="hover:text-gray-300 transition-colors"
+            >
+              Conditions générales d'utilisation
+            </Link>
+            <Link
+              href="/politique-de-cookies"
+              className="hover:text-gray-300 transition-colors"
+            >
+              Politique de gestion des cookies
+            </Link>
+            <Link
+              href="/politique-de-confidentialite"
+              className="hover:text-gray-300 transition-colors"
+            >
+              Politique de Confidentialité et de Protection des données
+            </Link>
+          </nav>
         </div>
         <div className="mt-8">
           <h3 className="text-lg font-semibold mb-4">Restez à jour</h3>
