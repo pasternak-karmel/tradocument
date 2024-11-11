@@ -174,7 +174,7 @@ export default function Footer() {
           <p className="text-sm text-center md:text-left text-gray-400 mb-4 md:mb-0">
             © 2024 Tradocument. Tout droit réservés.
           </p>
-          <nav className="flex flex-col space-y-2 text-xs text-gray-500 md:text-right md:space-y-1">
+          <nav className="flex flex-col space-y-2 text-xs text-gray-500 mr-32 md:space-y-1">
 
             <Link
               href="/apropos"
