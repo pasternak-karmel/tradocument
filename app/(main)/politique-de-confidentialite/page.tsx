@@ -18,26 +18,7 @@ export default function Component() {
           <div className="text-sm">
           Introduction
           </div>
-          <Accordion type="single" collapsible className="w-full">
-            <AccordionItem value="item-1">
-              <AccordionTrigger>1. Présentation du site</AccordionTrigger>
-              <AccordionContent>
-                <p className="text-sm text-muted-foreground mb-2">
-                  Le site web www.Tradocument.com est édité par [Nom de la société ou de l&apos;entrepreneur individuel], situé à [Adresse complète de l&apos;entreprise].
-                </p>
-                <ul className="list-disc pl-5 space-y-1 text-sm">
-                  <li>Nom de la société : [Nom de la société]</li>
-                  <li>Adresse du siège social : [Adresse complète]</li>
-                  <li>Numéro de téléphone : [Numéro de téléphone]</li>
-                  <li>Adresse email : contact@tradocument.com</li>
-                  <li>Forme juridique : [Forme juridique de la société, ex. SARL, SASU, etc.]</li>
-                  <li>SIRET : [Numéro de SIRET]</li>
-                  <li>Numéro d&apos;inscription au RCS : [Numéro d&apos;inscription au Registre du Commerce et des Sociétés]</li>
-                </ul>
-                <p className="text-sm mt-2">Le directeur de la publication est [Nom du directeur de la publication].</p>
-              </AccordionContent>
-            </AccordionItem>
-            </Accordion>
+          
           
           <p className="text-sm text-muted-foreground">
           Bienvenue sur « tradocument.com ». Nous sommes conscients de l&apos;importance 
