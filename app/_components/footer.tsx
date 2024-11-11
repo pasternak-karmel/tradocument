@@ -181,22 +181,31 @@ export default function Footer() {
             <nav className="flex space-x-4">
               <Link
                 className="text-sm text-gray-400 hover:text-white transition-colors"
-                href="/termes-et-services"
+                href="/legalTerms"
               >
-                Termes et services
+                Mentions Légales
               </Link>
               <Link
                 className="text-sm text-gray-400 hover:text-white transition-colors"
-                href="/politique-de-confidentialite"
+                href="/termes-et-services"
               >
-                Politique de confidentialité
+                Conditions générales d'utilisation
               </Link>
+
               <Link
                 className="text-sm text-gray-400 hover:text-white transition-colors"
                 href="/politique-de-cookies"
               >
-                Politique de Cookie
+                Politique de gestion des cookies
               </Link>
+
+              <Link
+                className="text-sm text-gray-400 hover:text-white transition-colors"
+                href="/politique-de-confidentialite"
+              >
+                Politique de Confidentialité et de Protection des données
+              </Link>
+              
             </nav>
           </div>
         </div>
