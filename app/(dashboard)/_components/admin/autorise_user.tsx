@@ -50,8 +50,11 @@ export default function AuthorizeUser() {
 
   const approveMutation = useMutation({
     mutationFn: async (userId: string) => {
-      const response = await fetch(`/api/pending-users/${userId}/approve`, {
+      const response = await fetch(`/api/pending-users`, {
         method: "POST",
+        body: JSON.stringify({
+          id: userId,
+        }),
       });
       if (!response.ok) {
         throw new Error("Failed to approve user");
@@ -73,8 +76,11 @@ export default function AuthorizeUser() {
 
   const deleteMutation = useMutation({
     mutationFn: async (userId: string) => {
-      const response = await fetch(`/api/pending-users/${userId}`, {
+      const response = await fetch(`/api/pending-users`, {
         method: "DELETE",
+        body: JSON.stringify({
+          id: userId,
+        }),
       });
       if (!response.ok) {
         throw new Error("Failed to delete user");

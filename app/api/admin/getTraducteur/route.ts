@@ -5,8 +5,10 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
-    const traducteur = await db.select().from(users);
-    // .where(eq(users.role, "traducteur"));
+    const traducteur = await db
+      .select()
+      .from(users)
+      .where(eq(users.role, "traducteur"));
 
     return NextResponse.json(traducteur);
   } catch (error) {

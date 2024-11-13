@@ -3,7 +3,6 @@ import { auth } from "@/auth";
 import { db } from "@/db/drizzle";
 import { rejoindrEquipe, users } from "@/db/schema";
 import { eq } from "drizzle-orm";
-// import { hash } from "bcrypt";
 import bcrypt from "bcryptjs";
 import { AcceptTraducteur } from "@/lib/mail";
 
