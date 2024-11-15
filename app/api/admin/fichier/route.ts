@@ -1,7 +1,7 @@
-import { NextResponse } from "next/server";
 import { db } from "@/db/drizzle";
-import { eq } from "drizzle-orm";
 import { traduction } from "@/db/schema";
+import { eq } from "drizzle-orm";
+import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
@@ -20,6 +20,29 @@ export async function GET() {
     console.error("Error fetching courses:", error);
     return NextResponse.json(
       { error: "Failed to fetch courses" },
+      { status: 500 }
+    );
+  }
+}
+
+export async function PATCH(
+  request: Request
+  // { params }: { params: { id: string } }
+) {
+  // const { id } = params;
+  const { status, documentId } = await request.json();
+
+  try {
+    await db
+      .update(traduction)
+      .set({ status })
+      .where(eq(traduction.id, documentId));
+
+    return NextResponse.json({ message: "Translation updated successfully" });
+  } catch (error) {
+    console.error("Error updating translation:", error);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
       { status: 500 }
     );
   }
