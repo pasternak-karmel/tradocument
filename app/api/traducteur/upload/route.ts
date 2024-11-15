@@ -2,12 +2,12 @@ import { auth } from "@/auth";
 import { db } from "@/db/drizzle";
 import { traduction } from "@/db/schema";
 import { eq } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   const values = await req.json();
 
-  console.log("Server received:", values);
 
   const { id, url } = values;
 
@@ -20,7 +20,6 @@ export async function POST(req: Request) {
 
   const session = await auth();
 
-  console.log("Full Session:", session);
 
   if (
     !session ||
@@ -38,7 +37,7 @@ export async function POST(req: Request) {
       .where(eq(traduction.id, id))
       .limit(1);
 
-    if (traductionExist.traducteur !== session.user.id) {
+    if (traductionExist.traducteur !== session?.user.id) {
       return NextResponse.json(
         { error: "Ce fichier ne vous a pas été assigné" },
         { status: 403 }
@@ -56,9 +55,10 @@ export async function POST(req: Request) {
 
     await db
       .update(traduction)
-      .set({ fichierTraduis: url })
+      .set({ fichierTraduis: url, status: "confirmation" })
       .where(eq(traduction.id, id));
 
+    revalidatePath("/dashboard");
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Error uploading file:", error);

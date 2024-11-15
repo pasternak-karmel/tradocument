@@ -64,7 +64,6 @@ export function UploadFileDialog({ id }: DialogProps) {
         setUrl(res.url);
       }
 
-
       const result = await fetch(`/api/traducteur/upload`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -79,8 +78,10 @@ export function UploadFileDialog({ id }: DialogProps) {
       if (response.error) {
         throw new Error(response.error);
       }
-
+      setFileStates([]);
+      // setUrl("");
       toast.success("Fichier uploadé avec succès");
+
       setOpen(false);
     } catch (error) {
       toast.error("Une erreur s'est produite", {

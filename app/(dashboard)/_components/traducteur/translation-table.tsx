@@ -2,14 +2,6 @@
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import {
   Table,
@@ -31,7 +23,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
+import { ArrowUpDown } from "lucide-react";
 import { useState } from "react";
 import { Traduction } from "../../data/schema";
 import { UploadFileDialog } from "./dialog-provider";
@@ -98,18 +90,18 @@ const columns: ColumnDef<Traduction>[] = [
     header: "Email",
     cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
   },
-  {
-    accessorKey: "montant",
-    header: () => <div className="text-right">Montant</div>,
-    cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("montant"));
-      const formatted = new Intl.NumberFormat("fr-FR", {
-        style: "currency",
-        currency: "EUR",
-      }).format(amount);
-      return <div className="text-right font-medium">{formatted}</div>;
-    },
-  },
+  // {
+  //   accessorKey: "montant",
+  //   header: () => <div className="text-right">Montant</div>,
+  //   cell: ({ row }) => {
+  //     const amount = parseFloat(row.getValue("montant"));
+  //     const formatted = new Intl.NumberFormat("fr-FR", {
+  //       style: "currency",
+  //       currency: "EUR",
+  //     }).format(amount);
+  //     return <div className="text-right font-medium">{formatted}</div>;
+  //   },
+  // },
   {
     accessorKey: "traduction_from",
     header: "From",
@@ -121,46 +113,34 @@ const columns: ColumnDef<Traduction>[] = [
     cell: ({ row }) => <div>{row.getValue("traduction_to")}</div>,
   },
   {
+    accessorKey: "fichier",
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Fichier
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
+    ),
+    cell: ({ row }) => (
+      <a target="_blank" href={row.original.fichier} download>
+        fichier d'origine
+      </a>
+    ),
+  },
+  {
     accessorKey: "fichierTraduis",
     header: "Translated File",
     cell: ({ row }) =>
       row.original.fichierTraduis ? (
-        <p>{row.original.fichierTraduis}</p>
+        <a target="_blank" href={row.original.fichierTraduis} download>
+          fichier traduit
+        </a>
       ) : (
         <UploadFileDialog id={row.original.id!} />
       ),
   },
-  //id actions
-  // {
-  //   id: "actions",
-  //   enableHiding: false,
-  //   cell: ({ row }) => {
-  //     const translation = row.original;
-
-  //     return (
-  //       <DropdownMenu>
-  //         <DropdownMenuTrigger asChild>
-  //           <Button variant="ghost" className="h-8 w-8 p-0">
-  //             <span className="sr-only">Open menu</span>
-  //             <MoreHorizontal className="h-4 w-4" />
-  //           </Button>
-  //         </DropdownMenuTrigger>
-  //         <DropdownMenuContent align="end">
-  //           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-  //           <DropdownMenuItem
-  //             onClick={() => navigator.clipboard.writeText(translation.id!)}
-  //           >
-  //             Copy translation ID
-  //           </DropdownMenuItem>
-  //           <DropdownMenuSeparator />
-  //           <DropdownMenuItem>
-  //             <UploadFileDialog id={translation.id!} />
-  //           </DropdownMenuItem>
-  //         </DropdownMenuContent>
-  //       </DropdownMenu>
-  //     );
-  //   },
-  // },
 ];
 
 export default function TranslationDataTable({ data }: { data: Traduction[] }) {
