@@ -5,7 +5,11 @@ import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
-  const { id, url } = await req.json();
+  const values = await req.json();
+
+  console.log("Server received:", values);
+
+  const { id, url } = values;
 
   if (!id || !url) {
     return NextResponse.json(
@@ -15,9 +19,18 @@ export async function POST(req: Request) {
   }
 
   const session = await auth();
-  if (!session || session.user.role !== "traducteur") {
+
+  console.log("Full Session:", session);
+
+  if (
+    !session ||
+    !session.user ||
+    session.user.role.trim().toLowerCase() !== "traducteur"
+  ) {
+    console.log("Unauthorized Access: Role is not traducteur");
     return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
   }
+
   try {
     const [traductionExist] = await db
       .select()
@@ -26,7 +39,19 @@ export async function POST(req: Request) {
       .limit(1);
 
     if (traductionExist.traducteur !== session.user.id) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+      return NextResponse.json(
+        { error: "Ce fichier ne vous a pas été assigné" },
+        { status: 403 }
+      );
+    }
+
+    if (traductionExist.fichierTraduis !== null) {
+      return NextResponse.json(
+        {
+          error: "fichier déjà uploader pas vous ou quelqu'un d'autre",
+        },
+        { status: 400 }
+      );
     }
 
     await db

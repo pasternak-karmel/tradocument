@@ -64,6 +64,7 @@ export function UploadFileDialog({ id }: DialogProps) {
         setUrl(res.url);
       }
 
+
       const result = await fetch(`/api/traducteur/upload`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -97,8 +98,10 @@ export function UploadFileDialog({ id }: DialogProps) {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="ghost" className="h-8 w-8 p-0">
-          <FileUp className="h-4 w-4" />
-          <span className="sr-only">Upload translated file</span>
+          <div>
+            <FileUp className="h-4 w-4" />
+            <p className="sr-only">Upload translated file</p>
+          </div>
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
