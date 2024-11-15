@@ -26,8 +26,12 @@ export const GetTraduction = async () => {
 
 export const GetAdminTraduction = async () => {
   const session = await auth();
-  if (!session || session?.user.role !== "admin") {
-    return { error: "You're not allowed to be here!" };
+  if (
+    !session
+    // || session?.user.role !== "admin"
+    // || session?.user.role !== "traducteur"
+  ) {
+    return { error: "Vous n'êtes pas autorisé a être ici" };
   }
 
   const articleAttente = await db.select().from(traduction);
