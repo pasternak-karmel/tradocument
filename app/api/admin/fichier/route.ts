@@ -1,5 +1,6 @@
 import { db } from "@/db/drizzle";
-import { traduction } from "@/db/schema";
+import { traduction, users } from "@/db/schema";
+import { AcceptTraduction, rejectedTraduction } from "@/lib/mail";
 import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 
@@ -33,12 +34,33 @@ export async function PATCH(
   const { status, documentId } = await request.json();
 
   try {
-    await db
+    const [traductionUpdated] = await db
       .update(traduction)
       .set({ status })
-      .where(eq(traduction.id, documentId));
+      .where(eq(traduction.id, documentId))
+      .returning();
 
-    return NextResponse.json({ message: "Translation updated successfully" });
+    if (status === "completed") {
+      await AcceptTraduction(traductionUpdated.email, traductionUpdated.nom);
+    }
+
+    if (status === "rejected") {
+      const [traducteurEmail] = await db
+        .select()
+        .from(users)
+        .where(eq(users.id, traductionUpdated.traducteur!));
+
+      await rejectedTraduction(traducteurEmail.email!, traductionUpdated.nom);
+
+      // todo: delete file in edge storage
+      const [] = await db
+        .update(traduction)
+        .set({ status: "rejected", fichierTraduis: null })
+        .where(eq(traduction.id, documentId))
+        .returning();
+    }
+
+    return NextResponse.json({ message: "Traduction mise à jour avec succès" });
   } catch (error) {
     console.error("Error updating translation:", error);
     return NextResponse.json(
