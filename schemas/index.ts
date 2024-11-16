@@ -180,6 +180,7 @@ export const demandeDevis = z.object({
       shippingAddress: z.string().optional(),
     })
     .optional(),
+    documentTypes: z.array(z.string()).optional(),
 });
 
 export const RejoindreSchema = z.object({
