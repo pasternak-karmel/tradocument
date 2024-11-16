@@ -54,11 +54,11 @@ const data = {
       url: "/devis",
       icon: BookOpen,
     },
-    {
-      title: "Consultation",
-      url: "/consultation",
-      icon: Bot,
-    },
+    // {
+    //   title: "Consultation",
+    //   url: "/consultation",
+    //   icon: Bot,
+    // },
     {
       title: "Procuration",
       url: "/procuration",
