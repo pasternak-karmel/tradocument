@@ -3,12 +3,15 @@ import AuthorizeDocument from "../../_components/admin/autorise_document";
 import AuthorizeUser from "../../_components/admin/autorise_user";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import AddTraduction from "../../_components/traduction";
 export default function AdminAuthorization() {
   return (
     <div className="container mx-auto py-10">
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold mb-6">Autorisation</h1>
-        <Button>Ajouter un traducteur</Button>
+        <h1 className="text-3xl font-bold mb-6">Page d'autorisation admin</h1>
+        <AddTraduction role="traducteur">
+          <Button>Ajouter un traducteur</Button>
+        </AddTraduction>
       </div>
       <Tabs defaultValue="documents">
         <TabsList className="mb-4">
