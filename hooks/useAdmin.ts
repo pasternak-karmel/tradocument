@@ -5,6 +5,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { GetAdminTraduction } from "@/actions/getTraductions";
 import { AssignTraduction } from "@/lib/mail";
+import { showError } from "@/function/notification-toast";
 
 export function useAdmin() {
   const queryClient = useQueryClient();
@@ -40,7 +41,7 @@ export function useAdmin() {
       userId: string;
     }) => {
       const result = await updatedTraduction(traductionId, userId);
-      if (result.error) throw new Error(result.error);
+      if (result.error) return showError(result.error)
       return result.data;
     },
     onMutate: async ({ traductionId, userId }) => {
@@ -54,8 +55,8 @@ export function useAdmin() {
       if (previousData) {
         queryClient.setQueryData<Users[]>(["getTableau"], (old) => {
           if (!old) return [];
-          return old.map((semester) => {
-            return semester;
+          return old.map((traduction) => {
+            return traduction;
           });
         });
       }
@@ -69,8 +70,8 @@ export function useAdmin() {
       toast.error(error.message);
     },
     onSuccess: async (userId) => {
-      // await AssignTraduction(userId?.email!);
-      toast.success("Fichier assigné");
+      await AssignTraduction(userId?.email!);
+      toast.success("Fichier assigné avec succès");
       queryClient.invalidateQueries({ queryKey: ["getTableau"] });
     },
   });

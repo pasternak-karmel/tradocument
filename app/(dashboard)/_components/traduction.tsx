@@ -4,19 +4,20 @@ import {
   SheetClose,
   SheetContent,
   SheetDescription,
-  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { AddTraductionForm } from "./traduction-form";
+import { AddTraducteurForm } from "./addTraducteur";
 
 interface TraductionProps {
   children?: React.ReactNode;
   asChild?: boolean;
+  role?: string;
 }
 
-export const AddTraduction = ({ children, asChild }: TraductionProps) => {
+export const AddTraduction = ({ children, role }: TraductionProps) => {
   return (
     <Sheet>
       <SheetTrigger asChild>{children}</SheetTrigger>
@@ -25,7 +26,8 @@ export const AddTraduction = ({ children, asChild }: TraductionProps) => {
           <SheetTitle>Nouvelle Traduction</SheetTitle>
           <SheetDescription>Entrez les infos de la traduction</SheetDescription>
         </SheetHeader>
-        <AddTraductionForm />
+        {role === "traducteur" ? <AddTraducteurForm /> : <AddTraductionForm />}
+        {/* <AddTraductionForm /> */}
       </SheetContent>
     </Sheet>
   );

@@ -1,3 +1,5 @@
+"use server";
+
 import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -50,5 +52,23 @@ export const AcceptTraducteur = async (email: string, mdp: string) => {
     to: email,
     subject: "Acceptation au poste de traducteur",
     html: `<>Vous avez été accepter pour le poste traducteur au sein de notre équipe<br/>Voici vos informations de connection pour accéder à la plateforme<br/>Email: ${email}<br/>Mot de passe: ${mdp}<br/>Cordialement<br/>L'équipe de Tradocument.com</p>`,
+  });
+};
+
+export const AcceptTraduction = async (email: string, nom: string) => {
+  await resend.emails.send({
+    from: "Acme <noreply@glaceandconfort.com>",
+    to: email,
+    subject: "Traduction de document terminée",
+    html: `<>Votre traduction "${nom}" a été terminée<br/>Veuillez vous connecter pour la télécharger<br/>Cordialement<br/>L'équipe de Tradocument.com</p>`,
+  });
+};
+
+export const rejectedTraduction = async (email: string, nom: string) => {
+  await resend.emails.send({
+    from: "Acme <noreply@glaceandconfort.com>",
+    to: email,
+    subject: "Traduction rejetée",
+    html: `<>Votre traduction "${nom}" a été rejetée<br/>Veuillez la reprendre ou la soumettre à nouveau<br/>Cordialement<br/>L'équipe de Tradocument.com</p>`,
   });
 };

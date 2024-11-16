@@ -1,3 +1,4 @@
+
 "use client";
 import { DataTable } from "./data-table";
 import { Columns } from "./columns";
@@ -26,4 +27,4 @@ const AdminOverview = () => {
 export default AdminOverview;
 
 //admin can do assign traduction to other user (done)
-//admin can authorize rejoignez nous
+//admin can authorize rejoignez nous (done)

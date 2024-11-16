@@ -59,6 +59,7 @@ export async function updatedTraduction(
       .update(traduction)
       .set({
         traducteur: traducteurId,
+        status: "processing",
       })
       .where(eq(traduction.id, TraductionId))
       .returning();
@@ -67,7 +68,7 @@ export async function updatedTraduction(
     return { data: updatedTraduction };
   } catch (error) {
     console.error("Error updating course:", error);
-    return { error: "Failed to update course" };
+    return { error: "Failed to update traduction" };
   }
 }
 

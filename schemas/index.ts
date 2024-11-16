@@ -198,3 +198,12 @@ export const RejoindreSchema = z.object({
 });
 
 export type RejoindreFormValues = z.infer<typeof RejoindreSchema>;
+
+export const AddTraducteur = z.object({
+  nom: z.string().min(3, "3 caractères minimun réquis"),
+  email: z.string().email({ message: "Adresse email invalide" }),
+  role: z.string({
+    message: "Veuillez sélectionnez un rôle",
+  }),
+  password: z.string().optional(),
+});
