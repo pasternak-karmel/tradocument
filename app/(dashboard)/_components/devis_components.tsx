@@ -79,9 +79,9 @@ const DevisForm = () => {
   const [showDeliveryAddress, setShowDeliveryAddress] = useState(false);
   const [loading, setLoading] = useState(false);
   const [fileStates, setFileStates] = useState<FileState[]>([]);
-  const [urls, setUrls] = useState<
-    { url: string; thumbnailUrl: string | null }[]
-  >([]);
+  const [, setUrls] = useState<{ url: string; thumbnailUrl: string | null }[]>(
+    []
+  );
   const [montant, setMontant] = useState<number | null>(null);
   const [distance, setDistance] = useState<number | null>(null);
   const [totalAmount, setTotalAmount] = useState<number | null>(null);
@@ -184,9 +184,8 @@ const DevisForm = () => {
           }
         }
 
-        values.url = validImageUrls.map((urlObj) => urlObj.url);
+        form.setValue("url", validImageUrls.map((urlObj) => urlObj.url));
 
-        console.log(values.url)
 
         if (showDeliveryAddress && values.deliveryAddress) {
           calculatedDistance = await calculateDistance({
@@ -213,7 +212,8 @@ const DevisForm = () => {
   }
 
   const validate = async (values: z.infer<typeof demandeDevis>) => {
-    if (!montant || montant === 0) return showError("Montant non calculé");
+    const formValues = form.getValues();
+
 
     if (showDeliveryAddress && !distance)
       return showError("Distance non calculée");
@@ -224,7 +224,7 @@ const DevisForm = () => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          ...values,
+          ...formValues,
           montant: showDeliveryAddress ? totalAmount : montant,
           distance: showDeliveryAddress ? distance : null,
         }),
@@ -404,6 +404,7 @@ const DevisForm = () => {
                           <PopoverTrigger asChild>
                             <FormControl>
                               <Button
+                                disabled={montant !== null || loading}
                                 style={{ borderWidth: 1, borderColor: "black" }}
                                 variant="outline"
                                 role="combobox"

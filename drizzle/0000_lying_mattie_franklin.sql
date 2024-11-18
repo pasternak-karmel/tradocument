@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS "demande_devis" (
 	"langue_traduit" text NOT NULL,
 	"page" text NOT NULL,
 	"information_supplementaire" text,
-	"fichier" text NOT NULL,
+	"fichier" text[] DEFAULT '{}'::text[] NOT NULL,
 	"fichier_traduis" text,
 	"traducteur" text,
 	"adresse_depart" text,
@@ -19,10 +19,11 @@ CREATE TABLE IF NOT EXISTS "demande_devis" (
 	"montant" integer NOT NULL,
 	"createdAT" timestamp DEFAULT now() NOT NULL,
 	"deliveredAT" timestamp,
-	"status" text DEFAULT 'traitement' NOT NULL,
+	"status" text DEFAULT 'pending' NOT NULL,
 	"payer" boolean DEFAULT false,
 	CONSTRAINT "demande_devis_fichier_unique" UNIQUE("fichier"),
-	CONSTRAINT "demande_devis_fichier_traduis_unique" UNIQUE("fichier_traduis")
+	CONSTRAINT "demande_devis_fichier_traduis_unique" UNIQUE("fichier_traduis"),
+	CONSTRAINT "demande_devis_traducteur_unique" UNIQUE("traducteur")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "account" (
@@ -53,11 +54,37 @@ CREATE TABLE IF NOT EXISTS "authenticator" (
 	CONSTRAINT "authenticator_credentialID_unique" UNIQUE("credentialID")
 );
 --> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "contact" (
+	"id" text PRIMARY KEY NOT NULL,
+	"nom" text NOT NULL,
+	"email" text NOT NULL,
+	"sujet" text NOT NULL,
+	"message" text NOT NULL
+);
+--> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "password_reset_tokens" (
 	"id" text PRIMARY KEY DEFAULT 'cuid()' NOT NULL,
 	"email" text NOT NULL,
 	"token" text NOT NULL,
 	"expires" timestamp NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "rejoindreEquipe" (
+	"id" text PRIMARY KEY NOT NULL,
+	"userId" text,
+	"nom" text NOT NULL,
+	"prenom" text NOT NULL,
+	"email" text NOT NULL,
+	"pays" text NOT NULL,
+	"ville" text NOT NULL,
+	"specialite" text NOT NULL,
+	"commentaire" text,
+	"cv" text,
+	"createdAT" timestamp DEFAULT now() NOT NULL,
+	"approved_at" timestamp,
+	"status" text DEFAULT 'attente' NOT NULL,
+	"isAccepter" boolean DEFAULT false,
+	CONSTRAINT "rejoindreEquipe_email_unique" UNIQUE("email")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "session" (
@@ -142,6 +169,12 @@ END $$;
 --> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "authenticator" ADD CONSTRAINT "authenticator_userId_user_id_fk" FOREIGN KEY ("userId") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "rejoindreEquipe" ADD CONSTRAINT "rejoindreEquipe_userId_user_id_fk" FOREIGN KEY ("userId") REFERENCES "public"."user"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

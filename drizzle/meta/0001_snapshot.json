@@ -1,6 +1,6 @@
 {
-  "id": "ec163288-6e03-43df-9892-d62d16f5054a",
-  "prevId": "08c20bab-599a-4549-9c78-43dd8c324a4f",
+  "id": "9db960aa-f89c-4553-bd31-e7b2925c1e6b",
+  "prevId": "b8f750e1-5a09-49bf-8e90-8d411a89a890",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -82,9 +82,9 @@
         },
         "fichier": {
           "name": "fichier",
-          "type": "text",
+          "type": "text[]",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "fichier_traduis": {
           "name": "fichier_traduis",
@@ -134,7 +134,7 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true,
-          "default": "'traitement'"
+          "default": "'pending'"
         },
         "payer": {
           "name": "payer",
@@ -175,18 +175,18 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "demande_devis_fichier_unique": {
-          "name": "demande_devis_fichier_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "fichier"
-          ]
-        },
         "demande_devis_fichier_traduis_unique": {
           "name": "demande_devis_fichier_traduis_unique",
           "nullsNotDistinct": false,
           "columns": [
             "fichier_traduis"
+          ]
+        },
+        "demande_devis_traducteur_unique": {
+          "name": "demande_devis_traducteur_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "traducteur"
           ]
         }
       },
@@ -493,7 +493,7 @@
           "name": "userId",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "nom": {
           "name": "nom",
@@ -541,7 +541,7 @@
           "name": "cv",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "createdAT": {
           "name": "createdAT",
@@ -588,7 +588,15 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
+      "uniqueConstraints": {
+        "rejoindreEquipe_email_unique": {
+          "name": "rejoindreEquipe_email_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "email"
+          ]
+        }
+      },
       "checkConstraints": {}
     },
     "public.session": {

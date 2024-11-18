@@ -199,17 +199,17 @@ export const DemandeDevis = pgTable("demande_devis", {
   langueTraduit: text("langue_traduit").notNull(),
   page: text("page").notNull(),
   infoSupl: text("information_supplementaire"),
-  fichier: text("fichier").array().unique().notNull().default(sql`'{}'::text[]`),
+  fichier: text("fichier").array(),
   fichierTraduis: text("fichier_traduis").unique(),
   traducteur: text("traducteur")
-    // .unique()
+    .unique()
     .references(() => users.id),
   adresseDepart: text("adresse_depart"),
   adresseArriver: text("adresse_arriver"),
-  montant: integer("montant").notNull(), //
+  montant: integer("montant").notNull(),
   created_at: timestamp("createdAT", { mode: "date" }).notNull().defaultNow(),
   delivered_at: timestamp("deliveredAT", { mode: "date" }),
-  status: text("status").default("traitement").notNull(),
+  status: text("status").default("pending").notNull(),
   payer: boolean("payer").default(false),
 });
 

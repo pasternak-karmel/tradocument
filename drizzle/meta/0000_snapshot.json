@@ -1,5 +1,5 @@
 {
-  "id": "08c20bab-599a-4549-9c78-43dd8c324a4f",
+  "id": "b8f750e1-5a09-49bf-8e90-8d411a89a890",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -82,9 +82,10 @@
         },
         "fichier": {
           "name": "fichier",
-          "type": "text",
+          "type": "text[]",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": "'{}'::text[]"
         },
         "fichier_traduis": {
           "name": "fichier_traduis",
@@ -134,7 +135,7 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true,
-          "default": "'traitement'"
+          "default": "'pending'"
         },
         "payer": {
           "name": "payer",
@@ -187,6 +188,13 @@
           "nullsNotDistinct": false,
           "columns": [
             "fichier_traduis"
+          ]
+        },
+        "demande_devis_traducteur_unique": {
+          "name": "demande_devis_traducteur_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "traducteur"
           ]
         }
       },
@@ -380,6 +388,47 @@
       },
       "checkConstraints": {}
     },
+    "public.contact": {
+      "name": "contact",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "nom": {
+          "name": "nom",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "sujet": {
+          "name": "sujet",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "message": {
+          "name": "message",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
     "public.password_reset_tokens": {
       "name": "password_reset_tokens",
       "schema": "",
@@ -436,6 +485,126 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "public.rejoindreEquipe": {
+      "name": "rejoindreEquipe",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "userId": {
+          "name": "userId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "nom": {
+          "name": "nom",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "prenom": {
+          "name": "prenom",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "pays": {
+          "name": "pays",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ville": {
+          "name": "ville",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "specialite": {
+          "name": "specialite",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "commentaire": {
+          "name": "commentaire",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "cv": {
+          "name": "cv",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAT": {
+          "name": "createdAT",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "approved_at": {
+          "name": "approved_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'attente'"
+        },
+        "isAccepter": {
+          "name": "isAccepter",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "rejoindreEquipe_userId_user_id_fk": {
+          "name": "rejoindreEquipe_userId_user_id_fk",
+          "tableFrom": "rejoindreEquipe",
+          "tableTo": "user",
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "rejoindreEquipe_email_unique": {
+          "name": "rejoindreEquipe_email_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "email"
+          ]
+        }
+      },
       "checkConstraints": {}
     },
     "public.session": {
