@@ -10,6 +10,7 @@ import {
 
 import type { AdapterAccountType } from "next-auth/adapters";
 import { createInsertSchema } from "drizzle-zod";
+import { sql } from "drizzle-orm";
 
 export const UserRoleEnum = {
   ADMIN: "admin",
@@ -33,6 +34,8 @@ export const users = pgTable("user", {
   two_factor_secret: text("two_factor_secret"),
   two_factor_enabled: boolean("two_factor_enabled").default(false),
 });
+export type USERS = typeof users.$inferSelect;
+
 
 export const InsertUserSchema = createInsertSchema(users);
 
@@ -196,7 +199,7 @@ export const DemandeDevis = pgTable("demande_devis", {
   langueTraduit: text("langue_traduit").notNull(),
   page: text("page").notNull(),
   infoSupl: text("information_supplementaire"),
-  fichier: text("fichier").unique().notNull(), //
+  fichier: text("fichier").array().unique().notNull().default(sql`'{}'::text[]`),
   fichierTraduis: text("fichier_traduis").unique(),
   traducteur: text("traducteur")
     // .unique()

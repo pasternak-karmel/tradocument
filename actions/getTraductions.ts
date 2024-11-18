@@ -1,7 +1,6 @@
 "use server";
 
 import { auth } from "@/auth";
-import { ShowError } from "@/components/sonner-component";
 import { getUserByEmail } from "@/data/user";
 import { db } from "@/db/drizzle";
 import { traduction, users } from "@/db/schema";
@@ -32,15 +31,12 @@ export const GetTraduction = async () => {
 
 export const GetAdminTraduction = async () => {
   const session = await auth();
-  if (
-    !session ||
-    session?.user.role !== "admin"
-    // ||session?.user.role !== "traducteur"
-  ) {
+  if (!session || session?.user.role !== "admin") {
     return { error: "Vous n'êtes pas autorisé a être ici" };
   }
 
   const articleAttente = await db.select().from(traduction);
+  
 
   if (!articleAttente || articleAttente.length === 0) {
     return { error: "Pas encore de traduction" };

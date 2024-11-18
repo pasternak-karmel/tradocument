@@ -27,27 +27,27 @@ export const labels = [
 export const statuses = [
   {
     value: "pending",
-    label: "pending",
+    label: "En attente",
     icon: QuestionMarkCircledIcon,
   },
   {
-    value: "todo",
-    label: "Todo",
+    value: "processing",
+    label: "Traitement",
     icon: CircleIcon,
   },
   {
     value: "in progress",
-    label: "In Progress",
+    label: "En cours",
     icon: StopwatchIcon,
   },
   {
-    value: "done",
-    label: "Done",
+    value: "completed",
+    label: "Terminé",
     icon: CheckCircledIcon,
   },
   {
-    value: "canceled",
-    label: "Canceled",
+    value: "rejected",
+    label: "Rejeté",
     icon: CrossCircledIcon,
   },
 ];

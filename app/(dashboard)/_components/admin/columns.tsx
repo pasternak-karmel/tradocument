@@ -134,8 +134,8 @@ export const Columns: ColumnDef<Traduction>[] = [
       ),
   },
   // actions
-  {
-    id: "actions",
-    cell: ({ row }) => <ActionsMenu articleId={row.original.id!} />,
-  },
+  // {
+  //   id: "actions",
+  //   cell: ({ row }) => <ActionsMenu articleId={row.original.id!} />,
+  // },
 ];

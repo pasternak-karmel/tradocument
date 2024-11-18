@@ -1,4 +1,3 @@
-import { traduction } from "@/db/schema";
 import { updatedTraduction } from "@/actions/admin";
 import { Users } from "@/app/(dashboard)/data/schema";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -6,6 +5,7 @@ import { toast } from "sonner";
 import { GetAdminTraduction } from "@/actions/getTraductions";
 import { AssignTraduction } from "@/lib/mail";
 import { showError } from "@/function/notification-toast";
+import { TRADUCTION } from "@/db/schema";
 
 export function useAdmin() {
   const queryClient = useQueryClient();
@@ -15,6 +15,7 @@ export function useAdmin() {
     queryFn: async () => {
       const data = await GetAdminTraduction();
       if ("error" in data) {
+        // return data.error;
         throw new Error(data.error);
       }
       return data;
@@ -70,7 +71,9 @@ export function useAdmin() {
       toast.error(error.message);
     },
     onSuccess: async (userId) => {
-      await AssignTraduction(userId?.email!);
+      console.log("I'm here");
+      console.log(userId);
+      // await AssignTraduction(userId?.email!);
       toast.success("Fichier assigné avec succès");
       queryClient.invalidateQueries({ queryKey: ["getTableau"] });
     },

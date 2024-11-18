@@ -1,9 +1,9 @@
 "use client";
 
-import z from "zod";
-import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 import { cn } from "@/lib/utils";
-import React, { useState, useEffect, Component } from "react";
+import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
+import { useEffect, useState } from "react";
+import z from "zod";
 
 import {
   Command,
@@ -20,9 +20,9 @@ import {
 } from "@/components/ui/popover";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { motion } from "framer-motion";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 
@@ -34,8 +34,10 @@ import { useReCaptcha } from "next-recaptcha-v3";
 import { useCurrentUser } from "@/hooks/use-current-user";
 
 import { demandeDevis } from "@/schemas";
-import { calculateDistance } from "@/actions/calculate_distance";
 
+import { calculateDistance } from "@/actions/calculate_distance";
+import { calculateMontantPage } from "@/actions/calculate_montant_page";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -44,7 +46,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Form,
   FormControl,
@@ -54,7 +56,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -62,13 +63,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Mail, User } from "lucide-react";
-import { calculateMontantPage } from "@/actions/calculate_montant_page";
+import { Textarea } from "@/components/ui/textarea";
 import { showError } from "@/function/notification-toast";
 import { acceptedFileTypes, languages } from "@/type";
-import { toast } from "sonner";
+import { Mail, User } from "lucide-react";
 import { BeatLoader } from "react-spinners";
+import { toast } from "sonner";
 
 const DevisForm = () => {
   const user = useCurrentUser();
@@ -79,7 +79,9 @@ const DevisForm = () => {
   const [showDeliveryAddress, setShowDeliveryAddress] = useState(false);
   const [loading, setLoading] = useState(false);
   const [fileStates, setFileStates] = useState<FileState[]>([]);
-  const [url, setUrl] = useState("");
+  const [urls, setUrls] = useState<
+    { url: string; thumbnailUrl: string | null }[]
+  >([]);
   const [montant, setMontant] = useState<number | null>(null);
   const [distance, setDistance] = useState<number | null>(null);
   const [totalAmount, setTotalAmount] = useState<number | null>(null);
@@ -94,7 +96,6 @@ const DevisForm = () => {
       email: user?.email || undefined,
       phone: "",
       country: undefined,
-      serviceType: "",
       documentType: "",
       sourceLanguage: "",
       targetLanguage: "",
@@ -110,7 +111,7 @@ const DevisForm = () => {
   });
 
   useEffect(() => {
-    if (montant !== null) {
+    if (montant !== null && montant !== 0) {
       setTotalAmount(
         showDeliveryAddress && distance !== null ? distance + montant : montant
       );
@@ -135,34 +136,58 @@ const DevisForm = () => {
 
     if (fileStates.length === 0)
       return showError("Veuillez sélectionner le fichier à traduire");
-    if (!values.termsAccepted)
-      return showError("Veuillez accepter les termes et conditions");
 
     const token = await executeRecaptcha("form_submit_demande_devis");
     if (token) {
       try {
         setLoading(true);
         let calculatedDistance = null;
-        let calculatedMontant = null;
+        let calculatedMontant = 0;
 
-        await Promise.all(
+        const imageUrls = await Promise.all(
           fileStates.map(async (fileState) => {
-            const res = await edgestore.document.upload({
-              options: { temporary: true },
-              file: fileState.file,
-              input: { type: "profile" },
-              onProgressChange: (progress) =>
-                updateFileProgress(fileState.key, progress),
-            });
-            if (res?.url) {
-              const pageCount = await calculateMontantPage(res.url);
-              if (pageCount) {
-                calculatedMontant = pageCount;
-                setUrl(res.url);
+            if (fileState.file instanceof File) {
+              try {
+                const res = await edgestore.document.upload({
+                  options: { temporary: true },
+                  file: fileState.file,
+                  input: { type: "post" },
+                  onProgressChange: (progress) => {
+                    updateFileProgress(fileState.key, progress);
+                  },
+                });
+                return {
+                  url: res.url,
+                  // , thumbnailUrl: res.thumbnailUrl || null
+                };
+              } catch (err) {
+                toast.error(`Une erreur s'est produite`, {
+                  description: `Connexion erreur`,
+                });
+                return null;
               }
+            } else {
+              return null;
             }
           })
         );
+
+        const validImageUrls = imageUrls.filter(
+          (res): res is { url: string; thumbnailUrl: string | null } =>
+            res !== null
+        );
+
+        for (const urlObj of validImageUrls) {
+          const pageCount = await calculateMontantPage(urlObj.url);
+          if (pageCount) {
+            calculatedMontant += pageCount;
+          }
+        }
+
+        values.url = validImageUrls.map((urlObj) => urlObj.url);
+
+        console.log(values.url)
+
         if (showDeliveryAddress && values.deliveryAddress) {
           calculatedDistance = await calculateDistance({
             departLocation: values.deliveryAddress.departureAddress!,
@@ -188,7 +213,8 @@ const DevisForm = () => {
   }
 
   const validate = async (values: z.infer<typeof demandeDevis>) => {
-    if (!montant) return showError("Montant non calculé");
+    if (!montant || montant === 0) return showError("Montant non calculé");
+
     if (showDeliveryAddress && !distance)
       return showError("Distance non calculée");
     setLoading(true);
@@ -201,30 +227,36 @@ const DevisForm = () => {
           ...values,
           montant: showDeliveryAddress ? totalAmount : montant,
           distance: showDeliveryAddress ? distance : null,
-          url,
         }),
       });
 
       const result = await response.json();
       if (!response.ok)
-        return showError(result.message || `Erreur HTTP: ${response.status}`);
+        return showError(result.message || `Internal Server Error`);
 
       if (result.success) {
         try {
-          await edgestore.document.confirmUpload({ url });
+          if (!values.url) return showError("Une erreur est survenue");
+
+          for (const url of values.url) {
+            await edgestore.document.confirmUpload({ url });
+          }
         } catch (err) {
           return showError(
-            "Erreur lors de la confirmation d'upload, Réessayez plus tard ou contactez le support"
+            "Erreur lors de la validation, Réessayez plus tard ou contactez le support"
           );
         }
 
         form.reset();
         setFileStates([]);
-        setUrl("");
+        setUrls([]);
         router.push(`/devis/payment?id=${result.message}`);
       } else {
         showError(result.message);
-        await edgestore.myArrowImages.delete({ url });
+        if (!values.url) return showError("Une erreur est survenue");
+        for (const url of values.url) {
+          await edgestore.document.delete({ url });
+        }
       }
     } catch (error) {
       console.error("Erreur lors de la validation:", error);
@@ -365,14 +397,14 @@ const DevisForm = () => {
                     control={form.control}
                     name="country"
                     render={({ field }) => (
-                      <FormItem >
+                      <FormItem>
                         <FormLabel>Pays: </FormLabel>
                         {/* <ComboboxDemo /> */}
                         <Popover>
                           <PopoverTrigger asChild>
                             <FormControl>
                               <Button
-                              style={{ borderWidth: 1, borderColor: "black" }}
+                                style={{ borderWidth: 1, borderColor: "black" }}
                                 variant="outline"
                                 role="combobox"
                                 className={cn(
@@ -385,9 +417,8 @@ const DevisForm = () => {
                                       (language) =>
                                         language.value === field.value
                                     )?.label
-                                  : "Selectionnez votre pays"
-                                  }
-                                  
+                                  : "Selectionnez votre pays"}
+
                                 <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                               </Button>
                             </FormControl>
@@ -441,10 +472,12 @@ const DevisForm = () => {
                       <FormItem>
                         <FormLabel>Type de document</FormLabel>
                         <Select
-                          disabled={montant !== null || loading}
+                          disabled={
+                            distance !== null || montant !== null || loading
+                          }
                           onValueChange={field.onChange}
                         >
-                          <SelectTrigger style={inputStyle}>
+                          <SelectTrigger>
                             <SelectValue placeholder="Sélectionnez un document" />
                           </SelectTrigger>
                           <SelectContent>
@@ -568,7 +601,7 @@ const DevisForm = () => {
                       disabled={montant !== null || loading}
                       value={fileStates}
                       dropzoneOptions={{
-                        maxFiles: 1,
+                        maxFiles: 5,
                         accept: acceptedFileTypes,
                       }}
                       onChange={(files) => {
@@ -672,7 +705,7 @@ const DevisForm = () => {
                         </pre>
                       )}
                       <pre>
-                        {montant.toFixed(2)}€ (40€/page) du document importé
+                        {montant.toFixed(2)}€ (69€/page) du document importé
                       </pre>
                     </div>
                   )}
@@ -705,6 +738,3 @@ const DevisForm = () => {
 };
 
 export default DevisForm;
-
-
-

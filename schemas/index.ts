@@ -1,4 +1,4 @@
-import * as z from "zod";
+import { z } from "zod";
 
 export const SettingsSchema = z
   .object({
@@ -154,9 +154,9 @@ export const demandeDevis = z.object({
   country: z.string({
     required_error: "Please select a country.",
   }),
-  serviceType: z.string({
-    required_error: "Veuillez sélectionner un type de service",
-  }),
+  // serviceType: z.string({
+  //   required_error: "Veuillez sélectionner un type de service",
+  // }),
   documentType: z.string({
     required_error: "Veuillez sélectionner un type de document",
   }),
@@ -180,7 +180,7 @@ export const demandeDevis = z.object({
       shippingAddress: z.string().optional(),
     })
     .optional(),
-  
+  url: z.array(z.string()).optional(),
 });
 
 export const RejoindreSchema = z.object({

@@ -2,8 +2,14 @@ import { eq } from "drizzle-orm";
 import { ServerActionResponse } from "@/types";
 import { revalidatePath } from "next/cache";
 import { db } from "@/db/drizzle";
-import { Users } from "@/app/(dashboard)/data/schema";
 import { traduction, TRADUCTION } from "@/db/schema";
+
+//user: pending
+//admin attribue: processing
+
+// todo carmel
+// Tu dois changer le type de la bd pour prendre un array (done)
+//dans chaque function pour uploader les fichiers tu retournes toutes les url que tu insere mainan dans la bd
 
 // export async function addCourse(
 //   semesterId: string,

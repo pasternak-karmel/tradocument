@@ -21,7 +21,7 @@ export async function getPDFPageCount(fileUrl: string): Promise<number | null> {
     const pdfDoc = await PDFDocument.load(response.data);
     const pageCount = pdfDoc.getPageCount();
 
-    return pageCount * 40;
+    return pageCount * 69;
   } catch (error) {
     console.error(
       "Erreur lors du téléchargement ou de l'analyse du fichier:",
@@ -60,7 +60,7 @@ async function getDocxPageCount(fileUrl: string): Promise<number | null> {
     const wordsPerPage = 300;
     const pageCount = Math.ceil(wordCount / wordsPerPage);
 
-    return pageCount * 40;
+    return pageCount * 69;
   } catch (error) {
     console.error("Error processing DOCX file:", error);
     showError("Error processing DOCX file:");
@@ -88,7 +88,7 @@ export async function getExcelPageCount(
     const pagesPerSheet = 1; // Assume each sheet counts as one "page"
     const pageCount = sheetCount * pagesPerSheet;
 
-    return pageCount * 40; // Adjust price per page
+    return pageCount * 69; // Adjust price per page
   } catch (error) {
     showError("Erreur lors de l'analyse du fichier Excel:");
     return null;

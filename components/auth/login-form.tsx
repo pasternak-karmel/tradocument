@@ -57,9 +57,6 @@ export const LoginForm = () => {
             form.reset();
             setError(data.error);
           }
-          // else if (data?.redirectUrl) {
-          //   router.push(data.redirectUrl);
-          // }
 
           if (data?.success) {
             form.reset();
