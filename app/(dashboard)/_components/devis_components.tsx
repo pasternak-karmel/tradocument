@@ -724,7 +724,7 @@ const DevisForm = () => {
                       disabled={loading}
                       onClick={form.handleSubmit(onSubmit)}
                     >
-                      {loading ? <BeatLoader /> : "Nouvelle demande de devis"}
+                      {loading ? <BeatLoader /> : "Envoyer demande de devis"}
                     </Button>
                   )}
                 </form>
