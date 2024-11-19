@@ -69,6 +69,7 @@ import { acceptedFileTypes, languages } from "@/type";
 import { Mail, User } from "lucide-react";
 import { BeatLoader } from "react-spinners";
 import { toast } from "sonner";
+import { devisSent, devisSentAdmin } from "@/lib/mail";
 
 const DevisForm = () => {
   const user = useCurrentUser();
@@ -91,9 +92,12 @@ const DevisForm = () => {
   const form = useForm<z.infer<typeof demandeDevis>>({
     resolver: zodResolver(demandeDevis),
     defaultValues: {
-      firstName: personne[0] || undefined,
-      lastName: personne[1] || undefined,
-      email: user?.email || undefined,
+      firstName: "",
+      lastName: "",
+      email: "",
+      // firstName: personne[0] || undefined,
+      // lastName: personne[1] || undefined,
+      // email: user?.email || undefined,
       phone: "",
       country: undefined,
       documentType: "",
@@ -250,6 +254,8 @@ const DevisForm = () => {
         form.reset();
         setFileStates([]);
         setUrls([]);
+        await devisSent(formValues);
+        await devisSentAdmin(formValues);
         router.push(`/devis/payment?id=${result.message}`);
       } else {
         showError(result.message);
