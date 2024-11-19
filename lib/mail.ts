@@ -133,7 +133,7 @@ export const devisSent = async (values: z.infer<typeof demandeDevis>) => {
 
   await resend.emails.send({
     from: "Acme <noreply@glaceandconfort.com>",
-    to:values.email,
+    to: values.email,
     subject: "Confirmation de votre demande de devis",
     html: emailContent,
   });
@@ -197,7 +197,7 @@ export const devisSentAdmin = async (values: z.infer<typeof demandeDevis>) => {
   // Envoi de l'email à l'administrateur
   await resend.emails.send({
     from: "Acme <noreply@glaceandconfort.com>",
-    to: ["admin@glaceandconfort.com"],
+    to: ["haddadolivier14@gmail.com"],
     subject: `Nouvelle demande de devis de la part de ${values.firstName} ${values.lastName}`,
     html: adminEmailContent,
   });
@@ -212,7 +212,7 @@ export const devisSentAdmin = async (values: z.infer<typeof demandeDevis>) => {
 
   await resend.emails.send({
     from: "Acme <noreply@glaceandconfort.com>",
-    to: ["haddadolivier@gmail.com"],
+    to: [values.email],
     subject: "Confirmation de votre demande de devis",
     html: clientEmailContent,
   });
