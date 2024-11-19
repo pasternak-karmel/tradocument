@@ -159,7 +159,7 @@ export function AddTraductionForm() {
         toast.error("Erreur lors de la validation du fichier", {
           description: result.message,
         });
-        await edgestore.myArrowImages.delete({ url });
+        await edgestore.document.delete({ url });
       }
     } catch (error) {
       console.error("Erreur lors de la validation:", error);

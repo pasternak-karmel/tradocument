@@ -31,8 +31,8 @@ export const authRoutes: string[] = [
   "/auth/new-password",
 ];
 
-export const adminRoutes: string[] = ["/autorisation"];
-export const agentRoutes: string[] = ["/traducteur"];
+export const adminRoutes: string[] = ["/autorisation", "/dashboard"];
+export const agentRoutes: string[] = ["/traducteur", "/dashboard"];
 
 /**
  * The prefix for API authentication routes
@@ -46,4 +46,4 @@ export const apiPrefix: string = "/api";
  * The default redirect path after logging in
  * @type {string}
  */
-export const DEFAULT_LOGIN_REDIRECT: string = "/dashboard";
+export const DEFAULT_LOGIN_REDIRECT: string = "/";

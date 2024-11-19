@@ -8,55 +8,18 @@ import { revalidatePath } from "next/cache";
 //user: pending
 //admin attribue: processing
 //traducteur: confirmation
+//admin: confirmed
 
-// todo carmel
-// Tu dois changer le type de la bd pour prendre un array (done)
-//dans chaque function pour uploader les fichiers tu retournes toutes les url que tu insere mainan dans la bd
 
-// export async function addCourse(
-//   semesterId: string,
-//   courseData: Users
-// ): Promise<ServerActionResponse<TRADUCTION>> {
-//   try {
-//     // First create the UE
-//     const [newUE] = await db
-//       .insert(traduction)
-//       .values({
-//         name: courseData.contenu,
-//         credits: courseData.cect,
-//         semesterId,
-//         classId: courseData.classId,
-//       })
-//       .returning();
+//a faire
 
-//     // Then create the EC
-//     const [newEC] = await db
-//       .insert(ec)
-//       .values({
-//         name: courseData.enseignement,
-//         ueId: newUE.id,
-//         codeEC: courseData.codeEC,
-//         contenu: courseData.contenu,
-//         enseignement: courseData.enseignement,
-//         cours: courseData.cours,
-//         tpTd: courseData.tpTd,
-//         sp: courseData.sp,
-//         tpe: courseData.tpe,
-//         ctt: courseData.ctt,
-//         cect: courseData.cect,
-//         cc: courseData.cc,
-//         et: courseData.et,
-//         ccEt: courseData.ccEt,
-//       })
-//       .returning();
+//rejoindre formulaire avec loading et envoyer un email
 
-//     revalidatePath("/[classId]");
-//     return { data: newEC };
-//   } catch (error) {
-//     console.error("Error adding course:", error);
-//     return { error: "Failed to add course" };
-//   }
-// }
+//demander devis refine for langue
+
+//contact page
+
+//traduction page: faire contenir les infos sir la page
 
 export async function updatedTraduction(
   TraductionId: string,
@@ -99,7 +62,9 @@ export async function updatedTraduction(
     console.error("Error updating course:", error);
     return { error: "Failed to update traduction" };
   }
+  
 }
+
 
 // export async function deleteCourse(
 //   courseId: string

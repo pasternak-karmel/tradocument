@@ -10,7 +10,8 @@ import {
 } from "@/components/ui/accordion"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { FileText, Briefcase, Scale, GraduationCap, CreditCard, Truck, FileSignature, Link } from "lucide-react"
-import { url } from "inspector"
+import { link } from "fs"
+import { useRouter } from "next/navigation"
 
 const translationCategories = [
   {
@@ -104,6 +105,11 @@ const translationCategories = [
 ];
 
 export default function PageTraduction() {
+  const router = useRouter();
+
+  const handleClick = () => {
+    router.push("/demandeDevis");
+  };
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -144,7 +150,8 @@ export default function PageTraduction() {
                             initial={{ opacity: 0, x: -10 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: itemIndex * 0.1 }}
-                            className="text-sm text-gray-600"
+                            className="text-sm text-gray-600 cursor-pointer hover:underline"
+                            onClick={() => handleClick()}
                           >
                             {item}
                           </motion.li>

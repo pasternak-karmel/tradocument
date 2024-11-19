@@ -181,7 +181,11 @@ export const demandeDevis = z.object({
     })
     .optional(),
   url: z.array(z.string()).optional(),
+}).refine((data) => data.sourceLanguage !== data.targetLanguage, {
+  message: "Les langues d'origine et de traduction doivent être différentes",
+  path: ["targetLanguage"],
 });
+
 
 export const RejoindreSchema = z.object({
   nom: z

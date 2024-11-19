@@ -32,22 +32,22 @@ import { useSession } from "next-auth/react";
 
 const data = {
   navMain: [
-    {
-      title: "Dashboard",
-      url: "/dashboard",
-      icon: SquareTerminal,
-    },
+    // {
+    //   title: "Dashboard",
+    //   url: "/dashboard",
+    //   icon: SquareTerminal,
+    // },
     {
       title: "Traduction",
       url: "/traduction",
       icon: SquareTerminal,
       isActive: true,
     },
-    {
-      title: "Me livrer",
-      url: "/me_livrer",
-      icon: BookOpen,
-    },
+    // {
+    //   title: "Me livrer",
+    //   url: "/me_livrer",
+    //   icon: BookOpen,
+    // },
 
     {
       title: "demande de devis",

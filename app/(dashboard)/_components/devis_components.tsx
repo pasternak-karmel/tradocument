@@ -628,7 +628,7 @@ const DevisForm = () => {
                       disabled={montant !== null || loading}
                     />
                     <label htmlFor="delivery">
-                      Obtenir un document administratif à faire traduire par
+                      Récupérer un document administratif à faire traduire par
                       procuration
                     </label>
                   </div>
