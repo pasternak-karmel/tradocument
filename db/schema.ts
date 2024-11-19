@@ -167,7 +167,7 @@ export const traduction = pgTable("traduction", {
   fichier: text("fichier").unique().notNull(),
   fichierTraduis: text("fichier_traduis").unique(),
   traducteur: text("traducteur")
-    .unique()
+    // .unique()
     .references(() => users.id),
   montant: integer("montant").notNull(),
   created_at: timestamp("createdAT", { mode: "date" }).notNull().defaultNow(),
@@ -202,7 +202,7 @@ export const DemandeDevis = pgTable("demande_devis", {
   fichier: text("fichier").array(),
   fichierTraduis: text("fichier_traduis").unique(),
   traducteur: text("traducteur")
-    .unique()
+    // .unique()
     .references(() => users.id),
   adresseDepart: text("adresse_depart"),
   adresseArriver: text("adresse_arriver"),

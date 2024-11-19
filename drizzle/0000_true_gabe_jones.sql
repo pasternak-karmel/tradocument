@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS "demande_devis" (
 	"langue_traduit" text NOT NULL,
 	"page" text NOT NULL,
 	"information_supplementaire" text,
-	"fichier" text[] DEFAULT '{}'::text[] NOT NULL,
+	"fichier" text[],
 	"fichier_traduis" text,
 	"traducteur" text,
 	"adresse_depart" text,
@@ -21,9 +21,7 @@ CREATE TABLE IF NOT EXISTS "demande_devis" (
 	"deliveredAT" timestamp,
 	"status" text DEFAULT 'pending' NOT NULL,
 	"payer" boolean DEFAULT false,
-	CONSTRAINT "demande_devis_fichier_unique" UNIQUE("fichier"),
-	CONSTRAINT "demande_devis_fichier_traduis_unique" UNIQUE("fichier_traduis"),
-	CONSTRAINT "demande_devis_traducteur_unique" UNIQUE("traducteur")
+	CONSTRAINT "demande_devis_fichier_traduis_unique" UNIQUE("fichier_traduis")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "account" (
@@ -110,8 +108,7 @@ CREATE TABLE IF NOT EXISTS "traduction" (
 	"traduction_to" text NOT NULL,
 	"payer" boolean DEFAULT false,
 	CONSTRAINT "traduction_fichier_unique" UNIQUE("fichier"),
-	CONSTRAINT "traduction_fichier_traduis_unique" UNIQUE("fichier_traduis"),
-	CONSTRAINT "traduction_traducteur_unique" UNIQUE("traducteur")
+	CONSTRAINT "traduction_fichier_traduis_unique" UNIQUE("fichier_traduis")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "two_factor_confirmations" (

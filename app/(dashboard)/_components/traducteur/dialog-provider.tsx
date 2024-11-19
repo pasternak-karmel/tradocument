@@ -76,10 +76,12 @@ export function UploadFileDialog({ id }: DialogProps) {
 
       const response = await result.json();
       if (response.error) {
+        toast.error("Une erreur est suvenue");
+
         throw new Error(response.error);
       }
       setFileStates([]);
-      // setUrl("");
+      setUrl("");
       toast.success("Fichier uploadé avec succès");
 
       setOpen(false);

@@ -31,12 +31,14 @@ export const GetTraduction = async () => {
 
 export const GetAdminTraduction = async () => {
   const session = await auth();
-  if (!session || session?.user.role !== "admin") {
+  if (
+    !session ||
+    (session?.user.role !== "admin" && session?.user.role !== "traducteur")
+  ) {
     return { error: "Vous n'êtes pas autorisé a être ici" };
   }
 
   const articleAttente = await db.select().from(traduction);
-  
 
   if (!articleAttente || articleAttente.length === 0) {
     return { error: "Pas encore de traduction" };

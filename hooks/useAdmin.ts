@@ -1,11 +1,10 @@
 import { updatedTraduction } from "@/actions/admin";
-import { Users } from "@/app/(dashboard)/data/schema";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
 import { GetAdminTraduction } from "@/actions/getTraductions";
+import { Users } from "@/app/(dashboard)/data/schema";
+import { ShowError } from "@/components/sonner-component";
 import { AssignTraduction } from "@/lib/mail";
-import { showError } from "@/function/notification-toast";
-import { TRADUCTION } from "@/db/schema";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 export function useAdmin() {
   const queryClient = useQueryClient();
@@ -21,7 +20,7 @@ export function useAdmin() {
       return data;
     },
   });
-  
+
   const GetTraductionQuery = useQuery<Users[]>({
     queryKey: ["getTraducteur"],
     queryFn: async () => {
@@ -42,21 +41,24 @@ export function useAdmin() {
       userId: string;
     }) => {
       const result = await updatedTraduction(traductionId, userId);
-      if (result.error) return showError(result.error)
+      if (result.error) throw new Error(result.error);
       return result.data;
     },
     onMutate: async ({ traductionId, userId }) => {
-      // Cancel outgoing refetches
       await queryClient.cancelQueries({ queryKey: ["getTableau"] });
-
-      // Get the current data
       const previousData = queryClient.getQueryData<Users[]>(["getTableau"]);
 
-      // Optimistically update the cache
       if (previousData) {
         queryClient.setQueryData<Users[]>(["getTableau"], (old) => {
           if (!old) return [];
           return old.map((traduction) => {
+            if (traduction.id === traductionId) {
+              return {
+                ...traduction,
+                traducteur: userId,
+                status: "processing",
+              };
+            }
             return traduction;
           });
         });
@@ -64,16 +66,18 @@ export function useAdmin() {
 
       return { previousData };
     },
-    onError: (error, variables, context) => {
+    onError: (error, _variables, context) => {
       if (context?.previousData) {
         queryClient.setQueryData(["getTableau"], context.previousData);
       }
       toast.error(error.message);
     },
-    onSuccess: async (userId) => {
-      console.log("I'm here");
-      console.log(userId);
-      // await AssignTraduction(userId?.email!);
+    onSuccess: async (data) => {
+      if (!data)
+        return ShowError(
+          "Something went wrong, please try again or contact the admin"
+        );
+      await AssignTraduction(data.translatorEmail);
       toast.success("Fichier assigné avec succès");
       queryClient.invalidateQueries({ queryKey: ["getTableau"] });
     },

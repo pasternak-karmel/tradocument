@@ -37,7 +37,6 @@ const SelectTraducteur = ({ traduction }: { traduction: string }) => {
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     updateTraduction({ traductionId: traduction, userId: data.agentId });
-    toast.success("All changes saved successfully");
   }
 
   if (isLoading) {

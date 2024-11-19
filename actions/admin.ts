@@ -1,11 +1,13 @@
-import { eq } from "drizzle-orm";
-import { ServerActionResponse } from "@/types";
-import { revalidatePath } from "next/cache";
+"use server";
 import { db } from "@/db/drizzle";
-import { traduction, TRADUCTION } from "@/db/schema";
+import { traduction, TRADUCTION, users } from "@/db/schema";
+import { ServerActionResponse } from "@/types";
+import { eq } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
 
 //user: pending
 //admin attribue: processing
+//traducteur: confirmation
 
 // todo carmel
 // Tu dois changer le type de la bd pour prendre un array (done)
@@ -59,7 +61,9 @@ import { traduction, TRADUCTION } from "@/db/schema";
 export async function updatedTraduction(
   TraductionId: string,
   traducteurId: string
-): Promise<ServerActionResponse<TRADUCTION>> {
+): Promise<
+  ServerActionResponse<{ traduction: TRADUCTION; translatorEmail: string }>
+> {
   try {
     const [updatedTraduction] = await db
       .update(traduction)
@@ -70,8 +74,27 @@ export async function updatedTraduction(
       .where(eq(traduction.id, TraductionId))
       .returning();
 
+    if (!updatedTraduction) {
+      return { error: "Traduction not found" };
+    }
+
+    const [translator] = await db
+      .select({ email: users.email })
+      .from(users)
+      .where(eq(users.id, traducteurId))
+      .limit(1);
+
+    if (!translator || !translator.email) {
+      return { error: "Translator not found" };
+    }
+
     revalidatePath("/dashboard");
-    return { data: updatedTraduction };
+    return {
+      data: {
+        traduction: updatedTraduction,
+        translatorEmail: translator.email,
+      },
+    };
   } catch (error) {
     console.error("Error updating course:", error);
     return { error: "Failed to update traduction" };

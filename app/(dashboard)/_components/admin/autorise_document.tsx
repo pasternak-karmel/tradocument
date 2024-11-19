@@ -187,7 +187,7 @@ const AuthorizeDocument = () => {
                             onClick={() =>
                               handleDocumentAction(doc.id, "approve")
                             }
-                            disabled={doc.status !== "in progress"}
+                            disabled={doc.status !== "confirmation"}
                           >
                             <Check className="mr-2 h-4 w-4" />
                             Approuver
@@ -197,7 +197,7 @@ const AuthorizeDocument = () => {
                               handleDocumentAction(doc.id, "reject")
                             }
                             variant="destructive"
-                            disabled={doc.status !== "in progress"}
+                            disabled={doc.status !== "confirmation"}
                           >
                             <X className="mr-2 h-4 w-4" />
                             Refuser

@@ -1,5 +1,5 @@
 {
-  "id": "b8f750e1-5a09-49bf-8e90-8d411a89a890",
+  "id": "21e84ebd-d988-4fa9-b9a8-55b9e4ca8ede",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -84,8 +84,7 @@
           "name": "fichier",
           "type": "text[]",
           "primaryKey": false,
-          "notNull": true,
-          "default": "'{}'::text[]"
+          "notNull": false
         },
         "fichier_traduis": {
           "name": "fichier_traduis",
@@ -176,25 +175,11 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "demande_devis_fichier_unique": {
-          "name": "demande_devis_fichier_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "fichier"
-          ]
-        },
         "demande_devis_fichier_traduis_unique": {
           "name": "demande_devis_fichier_traduis_unique",
           "nullsNotDistinct": false,
           "columns": [
             "fichier_traduis"
-          ]
-        },
-        "demande_devis_traducteur_unique": {
-          "name": "demande_devis_traducteur_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "traducteur"
           ]
         }
       },
@@ -791,13 +776,6 @@
           "nullsNotDistinct": false,
           "columns": [
             "fichier_traduis"
-          ]
-        },
-        "traduction_traducteur_unique": {
-          "name": "traduction_traducteur_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "traducteur"
           ]
         }
       },
