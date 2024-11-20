@@ -389,24 +389,24 @@ const DevisAccueil = () => {
                             <SelectValue placeholder="Sélectionnez un document" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="legal">
+                            <SelectItem value="Actes d'état civil">
                               Actes d'état civil
                             </SelectItem>
-                            <SelectItem value="medical">
+                            <SelectItem value=" Affaires & Business">
                               Affaires & Business
                             </SelectItem>
-                            <SelectItem value="technical">
+                            <SelectItem value="Diplômes & Bulletins">
                               Diplômes & Bulletins
                             </SelectItem>
-                            <SelectItem value="financial">
+                            <SelectItem value="Finance & Commerciale">
                               Finance & Commerciale
                             </SelectItem>
                             <SelectItem value="juridique">Juridique</SelectItem>
-                            <SelectItem value="permis">
+                            <SelectItem value="Permis de Conduire">
                               Permis de Conduire
                             </SelectItem>
-                            <SelectItem value="technique">Technique</SelectItem>
-                            <SelectItem value="other">Autre</SelectItem>
+                            <SelectItem value="Technique">Technique</SelectItem>
+                            <SelectItem value="Autre">Autre</SelectItem>
                           </SelectContent>
                         </Select>
                         <FormMessage />
@@ -428,11 +428,11 @@ const DevisAccueil = () => {
                             <SelectValue placeholder="Sélectionnez la langue source" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="fr">Français</SelectItem>
-                            <SelectItem value="ar">Arabe</SelectItem>
-                            <SelectItem value="en">Anglais</SelectItem>
-                            <SelectItem value="es">Espagnol</SelectItem>
-                            <SelectItem value="it">Italien</SelectItem>
+                          <SelectItem value="Français">Français</SelectItem>
+                            <SelectItem value="Arabe">Arabe</SelectItem>
+                            <SelectItem value="Anglais">Anglais</SelectItem>
+                            <SelectItem value="Italien">Espagnol</SelectItem>
+                            <SelectItem value="Italien">Italien</SelectItem>
                           </SelectContent>
                         </Select>
                         <FormMessage />
@@ -454,11 +454,11 @@ const DevisAccueil = () => {
                             <SelectValue placeholder="Sélectionnez la langue cible" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="fr">Français</SelectItem>
-                            <SelectItem value="ar">Arabe</SelectItem>
-                            <SelectItem value="en">Anglais</SelectItem>
-                            <SelectItem value="es">Espagnol</SelectItem>
-                            <SelectItem value="it">Italien</SelectItem>
+                            <SelectItem value="Français">Français</SelectItem>
+                            <SelectItem value="Arabe">Arabe</SelectItem>
+                            <SelectItem value="Anglais">Anglais</SelectItem>
+                            <SelectItem value="Italien">Espagnol</SelectItem>
+                            <SelectItem value="Italien">Italien</SelectItem>
                           </SelectContent>
                         </Select>
                         <FormMessage />
