@@ -89,7 +89,6 @@ export const devisSent = async (values: z.infer<typeof demandeDevis>) => {
       <li><strong>Date limite souhaitée :</strong> ${
         values.deadline || "Non précisée"
       }</li>
-      <li><strong>Nombre de mots :</strong> ${values.wordCount}</li>
     </ul>
 
     <h3>Informations personnelles</h3>
@@ -201,12 +200,6 @@ export const devisSentAdmin = async (values: z.infer<typeof demandeDevis>) => {
       <td style="padding: 10px; border: 1px solid #ddd; background-color: #f4f4f4;"><strong>Date limite</strong></td>
       <td style="padding: 10px; border: 1px solid #ddd;">${
         values.deadline || "non spécifié"
-      }</td>
-    </tr>
-    <tr>
-      <td style="padding: 10px; border: 1px solid #ddd; background-color: #f4f4f4;"><strong>Nombre de mots</strong></td>
-      <td style="padding: 10px; border: 1px solid #ddd;">${
-        values.wordCount
       }</td>
     </tr>
 
