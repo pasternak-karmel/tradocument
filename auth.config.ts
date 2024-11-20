@@ -47,12 +47,12 @@ export const authConfig: NextAuthConfig = {
       return account?.provider !== "credentials" || true;
     },
     async authorized({ auth, request: { nextUrl } }) {
-      const isLoggedIn = !!auth?.user;
-      const isAuthRoute = authRoutes.includes(nextUrl.pathname);
+      // const isLoggedIn = !!auth?.user;
+      // const isAuthRoute = authRoutes.includes(nextUrl.pathname);
 
-      if (isLoggedIn && isAuthRoute) {
-        return Response.redirect(new URL("/dashboard", nextUrl));
-      }
+      // if (isLoggedIn && isAuthRoute) {
+      //   return Response.redirect(new URL("/dashboard", nextUrl));
+      // }
 
       return true;
     },
@@ -73,6 +73,7 @@ export const authConfig: NextAuthConfig = {
       token.email = existingUser.email;
       token.role = existingUser.role;
       token.id = existingUser.id;
+      token.two_factor_enabled = existingUser.two_factor_enabled;
 
       return token;
     },
@@ -91,6 +92,7 @@ export const authConfig: NextAuthConfig = {
 
       if (session.user) {
         session.user.isOAuth = token.isOAuth as boolean;
+        session.user.two_factor_enabled = token.two_factor_enabled as boolean;
       }
 
       return session;

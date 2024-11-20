@@ -47,8 +47,7 @@ const SettingsPage = () => {
       newPassword: undefined,
       name: user?.name || undefined,
       email: user?.email || undefined,
-      role: user?.role || undefined,
-      isTwoFactorEnabled: user?.isTwoFactorEnabled || undefined,
+      isTwoFactorEnabled: user?.two_factor_enabled || undefined,
     },
   });
 
@@ -153,7 +152,7 @@ const SettingsPage = () => {
                   />
                 </>
               )}
-              <FormField
+              {/* <FormField
                 control={form.control}
                 name="role"
                 render={({ field }) => (
@@ -177,7 +176,7 @@ const SettingsPage = () => {
                     <FormMessage />
                   </FormItem>
                 )}
-              />
+              /> */}
               {user?.isOAuth === false && (
                 <FormField
                   control={form.control}

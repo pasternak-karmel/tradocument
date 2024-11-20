@@ -1,45 +1,38 @@
 "use client";
 
-import { ColumnDef } from "@tanstack/react-table";
-import { Checkbox } from "@/components/ui/checkbox";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { useRouter } from "next/navigation";
+import { Checkbox } from "@/components/ui/checkbox";
+import { ColumnDef } from "@tanstack/react-table";
+import { ArrowUpDown, Download } from "lucide-react";
 
 export type Article = {
   id: string;
   fichier: string;
   montant: number;
   status: string;
+  fichierTraduis: string | null;
 };
 
-const ActionsMenu = ({ articleId }: { articleId: string }) => {
-  const router = useRouter();
+// const ActionsMenu = ({ articleId }: { articleId: string }) => {
+//   const router = useRouter();
 
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="h-8 w-8 p-0">
-          <span className="sr-only">Open menu</span>
-          <MoreHorizontal className="h-4 w-4" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-        <DropdownMenuItem onClick={() => router.push(`/article/${articleId}`)}>
-          Consulter les infos de l&apos;article
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
-};
+//   return (
+//     <DropdownMenu>
+//       <DropdownMenuTrigger asChild>
+//         <Button variant="ghost" className="h-8 w-8 p-0">
+//           <span className="sr-only">Open menu</span>
+//           <MoreHorizontal className="h-4 w-4" />
+//         </Button>
+//       </DropdownMenuTrigger>
+//       <DropdownMenuContent align="end">
+//         <DropdownMenuLabel>Actions</DropdownMenuLabel>
+//         <DropdownMenuItem onClick={() => router.push(`/article/${articleId}`)}>
+//           Consulter les infos de l&apos;article
+//         </DropdownMenuItem>
+//       </DropdownMenuContent>
+//     </DropdownMenu>
+//   );
+// };
 
 export const Columns: ColumnDef<Article>[] = [
   // id
@@ -68,15 +61,7 @@ export const Columns: ColumnDef<Article>[] = [
   // nom
   {
     accessorKey: "fichier",
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        Fichier
-        <ArrowUpDown className="ml-2 h-4 w-4" />
-      </Button>
-    ),
+    header: "Fichier original",
     cell: ({ row }) => (
       <a target="_blank" href={row.original.fichier} download>
         Voir le fichier
@@ -86,7 +71,15 @@ export const Columns: ColumnDef<Article>[] = [
   // description
   {
     accessorKey: "montant",
-    header: "montant",
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Montant
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
+    ),
     cell: ({ row }) => <p>{row.original.montant} €</p>,
   },
   // prix €
@@ -94,9 +87,24 @@ export const Columns: ColumnDef<Article>[] = [
     accessorKey: "status",
     header: "status",
   },
-  // actions
   {
-    id: "actions",
-    cell: ({ row }) => <ActionsMenu articleId={row.original.id} />,
+    accessorKey: "fichierTraduis",
+    header: "Traduction finale",
+    cell: ({ row }) =>
+      row.original.fichierTraduis ? (
+        <div className="flex">
+
+        <a target="_blank" href={row.original.fichierTraduis!} download>
+          Télécharger 🫡
+        </a>
+        </div>
+      ) : (
+        <p>Presque terminé</p>
+      ),
   },
+  // actions
+  // {
+  //   id: "actions",
+  //   cell: ({ row }) => <ActionsMenu articleId={row.original.id} />,
+  // },
 ];

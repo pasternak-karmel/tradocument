@@ -13,13 +13,15 @@ import { revalidatePath } from "next/cache";
 
 //a faire
 
-//rejoindre formulaire avec loading et envoyer un email
+//rejoindre formulaire avec loading et envoyer un email (pending carmel)
 
-//demander devis refine for langue
+//demander devis refine for langue (done)
 
-//contact page
+//contact page (pending carmel)
 
-//traduction page: faire contenir les infos sir la page
+//traduction page: faire contenir les infos sur la page
+
+//
 
 export async function updatedTraduction(
   TraductionId: string,

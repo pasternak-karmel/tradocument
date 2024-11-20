@@ -1,20 +1,23 @@
 "use server";
 
-import * as z from "zod";
 import bcrypt from "bcryptjs";
+import * as z from "zod";
 
 // import { update } from "@/auth";
-import { SettingsSchema } from "@/schemas";
 import { getUserByEmail, getUserById } from "@/data/user";
-import { currentUser } from "@/lib/auth";
-import { generateVerificationToken } from "@/lib/tokens";
-import { sendVerificationEmail } from "@/lib/mail";
 import { db } from "@/db/drizzle";
 import { users } from "@/db/schema";
+import { currentUser } from "@/lib/auth";
+import { sendVerificationEmail } from "@/lib/mail";
+import { generateVerificationToken } from "@/lib/tokens";
+import { SettingsSchema } from "@/schemas";
 import { eq } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
 
 export const settings = async (values: z.infer<typeof SettingsSchema>) => {
   const user = await currentUser();
+
+  console.log(values);
 
   if (!user) {
     return { error: "Unauthorized" };
@@ -68,6 +71,7 @@ export const settings = async (values: z.infer<typeof SettingsSchema>) => {
   const updatedUser = await db
     .update(users)
     .set({
+      two_factor_enabled: values.isTwoFactorEnabled,
       ...values,
     })
     .where(eq(users.id, dbUser.id));
@@ -78,6 +82,8 @@ export const settings = async (values: z.infer<typeof SettingsSchema>) => {
   //     email: updatedUser.email,
   //   },
   // });
+
+  revalidatePath("/settings");
 
   return { success: "Paramètre mis à jour!" };
 };
