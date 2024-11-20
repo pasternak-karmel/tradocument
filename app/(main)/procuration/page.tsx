@@ -1,12 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
-import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Select,
   SelectContent,
@@ -14,75 +11,24 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { CalendarIcon, Upload } from "lucide-react";
-import { format, isValid, parse } from "date-fns";
-import { fr } from "date-fns/locale";
-import { DatetimePicker } from "@/components/ui/carmeldate";
-
-type FormData = {
-  typeProcuration: string;
-  nomMandant: string;
-  prenomMandant: string;
-  dateNaissanceMandant: Date | string | undefined;
-  lieuNaissanceMandant: string;
-  nationaliteMandant: string;
-  adresseMandant: string;
-  telephoneMandant: string;
-  emailMandant: string;
-  nomMandataire: string;
-  prenomMandataire: string;
-  dateNaissanceMandataire: Date | string | undefined;
-  lieuNaissanceMandataire: string;
-  nationaliteMandataire: string;
-  adresseMandataire: string;
-  telephoneMandataire: string;
-  emailMandataire: string;
-  pouvoirsGeneraux: boolean;
-  pouvoirsSpecifiques: string;
-  dateDebut: Date | string | undefined;
-  dateFin: Date | string | undefined;
-  lieuSignature: string;
-  dateSignature: Date | string | undefined;
-  pieceIdentiteMandant: File | null;
-  justificatifDomicile: File | null;
-  pieceIdentiteMandataire: File | null;
-};
+import { ProcurationFormData } from "@/types";
+import { format } from "date-fns";
+import { motion } from "framer-motion";
+import React, { useState } from "react";
 
 export default function ProcurationComplete() {
-  const [formData, setFormData] = useState<FormData>({
+  const today = format(new Date(), "dd/MM/yyyy");
+  const [formData, setFormData] = useState<ProcurationFormData>({
     typeProcuration: "",
     nomMandant: "",
     prenomMandant: "",
-    dateNaissanceMandant: undefined,
+    dateNaissanceMandant: "",
     lieuNaissanceMandant: "",
     nationaliteMandant: "",
     adresseMandant: "",
-    telephoneMandant: "",
-    emailMandant: "",
-    nomMandataire: "",
-    prenomMandataire: "",
-    dateNaissanceMandataire: undefined,
-    lieuNaissanceMandataire: "",
-    nationaliteMandataire: "",
-    adresseMandataire: "",
-    telephoneMandataire: "",
-    emailMandataire: "",
-    pouvoirsGeneraux: false,
-    pouvoirsSpecifiques: "",
-    dateDebut: undefined,
-    dateFin: undefined,
+    dateDebut: "",
+    dateFin: "",
     lieuSignature: "",
-    dateSignature: undefined,
-    pieceIdentiteMandant: null,
-    justificatifDomicile: null,
-    pieceIdentiteMandataire: null,
   });
 
   const handleInputChange = (
@@ -96,88 +42,10 @@ export default function ProcurationComplete() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleDateChange = (name: string) => (date: Date | undefined) => {
-    setFormData((prev) => ({ ...prev, [name]: date }));
-  };
-
-  const handleCheckboxChange = (checked: boolean) => {
-    setFormData((prev) => ({ ...prev, pouvoirsGeneraux: checked }));
-  };
-
-  const handleFileChange =
-    (name: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (e.target.files?.[0]) {
-        setFormData((prev) => ({ ...prev, [name]: e.target.files![0] }));
-      }
-    };
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Form submitted:", formData);
   };
-
-  const handleDateInputChange =
-    (name: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
-      const { value } = e.target;
-      const date = parse(value, "dd/MM/yyyy", new Date());
-      if (isValid(date)) {
-        setFormData((prev) => ({ ...prev, [name]: date }));
-      } else {
-        setFormData((prev) => ({ ...prev, [name]: value }));
-      }
-    };
-
-  const renderDateInput = (name: string, label: string) => (
-    <div>
-      <Label htmlFor={name}>{label}</Label>
-      <div className="flex items-center space-x-2">
-        <Input
-          id={`${name}-input`}
-          name={name}
-          value={
-            formData[name as keyof FormData] instanceof Date
-              ? format(formData[name as keyof FormData] as Date, "dd/MM/yyyy")
-              : typeof formData[name as keyof FormData] === "string"
-              ? (formData[name as keyof FormData] as string)
-              : ""
-          }
-          onChange={handleDateInputChange(name)}
-          placeholder="JJ/MM/AAAA"
-          className="w-1/2"
-        />
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button variant="outline" className="w-1/2">
-              <CalendarIcon className="mr-2 h-4 w-4" />
-              {formData[name as keyof FormData] instanceof Date ? (
-                format(formData[name as keyof FormData] as Date, "P", {
-                  locale: fr,
-                })
-              ) : (
-                <span>Choisir une date</span>
-              )}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-0">
-            <Calendar
-              mode="single"
-              selected={
-                formData[name as keyof FormData] instanceof Date
-                  ? (formData[name as keyof FormData] as Date)
-                  : undefined
-              }
-              onSelect={(date) => {
-                if (date) {
-                  setFormData((prev) => ({ ...prev, [name]: date }));
-                }
-              }}
-              initialFocus
-            />
-          </PopoverContent>
-        </Popover>
-      </div>
-    </div>
-  );
 
   return (
     <div className="container mx-auto p-4 bg-gray-50 min-h-screen">
@@ -191,336 +59,100 @@ export default function ProcurationComplete() {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
+              <h3 className="text-lg font-semibold">Informations du Mandant</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="nomMandant">Nom</Label>
+                  <Input
+                    id="nomMandant"
+                    name="nomMandant"
+                    value={formData.nomMandant}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="prenomMandant">Prénom</Label>
+                  <Input
+                    id="prenomMandant"
+                    name="prenomMandant"
+                    value={formData.prenomMandant}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
+              </div>
               <div>
-                <Label htmlFor="typeProcuration">Type de Procuration</Label>
+                <Label htmlFor="lieuNaissanceMandant">Lieu de naissance</Label>
+                <Input
+                  id="lieuNaissanceMandant"
+                  name="lieuNaissanceMandant"
+                  value={formData.lieuNaissanceMandant}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="nationaliteMandant">Nationalité</Label>
+                <Input
+                  id="nationaliteMandant"
+                  name="nationaliteMandant"
+                  value={formData.nationaliteMandant}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="adresseMandant">Adresse</Label>
+                <Input
+                  id="adresseMandant"
+                  name="adresseMandant"
+                  value={formData.adresseMandant}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="typeProcuration">Document à récuperer</Label>
                 <Select onValueChange={handleSelectChange("typeProcuration")}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Sélectionnez le type de procuration" />
+                    <SelectValue placeholder="Sélectionnez le type du document" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="generale">
-                      Procuration Générale
-                    </SelectItem>
-                    <SelectItem value="speciale">
-                      Procuration Spéciale
-                    </SelectItem>
-                    <SelectItem value="bancaire">
-                      Procuration Bancaire
-                    </SelectItem>
+                    <SelectItem value="acte">Acte de naissance</SelectItem>
+                    <SelectItem value="speciale">Permis de conduire</SelectItem>
+                    <SelectItem value="bancaire">Acte de mariage</SelectItem>
                     <SelectItem value="vehicule">
-                      Procuration Véhicule
+                      Autorisation pour ken
                     </SelectItem>
-                    <SelectItem value="administrative">
-                      Procuration administrative
-                    </SelectItem>
-                    <SelectItem value="judiciaire">
-                      Procuration judiciaire
-                    </SelectItem>
+                    <SelectItem value="administrative">autre</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold">
-                  Informations du Mandant
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="nomMandant">Nom</Label>
-                    <Input
-                      id="nomMandant"
-                      name="nomMandant"
-                      value={formData.nomMandant}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="prenomMandant">Prénom</Label>
-                    <Input
-                      id="prenomMandant"
-                      name="prenomMandant"
-                      value={formData.prenomMandant}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </div>
-                </div>
-                {renderDateInput("dateNaissanceMandant", "Date de naissance")}
+              <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="lieuNaissanceMandant">
-                    Lieu de naissance
-                  </Label>
+                  <Label htmlFor="dateDebut">Date de début(optionnel)</Label>
                   <Input
-                    id="lieuNaissanceMandant"
-                    name="lieuNaissanceMandant"
-                    value={formData.lieuNaissanceMandant}
+                    type="date"
+                    id="dateDebut"
+                    name="dateDebut"
+                    value={formData.dateDebut}
                     onChange={handleInputChange}
                     required
                   />
                 </div>
                 <div>
-                  <Label htmlFor="nationaliteMandant">Nationalité</Label>
+                  <Label htmlFor="dateFin">Date de fin (optionnel)</Label>
                   <Input
-                    id="nationaliteMandant"
-                    name="nationaliteMandant"
-                    value={formData.nationaliteMandant}
+                    type="date"
+                    id="dateFin"
+                    name="dateFin"
+                    value={formData.dateFin}
                     onChange={handleInputChange}
-                    required
                   />
                 </div>
-                <div>
-                  <Label htmlFor="adresseMandant">Adresse</Label>
-                  <Textarea
-                    id="adresseMandant"
-                    name="adresseMandant"
-                    value={formData.adresseMandant}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="telephoneMandant">Téléphone</Label>
-                  <Input
-                    id="telephoneMandant"
-                    name="telephoneMandant"
-                    value={formData.telephoneMandant}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="emailMandant">Email</Label>
-                  <Input
-                    id="emailMandant"
-                    name="emailMandant"
-                    type="email"
-                    value={formData.emailMandant}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="pieceIdentiteMandant">
-                    Pièce d'identité du Mandant
-                  </Label>
-                  <div className="mt-1 flex items-center">
-                    <label
-                      htmlFor="pieceIdentiteMandant"
-                      className="cursor-pointer bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                    >
-                      <Upload className="h-5 w-5 inline-block mr-2" />
-                      Choisir un fichier
-                    </label>
-                    <input
-                      id="pieceIdentiteMandant"
-                      name="pieceIdentiteMandant"
-                      type="file"
-                      className="sr-only"
-                      onChange={handleFileChange("pieceIdentiteMandant")}
-                      accept="image/*,.pdf"
-                      required
-                    />
-                    {formData.pieceIdentiteMandant && (
-                      <span className="ml-3 text-sm text-gray-600">
-                        {formData.pieceIdentiteMandant.name}
-                      </span>
-                    )}
-                  </div>
-                </div>
-                <div>
-                  <Label htmlFor="justificatifDomicile">
-                    Justificatif de Domicile du Mandant
-                  </Label>
-                  <div className="mt-1 flex items-center">
-                    <label
-                      htmlFor="justificatifDomicile"
-                      className="cursor-pointer bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                    >
-                      <Upload className="h-5 w-5 inline-block mr-2" />
-                      Choisir un fichier
-                    </label>
-                    <input
-                      id="justificatifDomicile"
-                      name="justificatifDomicile"
-                      type="file"
-                      className="sr-only"
-                      onChange={handleFileChange("justificatifDomicile")}
-                      accept="image/*,.pdf"
-                      required
-                    />
-                    {formData.justificatifDomicile && (
-                      <span className="ml-3 text-sm text-gray-600">
-                        {formData.justificatifDomicile.name}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold">
-                  Informations du Mandataire
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="nomMandataire">Nom</Label>
-                    <Input
-                      id="nomMandataire"
-                      name="nomMandataire"
-                      value={formData.nomMandataire}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </div>
-                  <div>
-                    <Label  htmlFor="prenomMandataire">Prénom</Label>
-                    <Input
-                      id="prenomMandataire"
-                      name="prenomMandataire"
-                      value={formData.prenomMandataire}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </div>
-                </div>
-                {renderDateInput(
-                  "dateNaissanceMandataire",
-                  "Date de naissance"
-                )}
-                <div>
-                  <Label htmlFor="lieuNaissanceMandataire">
-                    Lieu de naissance
-                  </Label>
-                  <Input
-                    id="lieuNaissanceMandataire"
-                    name="lieuNaissanceMandataire"
-                    value={formData.lieuNaissanceMandataire}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="nationaliteMandataire">Nationalité</Label>
-                  <Input
-                    id="nationaliteMandataire"
-                    name="nationaliteMandataire"
-                    value={formData.nationaliteMandataire}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="adresseMandataire">Adresse</Label>
-                  <Textarea
-                    id="adresseMandataire"
-                    name="adresseMandataire"
-                    value={formData.adresseMandataire}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="telephoneMandataire">Téléphone</Label>
-                  <Input
-                    id="telephoneMandataire"
-                    name="telephoneMandataire"
-                    value={formData.telephoneMandataire}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="emailMandataire">Email</Label>
-                  <Input
-                    id="emailMandataire"
-                    name="emailMandataire"
-                    type="email"
-                    value={formData.emailMandataire}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="pieceIdentiteMandataire">
-                    Pièce d'identité du Mandataire
-                  </Label>
-                  <div className="mt-1 flex items-center">
-                    <label
-                      htmlFor="pieceIdentiteMandataire"
-                      className="cursor-pointer bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                    >
-                      <Upload className="h-5 w-5 inline-block mr-2" />
-                      Choisir un fichier
-                    </label>
-                    <input
-                      id="pieceIdentiteMandataire"
-                      name="pieceIdentiteMandataire"
-                      type="file"
-                      className="sr-only"
-                      onChange={handleFileChange("pieceIdentiteMandataire")}
-                      accept="image/*,.pdf"
-                      required
-                    />
-                    {formData.pieceIdentiteMandataire && (
-                      <span className="ml-3 text-sm text-gray-600">
-                        {formData.pieceIdentiteMandataire.name}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold">Pouvoirs</h3>
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id="pouvoirsGeneraux"
-                    checked={formData.pouvoirsGeneraux}
-                    onCheckedChange={handleCheckboxChange}
-                  />
-                  <label
-                    htmlFor="pouvoirsGeneraux"
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                  >
-                    Pouvoirs généraux
-                  </label>
-                </div>
-                <div>
-                  <Label htmlFor="pouvoirsSpecifiques">
-                    Pouvoirs spécifiques
-                  </Label>
-                  <Textarea
-                    id="pouvoirsSpecifiques"
-                    name="pouvoirsSpecifiques"
-                    value={formData.pouvoirsSpecifiques}
-                    onChange={handleInputChange}
-                    placeholder="Détaillez les pouvoirs spécifiques conférés au mandataire"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold">
-                  Durée de la procuration
-                </h3>
-                {renderDateInput("dateDebut", "Date de début")}
-                {renderDateInput("dateFin", "Date de fin (optionnelle)")}
-              </div>
-
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold">Signature</h3>
-                <div>
-                  <Label htmlFor="lieuSignature">Lieu de signature</Label>
-                  <Input
-                    id="lieuSignature"
-                    name="lieuSignature"
-                    value={formData.lieuSignature}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
-                {renderDateInput("dateSignature", "Date de signature")}
               </div>
 
               <Button type="submit" className="w-full">
@@ -532,130 +164,81 @@ export default function ProcurationComplete() {
 
         <Card className="p-6 shadow-lg bg-white">
           <CardHeader>
-            <CardTitle>Aperçu de la Procuration</CardTitle>
+            <CardTitle>Aperçu</CardTitle>
           </CardHeader>
           <CardContent>
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5 }}
-              className="space-y-6 text-gray-700 bg-gray-100 p-8 rounded-lg shadow-inner"
+              className="space-y-6 text-gray-700 bg-white p-8 rounded-lg min-h-[29.7cm] w-full max-w-[21cm] mx-auto"
             >
-              <div className="text-center border-b pb-4">
-                <h2 className="text-2xl font-bold">PROCURATION</h2>
-                <p className="text-sm text-gray-500">
-                  {formData.typeProcuration ||
-                    "Type de procuration non spécifié"}
-                </p>
+              <div className="text-center mb-8">
+                <h2 className="font-bold">Objet : Procuration</h2>
               </div>
 
-              <div className="space-y-4">
-                <h3 className="font-semibold text-lg">Je soussigné(e),</h3>
+              <div className="space-y-6 text-justify">
                 <p>
-                  <strong>Mandant :</strong> {formData.prenomMandant}{" "}
-                  {formData.nomMandant}
+                  Je, soussigné(e) {formData.prenomMandant || "___"}{" "}
+                  {formData.nomMandant || "___"}, né(e) le{" "}
+                  {formData.dateNaissanceMandant?.toLocaleString() ||
+                    "Date de naissance"}{" "}
+                  à {formData.lieuNaissanceMandant || "___"}, donne par la
+                  présente pouvoir à l'entité suivante :{" "}
+                  <span className="font-semibold">Tradocument</span>,
                 </p>
-                <p>
-                  <strong>Né(e) le :</strong>{" "}
-                  {formData.dateNaissanceMandant instanceof Date
-                    ? format(formData.dateNaissanceMandant, "P", { locale: fr })
-                    : formData.dateNaissanceMandant || "Non spécifié"}
-                </p>
-                <p>
-                  <strong>À :</strong> {formData.lieuNaissanceMandant}
-                </p>
-                <p>
-                  <strong>Nationalité :</strong> {formData.nationaliteMandant}
-                </p>
-                <p>
-                  <strong>Demeurant à :</strong> {formData.adresseMandant}
-                </p>
-              </div>
 
-              <div className="space-y-4">
-                <h3 className="font-semibold text-lg">
-                  Donne par la présente pouvoir à :
-                </h3>
-                <p>
-                  <strong>Mandataire :</strong> {formData.prenomMandataire}{" "}
-                  {formData.nomMandataire}
-                </p>
-                <p>
-                  <strong>Né(e) le :</strong>{" "}
-                  {formData.dateNaissanceMandataire instanceof Date
-                    ? format(formData.dateNaissanceMandataire, "P", {
-                        locale: fr,
-                      })
-                    : formData.dateNaissanceMandataire || "Non spécifié"}
-                </p>
-                <p>
-                  <strong>À :</strong> {formData.lieuNaissanceMandataire}
-                </p>
-                <p>
-                  <strong>Nationalité :</strong>{" "}
-                  {formData.nationaliteMandataire}
-                </p>
-                <p>
-                  <strong>Demeurant à :</strong> {formData.adresseMandataire}
-                </p>
-              </div>
+                <div className="w-full border-b border-black"></div>
 
-              <div className="space-y-4">
-                <h3 className="font-semibold text-lg">
-                  De, pour moi et en mon nom :
-                </h3>
-                {formData.pouvoirsGeneraux && (
-                  <p>
-                    Exercer tous les pouvoirs généraux nécessaires pour gérer
-                    mes affaires.
-                  </p>
-                )}
-                {formData.pouvoirsSpecifiques && (
-                  <p>
-                    <strong>Pouvoirs spécifiques :</strong>{" "}
-                    {formData.pouvoirsSpecifiques}
-                  </p>
-                )}
-              </div>
+                <p>
+                  afin qu'elle puisse récuperer le document suivant en mon nom:
+                </p>
 
-              <div className="space-y-4">
-                <h3 className="font-semibold text-lg">
-                  Durée de la procuration :
-                </h3>
-                <p>
-                  <strong>Du :</strong>{" "}
-                  {formData.dateDebut instanceof Date
-                    ? format(formData.dateDebut, "P", { locale: fr })
-                    : formData.dateDebut || "Non spécifié"}
-                </p>
-                <p>
-                  <strong>Au :</strong>{" "}
-                  {formData.dateFin instanceof Date
-                    ? format(formData.dateFin, "P", { locale: fr })
-                    : formData.dateFin || "Non spécifié (durée indéterminée)"}
-                </p>
-              </div>
+                <li>{formData.typeProcuration || "___"}</li>
 
-              <div className="pt-6 border-t">
-                <p>
-                  <strong>Fait à :</strong> {formData.lieuSignature}
-                </p>
-                <p>
-                  <strong>Le :</strong>{" "}
-                  {formData.dateSignature instanceof Date
-                    ? format(formData.dateSignature, "P", { locale: fr })
-                    : formData.dateSignature || "Non spécifié"}
-                </p>
-              </div>
+                <div className="w-full border-b border-black"></div>
 
-              <div className="mt-8 space-y-4">
-                <div>
-                  <p className="font-semibold">Signature du Mandant :</p>
-                  <div className="w-40 h-20 border-b border-gray-400 mt-2" />
+                <p>
+                  Cette procuration est confiée à{" "}
+                  <span className="font-semibold">Tradocument</span> pour une
+                  durée
+                  {formData.dateFin
+                    ? ` du ${formData.dateDebut} au ${formData.dateFin}`
+                    : " indéterminée"}
+                  . Je me réserve la possibilité d'y mettre fin à tout moment.
+                </p>
+
+                <div className="w-full border-b border-black my-4"></div>
+
+                <p>
+                  Je conserve la responsabilité de toutes les actions effectuées
+                  par le mandataire en vertu de la présente procuration.
+                </p>
+
+                <div className="mt-12">
+                  <p>Fait le {today}, en 2 (deux) exemplaires originaux,</p>
                 </div>
-                <div>
-                  <p className="font-semibold">Signature du Mandataire :</p>
-                  <div className="w-40 h-20 border-b border-gray-400 mt-2" />
+
+                <div className="space-y-8 mt-16">
+                  <div>
+                    <p className="text-center font-bold mb-16">
+                      SIGNATURE DU MANDANT
+                    </p>
+                    <div className="w-full text-center">
+                      <div className="border-b border-black w-48 mx-auto"></div>
+                      <div className="border-b border-black w-48 mx-auto mt-2"></div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <p className="text-center font-bold mb-16">
+                      SIGNATURE DU MANDATAIRE
+                    </p>
+                    <div className="w-full text-center">
+                      <div className="border-b border-black w-48 mx-auto"></div>
+                      <div className="border-b border-black w-48 mx-auto mt-2"></div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </motion.div>

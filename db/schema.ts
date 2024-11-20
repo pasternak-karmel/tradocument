@@ -1,11 +1,13 @@
 import {
   boolean,
+  date,
   integer,
   pgTable,
   primaryKey,
   text,
   timestamp,
   uniqueIndex,
+  varchar,
 } from "drizzle-orm/pg-core";
 
 import type { AdapterAccountType } from "next-auth/adapters";
@@ -242,4 +244,22 @@ export const contact = pgTable("contact", {
   email: text("email").notNull(),
   sujet: text("sujet").notNull(),
   message: text("message").notNull(),
+});
+
+
+export const procurations = pgTable('procurations', {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  mandantNom: varchar('mandant_nom', { length: 255 }).notNull(),
+  mandantPrenom: varchar('mandant_prenom', { length: 255 }).notNull(),
+  mandantAdresse: text('mandant_adresse').notNull(),
+  mandataireNom: varchar('mandataire_nom', { length: 255 }).notNull(),
+  mandatairePrenom: varchar('mandataire_prenom', { length: 255 }).notNull(),
+  mandataireAdresse: text('mandataire_adresse').notNull(),
+  pouvoirs: text('pouvoirs').notNull(),
+  dateDebut: date('date_debut').notNull(),
+  dateFin: date('date_fin'),
+  lieuSignature: varchar('lieu_signature', { length: 255 }).notNull(),
+  dateSignature: date('date_signature').notNull(),
 });
