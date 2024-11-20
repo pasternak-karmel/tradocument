@@ -1,8 +1,7 @@
 import { auth } from "@/auth";
 import { db } from "@/db/drizzle";
-import { NextResponse } from "next/server";
-import { eq } from "drizzle-orm";
 import { DemandeDevis } from "@/db/schema";
+import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   try {
@@ -24,6 +23,7 @@ export async function POST(req: Request) {
     // )[0];
 
     const values = await req.json();
+
     const {
       firstName,
       lastName,
@@ -33,31 +33,31 @@ export async function POST(req: Request) {
       documentType,
       sourceLanguage,
       targetLanguage,
-      wordCount,
       additionalInfo,
       deliveryAddress,
       montant,
-      distance,
-      url,
     } = values;
-
 
     const traductionValues = {
       userId,
       nom: lastName,
       prenom: firstName,
       email,
-      fichier: url,
+      fichier: values.url ? values.url : undefined,
       montant: Math.floor(montant),
       numero: phone,
       pays: country,
       typeDocument: documentType,
       langueSource: sourceLanguage,
       langueTraduit: targetLanguage,
-      page: wordCount,
       infoSupl: additionalInfo,
-      adresseDepart: deliveryAddress.departureAddress,
-      adresseArriver: deliveryAddress.shippingAddress,
+      adresseDepart: values.deliveryAddress
+        ? deliveryAddress.departureAddress
+        : undefined,
+      adresseArriver: values.deliveryAddress
+        ? deliveryAddress.shippingAddress
+        : undefined,
+      type: values.deliveryAddress ? true : false,
     };
 
     const [result] = await db

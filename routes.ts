@@ -32,7 +32,7 @@ export const authRoutes: string[] = [
 ];
 
 export const adminRoutes: string[] = ["/autorisation", "/dashboard"];
-export const agentRoutes: string[] = ["/traducteur", "/dashboard"];
+export const agentRoutes: string[] = ["/traducteur"];
 
 /**
  * The prefix for API authentication routes

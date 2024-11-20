@@ -6,10 +6,10 @@ CREATE TABLE IF NOT EXISTS "demande_devis" (
 	"numero" text NOT NULL,
 	"email" text NOT NULL,
 	"pays" text NOT NULL,
+	"type" boolean DEFAULT false NOT NULL,
 	"type_document" text NOT NULL,
 	"langue_source" text NOT NULL,
 	"langue_traduit" text NOT NULL,
-	"page" text NOT NULL,
 	"information_supplementaire" text,
 	"fichier" text[],
 	"fichier_traduis" text,
@@ -107,7 +107,6 @@ CREATE TABLE IF NOT EXISTS "traduction" (
 	"traduction_from" text NOT NULL,
 	"traduction_to" text NOT NULL,
 	"payer" boolean DEFAULT false,
-	CONSTRAINT "traduction_fichier_unique" UNIQUE("fichier"),
 	CONSTRAINT "traduction_fichier_traduis_unique" UNIQUE("fichier_traduis")
 );
 --> statement-breakpoint

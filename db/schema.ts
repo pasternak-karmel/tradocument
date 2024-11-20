@@ -166,11 +166,9 @@ export const traduction = pgTable("traduction", {
   nom: text("nom").notNull(),
   prenom: text("prenom").notNull(),
   email: text("email").notNull(),
-  fichier: text("fichier").unique().notNull(),
+  fichier: text("fichier").notNull(),
   fichierTraduis: text("fichier_traduis").unique(),
-  traducteur: text("traducteur")
-    // .unique()
-    .references(() => users.id),
+  traducteur: text("traducteur").references(() => users.id),
   montant: integer("montant").notNull(),
   created_at: timestamp("createdAT", { mode: "date" }).notNull().defaultNow(),
   delivered_at: timestamp("deliveredAT", { mode: "date" }),
@@ -196,16 +194,14 @@ export const DemandeDevis = pgTable("demande_devis", {
   numero: text("numero").notNull(),
   email: text("email").notNull(),
   pays: text("pays").notNull(),
+  type: boolean("type").notNull().default(false),
   typeDocument: text("type_document").notNull(),
   langueSource: text("langue_source").notNull(),
   langueTraduit: text("langue_traduit").notNull(),
-  page: text("page").notNull(),
   infoSupl: text("information_supplementaire"),
   fichier: text("fichier").array(),
   fichierTraduis: text("fichier_traduis").unique(),
-  traducteur: text("traducteur")
-    // .unique()
-    .references(() => users.id),
+  traducteur: text("traducteur").references(() => users.id),
   adresseDepart: text("adresse_depart"),
   adresseArriver: text("adresse_arriver"),
   montant: integer("montant").notNull(),
@@ -247,19 +243,19 @@ export const contact = pgTable("contact", {
 });
 
 
-export const procurations = pgTable('procurations', {
-  id: text("id")
-    .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
-  mandantNom: varchar('mandant_nom', { length: 255 }).notNull(),
-  mandantPrenom: varchar('mandant_prenom', { length: 255 }).notNull(),
-  mandantAdresse: text('mandant_adresse').notNull(),
-  mandataireNom: varchar('mandataire_nom', { length: 255 }).notNull(),
-  mandatairePrenom: varchar('mandataire_prenom', { length: 255 }).notNull(),
-  mandataireAdresse: text('mandataire_adresse').notNull(),
-  pouvoirs: text('pouvoirs').notNull(),
-  dateDebut: date('date_debut').notNull(),
-  dateFin: date('date_fin'),
-  lieuSignature: varchar('lieu_signature', { length: 255 }).notNull(),
-  dateSignature: date('date_signature').notNull(),
-});
+// export const procurations = pgTable('procurations', {
+//   id: text("id")
+//     .primaryKey()
+//     .$defaultFn(() => crypto.randomUUID()),
+//   mandantNom: varchar('mandant_nom', { length: 255 }).notNull(),
+//   mandantPrenom: varchar('mandant_prenom', { length: 255 }).notNull(),
+//   mandantAdresse: text('mandant_adresse').notNull(),
+//   mandataireNom: varchar('mandataire_nom', { length: 255 }).notNull(),
+//   mandatairePrenom: varchar('mandataire_prenom', { length: 255 }).notNull(),
+//   mandataireAdresse: text('mandataire_adresse').notNull(),
+//   pouvoirs: text('pouvoirs').notNull(),
+//   dateDebut: date('date_debut').notNull(),
+//   dateFin: date('date_fin'),
+//   lieuSignature: varchar('lieu_signature', { length: 255 }).notNull(),
+//   dateSignature: date('date_signature').notNull(),
+// });

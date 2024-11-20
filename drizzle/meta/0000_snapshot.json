@@ -1,5 +1,5 @@
 {
-  "id": "21e84ebd-d988-4fa9-b9a8-55b9e4ca8ede",
+  "id": "a042d3b9-4b86-47ad-b8d3-c5c5596bcf65",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -50,6 +50,13 @@
           "primaryKey": false,
           "notNull": true
         },
+        "type": {
+          "name": "type",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
         "type_document": {
           "name": "type_document",
           "type": "text",
@@ -64,12 +71,6 @@
         },
         "langue_traduit": {
           "name": "langue_traduit",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "page": {
-          "name": "page",
           "type": "text",
           "primaryKey": false,
           "notNull": true
@@ -764,13 +765,6 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "traduction_fichier_unique": {
-          "name": "traduction_fichier_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "fichier"
-          ]
-        },
         "traduction_fichier_traduis_unique": {
           "name": "traduction_fichier_traduis_unique",
           "nullsNotDistinct": false,

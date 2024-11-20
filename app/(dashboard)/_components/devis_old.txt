@@ -35,12 +35,14 @@ import { useCurrentUser } from "@/hooks/use-current-user";
 
 import { demandeDevis } from "@/schemas";
 
+import { calculateDistance } from "@/actions/calculate_distance";
 import { calculateMontantPage } from "@/actions/calculate_montant_page";
 import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -97,16 +99,23 @@ const DevisForm = () => {
       sourceLanguage: "",
       targetLanguage: "",
       deadline: "",
+      wordCount: "",
       additionalInfo: "",
       termsAccepted: false,
+      deliveryAddress: {
+        departureAddress: "",
+        shippingAddress: "",
+      },
     },
   });
 
   useEffect(() => {
     if (montant !== null && montant !== 0) {
-      setTotalAmount(montant);
+      setTotalAmount(
+        showDeliveryAddress && distance !== null ? distance + montant : montant
+      );
     }
-  }, [montant]);
+  }, [montant, distance, showDeliveryAddress]);
 
   function updateFileProgress(key: string, progress: FileState["progress"]) {
     setFileStates((fileStates) => {
@@ -131,6 +140,7 @@ const DevisForm = () => {
     if (token) {
       try {
         setLoading(true);
+        let calculatedDistance = null;
         let calculatedMontant = 0;
 
         const imageUrls = await Promise.all(
@@ -147,6 +157,7 @@ const DevisForm = () => {
                 });
                 return {
                   url: res.url,
+                  // , thumbnailUrl: res.thumbnailUrl || null
                 };
               } catch (err) {
                 toast.error(`Une erreur s'est produite`, {
@@ -177,10 +188,20 @@ const DevisForm = () => {
           validImageUrls.map((urlObj) => urlObj.url)
         );
 
+        if (showDeliveryAddress && values.deliveryAddress) {
+          calculatedDistance = await calculateDistance({
+            departLocation: values.deliveryAddress.departureAddress!,
+            arriverLocation: values.deliveryAddress.shippingAddress!,
+          });
+        }
+
+        if (showDeliveryAddress && calculatedDistance === null)
+          return showError("Distance non existante");
         if (calculatedMontant === null)
           return showError("Montant non existant");
 
         setMontant(calculatedMontant);
+        setDistance(calculatedDistance);
       } catch (error) {
         showError("Erreur lors de la soumission");
       } finally {
@@ -194,7 +215,9 @@ const DevisForm = () => {
   const validate = async (values: z.infer<typeof demandeDevis>) => {
     const formValues = form.getValues();
 
-    console.log(formValues);
+    if (showDeliveryAddress && !distance)
+      return showError("Distance non calculée");
+    setLoading(true);
 
     try {
       const response = await fetch("/api/demande_devis", {
@@ -202,7 +225,8 @@ const DevisForm = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...formValues,
-          montant: montant,
+          montant: showDeliveryAddress ? totalAmount : montant,
+          distance: showDeliveryAddress ? distance : null,
         }),
       });
 
@@ -536,6 +560,24 @@ const DevisForm = () => {
                       </FormItem>
                     )}
                   />
+                  <FormField
+                    control={form.control}
+                    name="wordCount"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Nombre de pages</FormLabel>
+                        <FormControl>
+                          <Input
+                            disabled={montant !== null || loading}
+                            placeholder="Ex : 5"
+                            {...field}
+                            style={inputStyle}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
                   <FormField
                     control={form.control}
@@ -576,6 +618,65 @@ const DevisForm = () => {
                   </div>
 
                   <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="delivery"
+                      checked={showDeliveryAddress}
+                      onCheckedChange={(checked) => {
+                        setShowDeliveryAddress(checked as boolean);
+                        if (!checked) {
+                          setDistance(null);
+                        }
+                      }}
+                      disabled={montant !== null || loading}
+                    />
+                    <label htmlFor="delivery">
+                      Récupérer un document administratif à faire traduire par
+                      procuration
+                    </label>
+                  </div>
+
+                  {showDeliveryAddress && (
+                    <div className="space-y-4">
+                      <FormField
+                        control={form.control}
+                        name="deliveryAddress.departureAddress"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Adresse de départ</FormLabel>
+                            <FormControl>
+                              <Input
+                                disabled={montant !== null || loading}
+                                placeholder="eg: France, Paris"
+                                style={inputStyle}
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="deliveryAddress.shippingAddress"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Adresse d'expédition</FormLabel>
+                            <FormControl>
+                              <Input
+                                disabled={montant !== null || loading}
+                                placeholder="eg: Maroc, rabat"
+                                style={inputStyle}
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  )}
+                  <div className="flex items-center space-x-2">
                     <FormField
                       control={form.control}
                       name="termsAccepted"
@@ -601,6 +702,11 @@ const DevisForm = () => {
                     <div className="mt-4">
                       <h3>Montant total à payer:</h3>
                       <pre>{totalAmount?.toFixed(2)}€ soit:</pre>
+                      {showDeliveryAddress && distance !== null && (
+                        <pre>
+                          {distance.toFixed(2)}€ pour le transport (0.25€/km)
+                        </pre>
+                      )}
                       <pre>
                         {montant.toFixed(2)}€ (69€/page) du document importé
                       </pre>
@@ -626,6 +732,7 @@ const DevisForm = () => {
                 </form>
               </Form>
             </CardContent>
+            <CardFooter></CardFooter>
           </Card>
         </motion.div>
       </div>

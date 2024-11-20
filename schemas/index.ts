@@ -142,50 +142,45 @@ export const meLivrer = z.object({
     .optional(),
 });
 
-export const demandeDevis = z.object({
-  firstName: z
-    .string()
-    .min(2, { message: "Le prénom doit contenir au moins 2 caractères" }),
-  lastName: z
-    .string()
-    .min(2, { message: "Le nom doit contenir au moins 2 caractères" }),
-  email: z.string().email({ message: "Adresse email invalide" }),
-  phone: z.string().min(10, { message: "Numéro de téléphone invalide" }),
-  country: z.string({
-    required_error: "Please select a country.",
-  }),
-  // serviceType: z.string({
-  //   required_error: "Veuillez sélectionner un type de service",
-  // }),
-  documentType: z.string({
-    required_error: "Veuillez sélectionner un type de document",
-  }),
-  sourceLanguage: z.string({
-    required_error: "Veuillez sélectionner la langue source",
-  }),
-  targetLanguage: z.string({
-    required_error: "Veuillez sélectionner la langue cible",
-  }),
-  deadline: z.string().optional(),
-  wordCount: z.string().refine((val) => !Number.isNaN(parseInt(val, 10)), {
-    message: "Veuillez entrer un nombre valide",
-  }),
-  additionalInfo: z.string().optional(),
-  termsAccepted: z.boolean().refine((val) => val === true, {
-    message: "Vous devez accepter les termes et conditions",
-  }),
-  deliveryAddress: z
-    .object({
-      departureAddress: z.string().optional(),
-      shippingAddress: z.string().optional(),
-    })
-    .optional(),
-  url: z.array(z.string()).optional(),
-}).refine((data) => data.sourceLanguage !== data.targetLanguage, {
-  message: "Les langues d'origine et de traduction doivent être différentes",
-  path: ["targetLanguage"],
-});
-
+export const demandeDevis = z
+  .object({
+    firstName: z
+      .string()
+      .min(2, { message: "Le prénom doit contenir au moins 2 caractères" }),
+    lastName: z
+      .string()
+      .min(2, { message: "Le nom doit contenir au moins 2 caractères" }),
+    email: z.string().email({ message: "Adresse email invalide" }),
+    phone: z.string().min(10, { message: "Numéro de téléphone invalide" }),
+    country: z.string({
+      required_error: "Please select a country.",
+    }),
+    documentType: z.string({
+      required_error: "Veuillez sélectionner un type de document",
+    }),
+    sourceLanguage: z.string({
+      required_error: "Veuillez sélectionner la langue source",
+    }),
+    targetLanguage: z.string({
+      required_error: "Veuillez sélectionner la langue cible",
+    }),
+    deadline: z.string().optional(),
+    additionalInfo: z.string().optional(),
+    termsAccepted: z.boolean().refine((val) => val === true, {
+      message: "Vous devez accepter les termes et conditions",
+    }),
+    deliveryAddress: z
+      .object({
+        departureAddress: z.string(),
+        shippingAddress: z.string(),
+      })
+      .optional(),
+    url: z.array(z.string()).optional(),
+  })
+  .refine((data) => data.sourceLanguage !== data.targetLanguage, {
+    message: "Les langues d'origine et de traduction doivent être différentes",
+    path: ["targetLanguage"],
+  });
 
 export const RejoindreSchema = z.object({
   nom: z

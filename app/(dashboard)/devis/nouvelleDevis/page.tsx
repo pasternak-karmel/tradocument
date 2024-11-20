@@ -26,7 +26,6 @@ import { useForm } from "react-hook-form";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 
-import { FileState, MultiFileDropzone } from "@/components/multi-file";
 import { useEdgeStore } from "@/lib/edgestore";
 
 import { useReCaptcha } from "next-recaptcha-v3";
@@ -35,12 +34,13 @@ import { useCurrentUser } from "@/hooks/use-current-user";
 
 import { demandeDevis } from "@/schemas";
 
-import { calculateMontantPage } from "@/actions/calculate_montant_page";
+import { calculateDistance } from "@/actions/calculate_distance";
 import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -64,12 +64,12 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { showError } from "@/function/notification-toast";
 import { devisSent, devisSentAdmin } from "@/lib/mail";
-import { acceptedFileTypes, languages } from "@/type";
+import { languages } from "@/type";
 import { Mail, User } from "lucide-react";
 import { BeatLoader } from "react-spinners";
 import { toast } from "sonner";
 
-const DevisForm = () => {
+const DevisFormProc = () => {
   const user = useCurrentUser();
   const { executeRecaptcha } = useReCaptcha();
   const router = useRouter();
@@ -77,11 +77,6 @@ const DevisForm = () => {
 
   const [showDeliveryAddress, setShowDeliveryAddress] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [fileStates, setFileStates] = useState<FileState[]>([]);
-  const [, setUrls] = useState<{ url: string; thumbnailUrl: string | null }[]>(
-    []
-  );
-  const [montant, setMontant] = useState<number | null>(null);
   const [distance, setDistance] = useState<number | null>(null);
   const [totalAmount, setTotalAmount] = useState<number | null>(null);
 
@@ -103,84 +98,34 @@ const DevisForm = () => {
   });
 
   useEffect(() => {
-    if (montant !== null && montant !== 0) {
-      setTotalAmount(montant);
+    if (distance !== null && distance !== 0) {
+      setTotalAmount(distance);
     }
-  }, [montant]);
-
-  function updateFileProgress(key: string, progress: FileState["progress"]) {
-    setFileStates((fileStates) => {
-      const newFileStates = structuredClone(fileStates);
-      const fileState = newFileStates.find(
-        (fileState) => fileState.key === key
-      );
-      if (fileState) {
-        fileState.progress = progress;
-      }
-      return newFileStates;
-    });
-  }
+  }, [distance]);
 
   async function onSubmit(values: z.infer<typeof demandeDevis>) {
     if (!user) return router.push(`/devis`);
 
-    if (fileStates.length === 0)
-      return showError("Veuillez sélectionner le fichier à traduire");
+    if (!values.deliveryAddress ) {
+      showError("Adresse de livraison non renseignée");
+      return;
+    }
 
     const token = await executeRecaptcha("form_submit_demande_devis");
     if (token) {
       try {
         setLoading(true);
-        let calculatedMontant = 0;
+        let calculatedDistance = 0;
 
-        const imageUrls = await Promise.all(
-          fileStates.map(async (fileState) => {
-            if (fileState.file instanceof File) {
-              try {
-                const res = await edgestore.document.upload({
-                  options: { temporary: true },
-                  file: fileState.file,
-                  input: { type: "post" },
-                  onProgressChange: (progress) => {
-                    updateFileProgress(fileState.key, progress);
-                  },
-                });
-                return {
-                  url: res.url,
-                };
-              } catch (err) {
-                toast.error(`Une erreur s'est produite`, {
-                  description: `Connexion erreur`,
-                });
-                return null;
-              }
-            } else {
-              return null;
-            }
-          })
-        );
+        calculatedDistance = await calculateDistance({
+          departLocation: values.deliveryAddress.departureAddress!,
+          arriverLocation: values.deliveryAddress.shippingAddress!,
+        });
 
-        const validImageUrls = imageUrls.filter(
-          (res): res is { url: string; thumbnailUrl: string | null } =>
-            res !== null
-        );
+        if (showDeliveryAddress && calculatedDistance === null)
+          return showError("Distance non existante");
 
-        for (const urlObj of validImageUrls) {
-          const pageCount = await calculateMontantPage(urlObj.url);
-          if (pageCount) {
-            calculatedMontant += pageCount;
-          }
-        }
-
-        form.setValue(
-          "url",
-          validImageUrls.map((urlObj) => urlObj.url)
-        );
-
-        if (calculatedMontant === null)
-          return showError("Montant non existant");
-
-        setMontant(calculatedMontant);
+        setDistance(calculatedDistance);
       } catch (error) {
         showError("Erreur lors de la soumission");
       } finally {
@@ -194,7 +139,9 @@ const DevisForm = () => {
   const validate = async (values: z.infer<typeof demandeDevis>) => {
     const formValues = form.getValues();
 
-    console.log(formValues);
+    if (showDeliveryAddress && !distance)
+      return showError("Distance non calculée");
+    setLoading(true);
 
     try {
       const response = await fetch("/api/demande_devis", {
@@ -202,7 +149,7 @@ const DevisForm = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...formValues,
-          montant: montant,
+          montant: distance,
         }),
       });
 
@@ -211,30 +158,12 @@ const DevisForm = () => {
         return showError(result.message || `Internal Server Error`);
 
       if (result.success) {
-        try {
-          if (!values.url) return showError("Une erreur est survenue");
-
-          for (const url of values.url) {
-            await edgestore.document.confirmUpload({ url });
-          }
-        } catch (err) {
-          return showError(
-            "Erreur lors de la validation, Réessayez plus tard ou contactez le support"
-          );
-        }
-
         form.reset();
-        setFileStates([]);
-        setUrls([]);
         await devisSent(formValues);
         await devisSentAdmin(formValues);
         router.push(`/devis/payment?id=${result.message}`);
       } else {
         showError(result.message);
-        if (!values.url) return showError("Une erreur est survenue");
-        for (const url of values.url) {
-          await edgestore.document.delete({ url });
-        }
       }
     } catch (error) {
       console.error("Erreur lors de la validation:", error);
@@ -289,7 +218,7 @@ const DevisForm = () => {
                             <div className="flex items-center">
                               <User className="w-4 h-4 mr-2 text-gray-500" />
                               <Input
-                                disabled={montant !== null || loading}
+                                disabled={distance !== null || loading}
                                 placeholder="Votre prénom"
                                 style={inputStyle}
                                 {...field}
@@ -310,7 +239,7 @@ const DevisForm = () => {
                             <div className="flex items-center">
                               <User className="w-4 h-4 mr-2 text-gray-500" />
                               <Input
-                                disabled={montant !== null || loading}
+                                disabled={distance !== null || loading}
                                 placeholder="Votre nom"
                                 style={inputStyle}
                                 {...field}
@@ -337,7 +266,7 @@ const DevisForm = () => {
                                 type="email"
                                 placeholder="votre@email.com"
                                 {...field}
-                                disabled={montant !== null || loading}
+                                disabled={distance !== null || loading}
                                 style={inputStyle}
                               />
                             </div>
@@ -357,7 +286,7 @@ const DevisForm = () => {
                           </FormLabel>
                           <FormControl>
                             <PhoneInput
-                              disabled={montant !== null || loading}
+                              disabled={distance !== null || loading}
                               country={"fr"}
                               value={field.value}
                               onChange={field.onChange}
@@ -382,7 +311,7 @@ const DevisForm = () => {
                           <PopoverTrigger asChild>
                             <FormControl>
                               <Button
-                                disabled={montant !== null || loading}
+                                disabled={distance !== null || loading}
                                 style={{ borderWidth: 1, borderColor: "black" }}
                                 variant="outline"
                                 role="combobox"
@@ -452,7 +381,7 @@ const DevisForm = () => {
                         <FormLabel>Type de document</FormLabel>
                         <Select
                           disabled={
-                            distance !== null || montant !== null || loading
+                            distance !== null || distance !== null || loading
                           }
                           onValueChange={field.onChange}
                         >
@@ -492,7 +421,7 @@ const DevisForm = () => {
                       <FormItem>
                         <FormLabel>Langue du document</FormLabel>
                         <Select
-                          disabled={montant !== null || loading}
+                          disabled={distance !== null || loading}
                           onValueChange={field.onChange}
                         >
                           <SelectTrigger style={inputStyle}>
@@ -518,7 +447,7 @@ const DevisForm = () => {
                       <FormItem>
                         <FormLabel>Le document sera traduit en :</FormLabel>
                         <Select
-                          disabled={montant !== null || loading}
+                          disabled={distance !== null || loading}
                           onValueChange={field.onChange}
                         >
                           <SelectTrigger style={inputStyle}>
@@ -545,7 +474,7 @@ const DevisForm = () => {
                         <FormLabel>Informations supplémentaires</FormLabel>
                         <FormControl>
                           <Textarea
-                            disabled={montant !== null || loading}
+                            disabled={distance !== null || loading}
                             placeholder="Ajoutez des détails supplémentaires sur votre demande."
                             {...field}
                             style={inputStyle}
@@ -557,24 +486,48 @@ const DevisForm = () => {
                   />
 
                   <div className="space-y-4">
-                    <FormLabel>Télécharger le document à traduire</FormLabel>
-                    <MultiFileDropzone
-                      disabled={montant !== null || loading}
-                      value={fileStates}
-                      dropzoneOptions={{
-                        maxFiles: 5,
-                        accept: acceptedFileTypes,
-                      }}
-                      onChange={(files) => {
-                        setFileStates(files);
-                      }}
-                      onFilesAdded={async (addedFiles) => {
-                        const updatedFiles = [...fileStates, ...addedFiles];
-                        setFileStates(updatedFiles);
-                      }}
+                    <FormField
+                      control={form.control}
+                      name="deliveryAddress.departureAddress"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>
+                            Adresse de récupération du document
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              disabled={distance !== null || loading}
+                              placeholder="eg: France, Paris"
+                              style={inputStyle}
+                              {...field}
+                              required
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="deliveryAddress.shippingAddress"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Adresse d'expédition</FormLabel>
+                          <FormControl>
+                            <Input
+                              disabled={distance !== null || loading}
+                              placeholder="eg: Maroc, rabat"
+                              style={inputStyle}
+                              required
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
                     />
                   </div>
-
                   <div className="flex items-center space-x-2">
                     <FormField
                       control={form.control}
@@ -583,7 +536,7 @@ const DevisForm = () => {
                         <FormItem>
                           <FormControl>
                             <Checkbox
-                              disabled={montant !== null || loading}
+                              disabled={distance !== null || loading}
                               id="terms"
                               checked={field.value}
                               onCheckedChange={field.onChange}
@@ -597,16 +550,21 @@ const DevisForm = () => {
                       J'accepte les termes et conditions
                     </label>
                   </div>
-                  {montant !== null && (
+                  {distance !== null && (
                     <div className="mt-4">
                       <h3>Montant total à payer:</h3>
                       <pre>{totalAmount?.toFixed(2)}€ soit:</pre>
+                      {showDeliveryAddress && distance !== null && (
+                        <pre>
+                          {distance.toFixed(2)}€ pour le transport (0.25€/km)
+                        </pre>
+                      )}
                       <pre>
-                        {montant.toFixed(2)}€ (69€/page) du document importé
+                        {distance.toFixed(2)}€ (0.25€/Km)
                       </pre>
                     </div>
                   )}
-                  {montant !== null ? (
+                  {distance !== null ? (
                     <Button
                       type="button"
                       disabled={loading}
@@ -620,12 +578,17 @@ const DevisForm = () => {
                       disabled={loading}
                       onClick={form.handleSubmit(onSubmit)}
                     >
-                      {loading ? <BeatLoader /> : "Envoyez demande de devis"}
+                      {loading ? (
+                        <BeatLoader />
+                      ) : (
+                        "Soumettre la demande de devis"
+                      )}
                     </Button>
                   )}
                 </form>
               </Form>
             </CardContent>
+            <CardFooter></CardFooter>
           </Card>
         </motion.div>
       </div>
@@ -633,4 +596,4 @@ const DevisForm = () => {
   );
 };
 
-export default DevisForm;
+export default DevisFormProc;
