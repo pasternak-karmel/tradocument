@@ -15,13 +15,13 @@ import {
 import { z } from "zod";
 import * as React from "react";
 
-export default function DemandeDevisEmail(
+export default function DemandeDevisEmailAdmin(
   values: z.infer<typeof demandeDevis>
 ) {
   return (
     <Html>
       <Head />
-      <Preview>Récapitulatif de votre demande de devis - Tradocument</Preview>
+      <Preview>Nouvelle demande de devis - Tradocument</Preview>
       <Body style={main}>
         <Container style={container}>
           <Img
@@ -33,10 +33,10 @@ export default function DemandeDevisEmail(
           />
           <Heading style={heading}>Récapitulatif de votre demande</Heading>
           <Text style={subheading}>
-            Bonjour <strong style={strongText}>{values.firstName} {values.lastName}</strong>,
+            Bonjour,
           </Text>
           <Text style={paragraph}>
-            Nous vous remercions pour votre demande de devis. Voici un récapitulatif détaillé des informations que vous nous avez fournies :
+            Une nouvelle demande de devis a été soumise par  <strong style={strongText}>{values.firstName} {values.lastName}</strong>,. Voici un récapitulatif détaillé des informations fournies :
           </Text>
           <Section style={detailsContainer}>
             <table style={table}>
@@ -63,12 +63,10 @@ export default function DemandeDevisEmail(
             </table>
           </Section>
           <Text style={paragraph}>
-            Notre équipe d'experts va examiner attentivement votre demande et vous contactera dans les plus brefs délais avec un devis personnalisé adapté à vos besoins spécifiques.
+           Merci de prendre en charge cette demande de devis dans les plus bref délais.
           </Text>
           <Hr style={hr} />
-          <Text style={paragraph}>
-            Si vous souhaitez modifier ces informations ou avez des questions supplémentaires, n'hésitez pas à nous contacter à <Link href="mailto:contact@tradocument.com" style={link}>contact@tradocument.com</Link> ou au <Link href="tel:+33123456789" style={link}>+33 1 23 45 67 89</Link>.
-          </Text>
+          
           <Text style={footer}>
             © {new Date().getFullYear()} Tradocument. Tous droits réservés.
           </Text>
