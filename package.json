@@ -44,6 +44,7 @@
     "@types/fast-levenshtein": "^0.0.4",
     "@types/google.maps": "^3.58.1",
     "@types/qrcode": "^1.5.5",
+    "@types/react-signature-canvas": "^1.0.6",
     "@types/speakeasy": "^2.0.10",
     "@types/stripe": "^8.0.417",
     "@types/uuid": "^10.0.0",
