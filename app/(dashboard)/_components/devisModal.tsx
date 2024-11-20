@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { FileSignature, FileText } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 
 interface OptionCardProps {
@@ -14,6 +14,7 @@ interface OptionCardProps {
 }
 
 const DevisModal = () => {
+  const pathname = usePathname();
   const [showModal, setShowModal] = useState(true);
   const router = useRouter();
 
@@ -46,14 +47,16 @@ const DevisModal = () => {
               icon={<FileText className="w-12 h-12 text-blue-500" />}
               title="J'ai le document"
               description="Téléchargez votre document et obtenez un devis immédiat pour la traduction."
-              onClick={() => handleButtonClick("/devis/nouvelle_devis")}
+              onClick={() => handleButtonClick(pathname === "/demandeDevis" ? "/nouvelleDevis" : "/devis/nouvelle_devis")}
+              // onClick={() => handleButtonClick("/devis/nouvelle_devis")}
               color="blue"
             />
             <OptionCard
               icon={<FileSignature className="w-12 h-12 text-green-500" />}
               title="Je n'ai pas le document en ma possession"
               description="Nous récupérerons le document via une procuration avant de le traduire."
-              onClick={() => handleButtonClick("devis/nouvelleDevis")}
+              onClick={() => handleButtonClick(pathname === "/demandeDevis" ? "/nouvelle_devis" : "/devis/nouvelleDevis")}
+              // onClick={() => handleButtonClick("devis/nouvelleDevis")}
               color="green"
             />
           </div>

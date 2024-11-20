@@ -6,5 +6,4 @@ export default function DemandeDevis() {
       <DevisModal />
     </div>
   );
-  // return <DevisForm />;
 }
