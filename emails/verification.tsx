@@ -15,7 +15,7 @@ interface PlaidVerifyIdentityEmailProps {
 }
 
 const baseUrl = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}`
+  ? `https://tradocument.vercel.app`
   : "";
 
 export const VerificationEmail = ({
@@ -29,12 +29,12 @@ export const VerificationEmail = ({
           src={`${baseUrl}/static/plaid-logo.png`}
           width="212"
           height="88"
-          alt="Plaid"
+          alt="Tradocument"
           style={logo}
         />
         <Text style={tertiary}>Verify Your Identity</Text>
         <Heading style={secondary}>
-          Enter the following code to finish linking Venmo.
+          Entrer le code suivant pour vous connecter.
         </Heading>
         <Section style={codeContainer}>
           <Text style={code}>{validationCode}</Text>
@@ -52,6 +52,7 @@ export const VerificationEmail = ({
     </Body>
   </Html>
 );
+
 
 VerificationEmail.PreviewProps = {
   validationCode: "144833",
