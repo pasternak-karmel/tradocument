@@ -5,6 +5,7 @@ import { Columns } from "./columns";
 import AddTraduction from "../_components/traduction";
 
 import { GetTraduction } from "@/actions/getTraductions";
+import Link from "next/link";
 
 export default async function Traduction() {
   const data = await GetTraduction();
@@ -13,12 +14,15 @@ export default async function Traduction() {
     <div className="h-auto">
       <div className="h-auto flex justify-between items-center">
         <div />
-        <AddTraduction>
-          <Button>
+        {/* <AddTraduction> */}
+        <Link href="/devis ">
+          <Button >
             <Plus />
             Nouvelle traduction
-          </Button>
-        </AddTraduction>
+        </Button>
+        </Link>
+          
+        {/* </AddTraduction> */}
       </div>
       <h1 className="text-2xl text-center mt-6 underline">
         Vos traductions récentes
