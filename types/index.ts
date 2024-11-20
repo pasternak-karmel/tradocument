@@ -27,3 +27,17 @@ export type UserRejoindre = {
   cv: string | null;
   status: string;
 };
+
+
+export type ProcurationFormData = {
+  typeProcuration: string;
+  nomMandant: string;
+  prenomMandant: string;
+  dateNaissanceMandant: string;
+  lieuNaissanceMandant: string;
+  nationaliteMandant: string;
+  adresseMandant: string;
+  dateDebut: string;
+  dateFin: string;
+  lieuSignature: string;
+};
