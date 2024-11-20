@@ -1,6 +1,8 @@
 "use server";
 
+import DemandeDevisEmail from "@/emails/devis-client";
 import { demandeDevis } from "@/schemas";
+import { render } from "@react-email/render";
 import { Resend } from "resend";
 import { z } from "zod";
 
@@ -76,68 +78,27 @@ export const rejectedTraduction = async (email: string, nom: string) => {
 };
 
 export const devisSent = async (values: z.infer<typeof demandeDevis>) => {
-  const emailContent = `
-    <p>Bonjour <strong>${values.firstName} ${values.lastName}</strong>,</p>
+  try {
+    const htmlContent = await render(DemandeDevisEmail(values));
 
-    <p>Nous vous remercions d’avoir soumis une demande de devis sur notre plateforme <strong>Tradocument.com</strong>. Voici un récapitulatif des informations que vous avez fournies :</p>
+    const { data, error } = await resend.emails.send({
+      from: "Acme <noreply@glaceandconfort.com>",
+      to: values.email,
+      subject: "Confirmation de votre demande de devis",
+      html: htmlContent,
+    });
 
-    <h3>Détails de la demande</h3>
-    <ul>
-      <li><strong>Type de document :</strong> ${values.documentType}</li>
-      <li><strong>Langue source :</strong> ${values.sourceLanguage}</li>
-      <li><strong>Langue cible :</strong> ${values.targetLanguage}</li>
-      <li><strong>Date limite souhaitée :</strong> ${
-        values.deadline || "Non précisée"
-      }</li>
-    </ul>
-
-    <h3>Informations personnelles</h3>
-    <ul>
-      <li><strong>Prénom :</strong> ${values.firstName}</li>
-      <li><strong>Nom :</strong> ${values.lastName}</li>
-      <li><strong>Email :</strong> ${values.email}</li>
-      <li><strong>Téléphone :</strong> ${values.phone}</li>
-      <li><strong>Pays :</strong> ${values.country}</li>
-    </ul>
-
-    ${
-      values.deliveryAddress
-        ? `
-      <h3>Adresse de livraison</h3>
-      <ul>
-        <li><strong>Adresse de départ :</strong> ${
-          values.deliveryAddress.departureAddress || "Non spécifiée"
-        }</li>
-        <li><strong>Adresse de destination :</strong> ${
-          values.deliveryAddress.shippingAddress || "Non spécifiée"
-        }</li>
-      </ul>
-      `
-        : ""
+    if (error) {
+      console.error("Failed to send email:", error);
+      throw new Error("Email sending failed");
     }
 
-    ${
-      values.additionalInfo
-        ? `
-      <h3>Informations supplémentaires</h3>
-      <p>${values.additionalInfo}</p>
-      `
-        : ""
-    }
-
-    <p>Nous traitons actuellement votre demande et reviendrons vers vous avec une estimation détaillée dans les plus brefs délais. Si vous avez des questions ou des précisions à apporter, n’hésitez pas à nous contacter par email ou par téléphone.</p>
-
-    <p>Cordialement,</p>
-    <p>L’équipe <strong>Tradocument.com</strong><br/>
-    <a href="mailto:noreply@glaceandconfort.com">noreply@glaceandconfort.com</a></p>
-  `;
-
-  await resend.emails.send({
-    from: "Acme <noreply@glaceandconfort.com>",
-    to: values.email,
-    subject: "Confirmation de votre demande de devis",
-    html: emailContent,
-  });
+    console.log("Email sent successfully:", data);
+    return data;
+  } catch (err) {
+    console.error("Error in devisSent:", err);
+    throw err;
+  }
 };
 
 export const devisSentAdmin = async (values: z.infer<typeof demandeDevis>) => {
