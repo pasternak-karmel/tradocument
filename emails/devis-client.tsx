@@ -42,7 +42,7 @@ export default function DemandeDevisEmail(
             <table style={table}>
               <tbody>
                 <DetailRow label="Email" value={values.email} />
-                <DetailRow label="Téléphone" value={values.phone} />
+                <DetailRow label="Téléphone" value={`+${values.phone}`} />
                 <DetailRow label="Pays" value={values.country} />
                 <DetailRow label="Type de document" value={values.documentType} />
                 <DetailRow label="Langue source" value={values.sourceLanguage} />

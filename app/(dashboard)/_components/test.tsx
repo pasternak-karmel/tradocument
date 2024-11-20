@@ -110,7 +110,7 @@ export const Test = ({
           <div className="grid md:grid-cols-2 gap-6">
             <OptionCard
               icon={<FileText className="w-12 h-12 text-blue-500" />}
-              title="J'ai le document"
+              title="J'ai le document à traduire"
               description="Téléchargez votre document et obtenez un devis immédiat pour la traduction."
               onClick={() =>
                 handleButtonClick(

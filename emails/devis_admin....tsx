@@ -7,13 +7,11 @@ import {
   Hr,
   Html,
   Img,
-  Link,
   Preview,
   Section,
   Text,
 } from "@react-email/components";
 import { z } from "zod";
-import * as React from "react";
 
 export default function DemandeDevisEmailAdmin(
   values: z.infer<typeof demandeDevis>
@@ -32,41 +30,59 @@ export default function DemandeDevisEmailAdmin(
             style={logo}
           />
           <Heading style={heading}>Récapitulatif de votre demande</Heading>
-          <Text style={subheading}>
-            Bonjour,
-          </Text>
+          <Text style={subheading}>Bonjour,</Text>
           <Text style={paragraph}>
-            Une nouvelle demande de devis a été soumise par  <strong style={strongText}>{values.firstName} {values.lastName}</strong>,. Voici un récapitulatif détaillé des informations fournies :
+            Une nouvelle demande de devis a été soumise par{" "}
+            <strong style={strongText}>
+              {values.firstName} {values.lastName}
+            </strong>
+            ,. Voici un récapitulatif détaillé des informations fournies :
           </Text>
           <Section style={detailsContainer}>
             <table style={table}>
               <tbody>
                 <DetailRow label="Email" value={values.email} />
-                <DetailRow label="Téléphone" value={values.phone} />
+                <DetailRow label="Téléphone" value={`+${values.phone}`} />
                 <DetailRow label="Pays" value={values.country} />
-                <DetailRow label="Type de document" value={values.documentType} />
-                <DetailRow label="Langue source" value={values.sourceLanguage} />
+                <DetailRow
+                  label="Type de document"
+                  value={values.documentType}
+                />
+                <DetailRow
+                  label="Langue source"
+                  value={values.sourceLanguage}
+                />
                 <DetailRow label="Langue cible" value={values.targetLanguage} />
                 {values.deadline && (
                   <DetailRow label="Délai souhaité" value={values.deadline} />
                 )}
                 {values.additionalInfo && (
-                  <DetailRow label="Informations supplémentaires" value={values.additionalInfo} />
+                  <DetailRow
+                    label="Informations supplémentaires"
+                    value={values.additionalInfo}
+                  />
                 )}
                 {values.deliveryAddress && (
                   <>
-                    <DetailRow label="Adresse de départ" value={values.deliveryAddress.departureAddress} />
-                    <DetailRow label="Adresse d'expédition" value={values.deliveryAddress.shippingAddress} />
+                    <DetailRow
+                      label="Adresse de départ"
+                      value={values.deliveryAddress.departureAddress}
+                    />
+                    <DetailRow
+                      label="Adresse d'expédition"
+                      value={values.deliveryAddress.shippingAddress}
+                    />
                   </>
                 )}
               </tbody>
             </table>
           </Section>
           <Text style={paragraph}>
-           Merci de prendre en charge cette demande de devis dans les plus bref délais.
+            Merci de prendre en charge cette demande de devis dans les plus bref
+            délais.
           </Text>
           <Hr style={hr} />
-          
+
           <Text style={footer}>
             © {new Date().getFullYear()} Tradocument. Tous droits réservés.
           </Text>
