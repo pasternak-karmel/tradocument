@@ -31,7 +31,14 @@ export const authRoutes: string[] = [
   "/auth/new-password",
 ];
 
-export const adminRoutes: string[] = ["/autorisation", "/dashboard"];
+export const dashboardRoutes: string[] = ["/dashboard"];
+
+export const devisRoutes: string[] = [
+  "/devis/nouvelleDevis",
+  "/devis/nouvelle_devis"
+];
+
+export const adminRoutes: string[] = ["/autorisation"];
 export const agentRoutes: string[] = ["/traducteur"];
 
 /**

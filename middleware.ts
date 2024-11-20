@@ -3,12 +3,14 @@ import { NextResponse } from "next/server";
 
 import {
   DEFAULT_LOGIN_REDIRECT,
-  apiAuthPrefix,
-  authRoutes,
-  publicRoutes,
-  apiPrefix,
   adminRoutes,
   agentRoutes,
+  apiAuthPrefix,
+  apiPrefix,
+  authRoutes,
+  dashboardRoutes,
+  devisRoutes,
+  publicRoutes,
 } from "@/routes";
 import { authConfig } from "./auth.config";
 
@@ -28,6 +30,8 @@ export default auth((req) => {
   const isAgentRoute = agentRoutes.some((route) =>
     nextUrl.pathname.startsWith(route)
   );
+  const isDashboardRoute = dashboardRoutes.includes(nextUrl.pathname);
+  const isDevisRoute = devisRoutes.includes(nextUrl.pathname);
 
   if (isApiAuthRoute || isPublicRoute) {
     return NextResponse.next();
@@ -57,6 +61,7 @@ export default auth((req) => {
       new URL(`/auth/login?callbackUrl=${encodedCallbackUrl}`, nextUrl)
     );
   }
+
   const userRole = req.auth?.user?.role;
 
   if (isAdminRoute && userRole !== "admin") {
@@ -65,6 +70,20 @@ export default auth((req) => {
 
   if (isAgentRoute && userRole !== "traducteur") {
     return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
+  }
+
+  if (isDashboardRoute) {
+    if (userRole === "user") {
+      return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
+    }
+    return NextResponse.next();
+  }
+
+  if (isDevisRoute) {
+    if (userRole !== "user") {
+      return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
+    }
+    return NextResponse.next();
   }
 
   return NextResponse.next();
