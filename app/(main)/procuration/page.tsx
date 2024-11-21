@@ -388,7 +388,7 @@ try {
                     <SelectItem value="Acte de naissance">Acte de naissance</SelectItem>
                     <SelectItem value="Permis de conduire">Permis de conduire</SelectItem>
                     <SelectItem value="Acte de mariage">Acte de mariage</SelectItem>
-                    <SelectItem value="Autorisation pour ken">Autorisation pour ken</SelectItem>
+                    <SelectItem value="Juridique">Juridique</SelectItem>
                     <SelectItem value="Autre">Autre</SelectItem>
                   </SelectContent>
                 </Select>
