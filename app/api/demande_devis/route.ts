@@ -64,9 +64,15 @@ export async function POST(req: Request) {
       .insert(DemandeDevis)
       .values(traductionValues)
       .returning();
+    const info = {
+      montant: result.montant,
+      date: result.created_at.toDateString(),
+      type: result.type,
+      fichier: result.fichier
+    }
 
     return NextResponse.json(
-      { success: true, message: result.id! },
+      { success: true, message: result.id!, info: info },
       { status: 200 }
     );
   } catch (err) {

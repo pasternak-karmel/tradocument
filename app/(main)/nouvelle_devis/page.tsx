@@ -68,6 +68,7 @@ import { languages } from "@/type";
 import { Mail, User } from "lucide-react";
 import { BeatLoader } from "react-spinners";
 import { toast } from "sonner";
+import { calculateDistanceToCapital } from "@/actions/calculateDistanceTest";
 
 const DevisAccueil = () => {
   const user = useCurrentUser();
@@ -119,7 +120,7 @@ const DevisAccueil = () => {
 
         calculatedDistance = await calculateDistance({
           departLocation: values.deliveryAddress.departureAddress!,
-          arriverLocation: values.deliveryAddress.shippingAddress!,
+          // arriverLocation: values.deliveryAddress.shippingAddress!,
         });
 
         if (showDeliveryAddress && calculatedDistance === null)
@@ -159,8 +160,8 @@ const DevisAccueil = () => {
 
       if (result.success) {
         form.reset();
-        await devisSent(formValues);
-        await devisSentAdmin(formValues);
+        await devisSent(result.info as z.infer<typeof demandeDevis>);
+        await devisSentAdmin(values, result.info);
         router.push(`/devis/payment?id=${result.message}`);
       } else {
         showError(result.message);
@@ -306,7 +307,6 @@ const DevisAccueil = () => {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Pays: </FormLabel>
-                        {/* <ComboboxDemo /> */}
                         <Popover>
                           <PopoverTrigger asChild>
                             <FormControl>
@@ -508,7 +508,7 @@ const DevisAccueil = () => {
                       )}
                     />
 
-                    <FormField
+                    {/* <FormField
                       control={form.control}
                       name="deliveryAddress.shippingAddress"
                       render={({ field }) => (
@@ -526,7 +526,7 @@ const DevisAccueil = () => {
                           <FormMessage />
                         </FormItem>
                       )}
-                    />
+                    /> */}
                   </div>
                   <div className="flex items-center space-x-2">
                     <FormField

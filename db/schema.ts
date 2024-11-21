@@ -13,6 +13,7 @@ import {
 import type { AdapterAccountType } from "next-auth/adapters";
 import { createInsertSchema } from "drizzle-zod";
 import { sql } from "drizzle-orm";
+import { demandeDevis } from "@/schemas";
 
 export const UserRoleEnum = {
   ADMIN: "admin",
@@ -210,6 +211,8 @@ export const DemandeDevis = pgTable("demande_devis", {
   status: text("status").default("pending").notNull(),
   payer: boolean("payer").default(false),
 });
+export type DEMANDEDEVIS = typeof DemandeDevis.$inferSelect;
+
 
 export const rejoindrEquipe = pgTable("rejoindreEquipe", {
   id: text("id")

@@ -172,7 +172,7 @@ export const demandeDevis = z
     deliveryAddress: z
       .object({
         departureAddress: z.string(),
-        shippingAddress: z.string(),
+        shippingAddress: z.string().optional(),
       })
       .optional(),
     url: z.array(z.string()).optional(),

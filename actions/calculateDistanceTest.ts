@@ -80,7 +80,9 @@ const validateCity = async (countryCode: string, cityName: string) => {
 };
 
 // Function to calculate distance
-export const calculateDistance = async ({ departLocation }: Point) => {
+export const calculateDistanceToCapital = async ({
+  departLocation,
+}: Point) => {
   const [country, city] = departLocation.split(",").map((item) => item.trim());
   let countryCode = "";
   let validCity = city;
@@ -138,5 +140,6 @@ export const calculateDistance = async ({ departLocation }: Point) => {
     throw new Error("Failed to calculate distance");
   }
 };
+
 
 //calculateDistance

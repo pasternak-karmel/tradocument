@@ -227,7 +227,7 @@ const DevisForm = () => {
         setFileStates([]);
         setUrls([]);
         await devisSent(formValues);
-        await devisSentAdmin(formValues);
+        await devisSentAdmin(formValues, result.info);
         router.push(`/devis/payment?id=${result.message}`);
       } else {
         showError(result.message);

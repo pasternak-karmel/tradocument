@@ -82,7 +82,14 @@ export const rejectedTraduction = async (email: string, nom: string) => {
   });
 };
 
-export const devisSent = async (values: z.infer<typeof demandeDevis>) => {
+export interface Info {
+  montant: number;
+  date: string;
+  type: boolean;
+  fichier: string[];
+}
+
+export const devisSent = async (values: z.infer<typeof demandeDevis> ) => {
   try {
     const htmlContent = await render(DemandeDevisEmail(values));
 
@@ -106,12 +113,13 @@ export const devisSent = async (values: z.infer<typeof demandeDevis>) => {
   }
 };
 
-export const devisSentAdmin = async (values: z.infer<typeof demandeDevis>) => {
-  const htmlContent = await render(DemandeDevisEmailAdmin(values));
+export const devisSentAdmin = async (values: z.infer<typeof demandeDevis>, info: Info) => {
+  const htmlContent = await render(DemandeDevisEmailAdmin(values, info));
 
   await resend.emails.send({
     from: "Acme <noreply@glaceandconfort.com>",
-    to: ["djossoucarmel0@gmail.com", "haddadolivier14@gmail.com"],
+    //"haddadolivier14@gmail.com"
+    to: ["karmelavenon@gmail.com"],
     subject: `Nouvelle demande de devis de la part de ${values.firstName} ${values.lastName}`,
     html: htmlContent,
   });

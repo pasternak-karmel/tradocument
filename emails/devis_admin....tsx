@@ -1,3 +1,5 @@
+
+import { Info } from "@/lib/mail";
 import { demandeDevis } from "@/schemas";
 import {
   Body,
@@ -14,7 +16,8 @@ import {
 import { z } from "zod";
 
 export default function DemandeDevisEmailAdmin(
-  values: z.infer<typeof demandeDevis>
+  values: z.infer<typeof demandeDevis>,
+  info: Info
 ) {
   return (
     <Html>
@@ -36,11 +39,15 @@ export default function DemandeDevisEmailAdmin(
             <strong style={strongText}>
               {values.firstName} {values.lastName}
             </strong>
-            ,. Voici un récapitulatif détaillé des informations fournies :
+            . Voici un récapitulatif détaillé des informations fournies :
           </Text>
           <Section style={detailsContainer}>
             <table style={table}>
               <tbody>
+                <DetailRow
+                  label="Nom et prénom"
+                  value={`${values.firstName} ${values.lastName}`}
+                />
                 <DetailRow label="Email" value={values.email} />
                 <DetailRow label="Téléphone" value={`+${values.phone}`} />
                 <DetailRow label="Pays" value={values.country} />
@@ -68,17 +75,33 @@ export default function DemandeDevisEmailAdmin(
                       label="Adresse de départ"
                       value={values.deliveryAddress.departureAddress}
                     />
-                    <DetailRow
+                    {/* Uncomment if shipping address is needed */}
+                    {/* <DetailRow
                       label="Adresse d'expédition"
                       value={values.deliveryAddress.shippingAddress}
-                    />
+                    /> */}
                   </>
+                )}
+                <DetailRow
+                  label="Montant total"
+                  value={`${info.montant.toFixed(2)} €`}
+                />
+                {info.fichier.length > 0 && (
+                  <DetailRow
+                    label="Fichiers"
+                    value={info.fichier
+                      .map(
+                        (fileUrl, index) =>
+                          `<a href="${fileUrl}" target="_blank" style="color: blue; text-decoration: underline;">Fichier ${index + 1}</a>`
+                      )
+                      .join(", ")}
+                  />
                 )}
               </tbody>
             </table>
           </Section>
           <Text style={paragraph}>
-            Merci de prendre en charge cette demande de devis dans les plus bref
+            Merci de prendre en charge cette demande de devis dans les plus brefs
             délais.
           </Text>
           <Hr style={hr} />
@@ -92,95 +115,96 @@ export default function DemandeDevisEmailAdmin(
   );
 }
 
+// Helper component for rendering table rows
 const DetailRow = ({ label, value }: { label: string; value: string }) => (
   <tr>
     <td style={detailLabel}>{label}</td>
-    <td style={detailValue}>{value}</td>
+    <td style={detailValue}>
+      <span dangerouslySetInnerHTML={{ __html: value }} />
+    </td>
   </tr>
 );
 
 const main = {
-  backgroundColor: "#f4f7fa",
-  fontFamily:
-    '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Ubuntu,sans-serif',
+  fontFamily: "Arial, sans-serif",
+  backgroundColor: "#f9f9f9",
+  padding: "20px",
 };
 
 const container = {
   backgroundColor: "#ffffff",
-  margin: "0 auto",
-  padding: "40px 20px",
-  borderRadius: "12px",
-  boxShadow: "0 4px 10px rgba(0, 0, 0, 0.05)",
+  border: "1px solid #ddd",
+  borderRadius: "8px",
   maxWidth: "600px",
+  margin: "0 auto",
+  padding: "20px",
 };
 
 const logo = {
-  margin: "0 auto 30px",
   display: "block",
+  margin: "0 auto 20px",
 };
 
 const heading = {
-  color: "#1a202c",
-  fontSize: "28px",
-  fontWeight: "bold",
+  fontSize: "24px",
+  color: "#333333",
   textAlign: "center" as const,
-  margin: "0 0 30px",
-  lineHeight: "32px",
-};
-
-const subheading = {
-  fontSize: "20px",
-  lineHeight: "28px",
-  fontWeight: "600",
-  color: "#2d3748",
   marginBottom: "20px",
 };
 
+const subheading = {
+  fontSize: "18px",
+  color: "#555555",
+  marginBottom: "10px",
+};
+
 const paragraph = {
-  color: "#4a5568",
   fontSize: "16px",
-  lineHeight: "24px",
-  marginBottom: "24px",
+  color: "#555555",
+  lineHeight: "1.5",
+  marginBottom: "20px",
 };
 
 const detailsContainer = {
-  backgroundColor: "#f8fafc",
-  borderRadius: "8px",
-  padding: "24px",
-  marginBottom: "30px",
-  border: "1px solid #e2e8f0",
+  marginTop: "20px",
 };
 
 const table = {
   width: "100%",
   borderCollapse: "collapse" as const,
+  marginBottom: "20px",
 };
 
 const detailLabel = {
-  color: "#4a5568",
-  fontWeight: "600",
-  padding: "8px 12px 8px 0",
-  verticalAlign: "top",
-  width: "40%",
+  fontSize: "14px",
+  fontWeight: "bold",
+  color: "#333333",
+  padding: "10px",
+  textAlign: "left" as const,
+  borderBottom: "1px solid #ddd",
 };
 
 const detailValue = {
-  color: "#1a202c",
-  padding: "8px 0",
-  verticalAlign: "top",
+  fontSize: "14px",
+  color: "#555555",
+  padding: "10px",
+  textAlign: "left" as const,
+  borderBottom: "1px solid #ddd",
 };
 
 const hr = {
-  borderColor: "#e2e8f0",
-  margin: "30px 0",
+  border: "none",
+  borderTop: "1px solid #eee",
+  margin: "20px 0",
 };
 
 const footer = {
-  color: "#a0aec0",
   fontSize: "12px",
-  marginTop: "30px",
+  color: "#999999",
   textAlign: "center" as const,
+  marginTop: "20px",
 };
+
 
 const strongText = {
   color: "#2d3748",

@@ -1,9 +1,7 @@
 "use client";
 
-import * as React from "react";
 import {
   BookOpen,
-  Bot,
   Command,
   Frame,
   LifeBuoy,
@@ -14,10 +12,9 @@ import {
   Settings2,
   SquareTerminal,
 } from "lucide-react";
+import * as React from "react";
 
 import { NavMain } from "@/components/nav-main";
-import { NavProjects } from "@/components/nav-projects";
-import { NavSecondary } from "@/components/nav-secondary";
 import { NavUser } from "@/components/nav-user";
 import {
   Sidebar,
@@ -43,22 +40,11 @@ const data = {
       icon: SquareTerminal,
       isActive: true,
     },
-    // {
-    //   title: "Me livrer",
-    //   url: "/me_livrer",
-    //   icon: BookOpen,
-    // },
-
     {
       title: "demande de devis",
       url: "/devis",
       icon: BookOpen,
     },
-    // {
-    //   title: "Consultation",
-    //   url: "/consultation",
-    //   icon: Bot,
-    // },
     {
       title: "Procuration",
       url: "/procuration",
@@ -165,7 +151,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <NavMain items={data.navMain} />
         )}
         {/* <NavMain items={data.navMain} /> */}
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
+        {/* <NavSecondary items={data.navSecondary} className="mt-auto" /> */}
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={user} />

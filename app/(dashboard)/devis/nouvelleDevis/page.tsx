@@ -119,7 +119,7 @@ const DevisFormProc = () => {
 
         calculatedDistance = await calculateDistance({
           departLocation: values.deliveryAddress.departureAddress!,
-          arriverLocation: values.deliveryAddress.shippingAddress!,
+          // arriverLocation: values.deliveryAddress.shippingAddress!,
         });
 
         if (showDeliveryAddress && calculatedDistance === null)
@@ -160,7 +160,7 @@ const DevisFormProc = () => {
       if (result.success) {
         form.reset();
         await devisSent(formValues);
-        await devisSentAdmin(formValues);
+        await devisSentAdmin(formValues, result.info);
         router.push(`/devis/payment?id=${result.message}`);
       } else {
         showError(result.message);
@@ -508,7 +508,7 @@ const DevisFormProc = () => {
                       )}
                     />
 
-                    <FormField
+                    {/* <FormField
                       control={form.control}
                       name="deliveryAddress.shippingAddress"
                       render={({ field }) => (
@@ -526,7 +526,7 @@ const DevisFormProc = () => {
                           <FormMessage />
                         </FormItem>
                       )}
-                    />
+                    /> */}
                   </div>
                   <div className="flex items-center space-x-2">
                     <FormField

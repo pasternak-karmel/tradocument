@@ -1,13 +1,8 @@
 "use client";
 
-import React from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { motion } from "framer-motion";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { UserRejoindre } from "@/actions/rejoindre";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -16,6 +11,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -23,14 +19,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Users, Briefcase, GraduationCap, Globe, Send } from "lucide-react";
 import { RejoindreFormValues, RejoindreSchema } from "@/schemas";
-import { UserRejoindre } from "@/actions/rejoindre";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { motion } from "framer-motion";
+import { Briefcase, Globe, GraduationCap, Send, Users } from "lucide-react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
-// Validation schema using Zod
-
 export default function RejoignezNous() {
+  const [isLoading, setIsLoading] = useState(false);
   const form = useForm<RejoindreFormValues>({
     resolver: zodResolver(RejoindreSchema),
   });
@@ -62,7 +60,9 @@ export default function RejoignezNous() {
   const specialties = ["Traducteur/Traductrice agréé(e)", "Transport Coursier"];
 
   async function onSubmit(data: RejoindreFormValues) {
+    setIsLoading(true);
     const result = await UserRejoindre(data);
+    setIsLoading(false);
     if (result.error)
       return toast("Erreur!!!", {
         description: result.error,
@@ -88,7 +88,7 @@ export default function RejoignezNous() {
     padding: "0.5rem",
     width: "100%",
   };
- 
+
   return (
     <div className="mt-10 min-h-screen bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
@@ -161,7 +161,12 @@ export default function RejoignezNous() {
                       <FormItem>
                         <FormLabel>Nom</FormLabel>
                         <FormControl>
-                          <Input {...field} placeholder="Nom" style={inputStyle} />
+                          <Input
+                            {...field}
+                            placeholder="Nom"
+                            style={inputStyle}
+                            disabled={isLoading}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -174,7 +179,12 @@ export default function RejoignezNous() {
                       <FormItem>
                         <FormLabel>Prénom</FormLabel>
                         <FormControl>
-                          <Input {...field} placeholder="Prénom" style={inputStyle} />
+                          <Input
+                            {...field}
+                            placeholder="Prénom"
+                            style={inputStyle}
+                            disabled={isLoading}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -187,7 +197,13 @@ export default function RejoignezNous() {
                       <FormItem>
                         <FormLabel>Email</FormLabel>
                         <FormControl>
-                          <Input {...field} placeholder="Email" type="email" style={inputStyle} />
+                          <Input
+                            {...field}
+                            placeholder="Email"
+                            type="email"
+                            style={inputStyle}
+                            disabled={isLoading}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -200,7 +216,12 @@ export default function RejoignezNous() {
                       <FormItem>
                         <FormLabel>Pays</FormLabel>
                         <FormControl>
-                          <Input {...field} placeholder="Pays" style={inputStyle}/>
+                          <Input
+                            {...field}
+                            placeholder="Pays"
+                            style={inputStyle}
+                            disabled={isLoading}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -213,7 +234,12 @@ export default function RejoignezNous() {
                       <FormItem>
                         <FormLabel>Ville</FormLabel>
                         <FormControl>
-                          <Input {...field} placeholder="Ville" style={inputStyle}/>
+                          <Input
+                            {...field}
+                            placeholder="Ville"
+                            style={inputStyle}
+                            disabled={isLoading}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -226,7 +252,12 @@ export default function RejoignezNous() {
                       <FormItem>
                         <FormLabel>Adresse</FormLabel>
                         <FormControl>
-                          <Input {...field} placeholder="Adresse" style={inputStyle}/>
+                          <Input
+                            {...field}
+                            placeholder="Adresse"
+                            style={inputStyle}
+                            disabled={isLoading}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -237,14 +268,18 @@ export default function RejoignezNous() {
                     name="specialite"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel >Spécialité</FormLabel>
+                        <FormLabel>Spécialité</FormLabel>
                         <Select
                           onValueChange={field.onChange}
                           defaultValue={field.value}
+                          disabled={isLoading}
                         >
                           <FormControl>
                             <SelectTrigger className="w-full">
-                              <SelectValue placeholder="Choisissez votre spécialité" style={inputStyle} />
+                              <SelectValue
+                                placeholder="Choisissez votre spécialité"
+                                style={inputStyle}
+                              />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
@@ -277,6 +312,7 @@ export default function RejoignezNous() {
                             placeholder="Avez-vous un commentaire ?"
                             className="block w-full p-2 border rounded"
                             style={inputStyle}
+                            disabled={isLoading}
                           />
                         </FormControl>
                       </FormItem>
@@ -285,8 +321,15 @@ export default function RejoignezNous() {
                   <Button
                     type="submit"
                     className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-2 rounded-full"
+                    disabled={isLoading}
                   >
-                    <Send className="mr-2 h-4 w-4" /> Envoyer ma candidature
+                    {isLoading ? (
+                      // <Loader className="mr-2 h-4 w-4 animate-spin" />
+                      <div className="w-5 h-5 border-4 border-t-transparent border-white rounded-full animate-spin"></div>
+                    ) : (
+                      <Send className="mr-2 h-4 w-4" />
+                    )}
+                    {isLoading ? "Envoi en cours..." : "Envoyer ma candidature"}
                   </Button>
                 </form>
               </Form>
