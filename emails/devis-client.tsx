@@ -56,7 +56,7 @@ export default function DemandeDevisEmail(
                 {values.deliveryAddress && (
                   <>
                     <DetailRow label="Adresse de départ" value={values.deliveryAddress.departureAddress} />
-                    <DetailRow label="Adresse d'expédition" value={values.deliveryAddress.shippingAddress} />
+                    {/* <DetailRow label="Adresse d'expédition" value={values.deliveryAddress.shippingAddress} /> */}
                   </>
                 )}
               </tbody>
