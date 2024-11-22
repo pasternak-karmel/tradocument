@@ -28,6 +28,7 @@ import { showError } from "@/function/notification-toast";
 import { useEdgeStore } from "@/lib/edgestore";
 import { ProcurationUser } from "@/lib/mail";
 import { ProcurationFormData, ProcurationFormSchema } from "@/schemas";
+import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
 import { toast } from "sonner";
 
 export default function ProcurationForm() {
@@ -149,12 +150,13 @@ export default function ProcurationForm() {
           await edgestore.document.confirmUpload({ url });
         }
         await ProcurationUser(data);
+        await generatePDF();
         setSuccess(result.message);
       } else if (result?.maj) {
         setSuccess(result.message);
       }
     } catch (err) {
-      setError("Une erreur s'est produite lors de la soumission du formulaire");
+      setError("Une erreur s'est produite");
     } finally {
       setLoading(false);
     }
@@ -444,6 +446,254 @@ export default function ProcurationForm() {
       default:
         return null;
     }
+  };
+
+  const generatePDF = async () => {
+    const pdfDoc = await PDFDocument.create();
+    const page = pdfDoc.addPage([595, 842]); // A4 size
+    const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
+    const helveticaBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+
+    // Helper function for centered text
+    const drawCenteredText = (
+      text: string,
+      y: number,
+      font = helveticaFont,
+      size = 12
+    ) => {
+      const textWidth = font.widthOfTextAtSize(text, size);
+      page.drawText(text, {
+        x: (page.getWidth() - textWidth) / 2,
+        y,
+        size,
+        font,
+      });
+    };
+
+    // Draw header
+    drawCenteredText("Objet : Procuration", 800, helveticaBold, 14);
+
+    // Draw main content
+    const startY = 750;
+    const lineHeight = 20;
+    let currentY = startY;
+
+    // Format dates
+    const birthDate = formData.dateNaissanceMandant
+      ? format(new Date(formData.dateNaissanceMandant), "dd/MM/yyyy", {
+          locale: fr,
+        })
+      : "___/___/____";
+
+    const today = format(new Date(), "dd/MM/yyyy", { locale: fr });
+
+    // First paragraph
+    page.drawText(
+      `Je, soussigné(e) ${formData.prenomMandant} ${formData.nomMandant},`,
+      {
+        x: 50,
+        y: currentY,
+        size: 12,
+        font: helveticaFont,
+      }
+    );
+
+    currentY -= lineHeight;
+    page.drawText(`né(e) le ${birthDate} à ${formData.lieuNaissanceMandant},`, {
+      x: 50,
+      y: currentY,
+      size: 12,
+      font: helveticaFont,
+    });
+
+    currentY -= lineHeight;
+    page.drawText(`de nationalité ${formData.nationaliteMandant},`, {
+      x: 50,
+      y: currentY,
+      size: 12,
+      font: helveticaFont,
+    });
+
+    currentY -= lineHeight;
+    page.drawText(`demeurant à ${formData.adresseMandant},`, {
+      x: 50,
+      y: currentY,
+      size: 12,
+      font: helveticaFont,
+    });
+
+    currentY -= lineHeight * 2;
+    page.drawText(`donne par la présente pouvoir à l'entité Tradocument,`, {
+      x: 50,
+      y: currentY,
+      size: 12,
+      font: helveticaFont,
+    });
+
+    // Draw horizontal line
+    currentY -= lineHeight;
+    page.drawLine({
+      start: { x: 50, y: currentY },
+      end: { x: 545, y: currentY },
+      thickness: 1,
+      color: rgb(0, 0, 0),
+    });
+
+    currentY -= lineHeight * 2;
+    page.drawText(
+      `afin qu'elle puisse récupérer le document suivant en mon nom :`,
+      {
+        x: 50,
+        y: currentY,
+        size: 12,
+        font: helveticaFont,
+      }
+    );
+
+    currentY -= lineHeight;
+    page.drawText(`${formData.typeProcuration}`, {
+      x: 70,
+      y: currentY,
+      size: 12,
+      font: helveticaFont,
+    });
+
+    // Draw another horizontal line
+    currentY -= lineHeight;
+    page.drawLine({
+      start: { x: 50, y: currentY },
+      end: { x: 545, y: currentY },
+      thickness: 1,
+      color: rgb(0, 0, 0),
+    });
+
+    // Duration text
+    currentY -= lineHeight * 2;
+    const durationText = formData.dateFin
+      ? `Cette procuration est confiée à Tradocument pour une durée du ${formData.dateDebut} au ${formData.dateFin}.`
+      : `Cette procuration est confiée à Tradocument pour une durée indéterminée.`;
+
+    page.drawText(durationText, {
+      x: 50,
+      y: currentY,
+      size: 12,
+      font: helveticaFont,
+    });
+
+    currentY -= lineHeight;
+    page.drawText(
+      `Je me réserve la possibilité d'y mettre fin à tout moment.`,
+      {
+        x: 50,
+        y: currentY,
+        size: 12,
+        font: helveticaFont,
+      }
+    );
+
+    // Draw another horizontal line
+    currentY -= lineHeight;
+    page.drawLine({
+      start: { x: 50, y: currentY },
+      end: { x: 545, y: currentY },
+      thickness: 1,
+      color: rgb(0, 0, 0),
+    });
+
+    // Responsibility text
+    currentY -= lineHeight * 2;
+    page.drawText(
+      `Je conserve la responsabilité de toutes les actions effectuées par le mandataire`,
+      {
+        x: 50,
+        y: currentY,
+        size: 12,
+        font: helveticaFont,
+      }
+    );
+
+    currentY -= lineHeight;
+    page.drawText(`en vertu de la présente procuration.`, {
+      x: 50,
+      y: currentY,
+      size: 12,
+      font: helveticaFont,
+    });
+
+    // Date and signature section
+    currentY -= lineHeight * 3;
+    page.drawText(`Fait le ${today}, en 2 (deux) exemplaires originaux,`, {
+      x: 50,
+      y: currentY,
+      size: 12,
+      font: helveticaFont,
+    });
+
+    // Signature sections
+    currentY -= lineHeight * 3;
+    drawCenteredText("SIGNATURE DU MANDANT", currentY, helveticaBold, 12);
+
+    // Add signature if available
+    if (signaturePadRef.current) {
+      const signatureData = signaturePadRef.current.toDataURL();
+      const signatureImage = await pdfDoc.embedPng(signatureData);
+      page.drawImage(signatureImage, {
+        x: 197.5,
+        y: currentY - 100,
+        width: 200,
+        height: 100,
+      });
+    }
+
+    // Mandataire signature section
+    currentY -= lineHeight * 8;
+    drawCenteredText("SIGNATURE DU MANDATAIRE", currentY, helveticaBold, 12);
+
+    // Ajouter une image de signature pour le mandataire
+    try {
+      // Charger l'image de signature
+      const mandataireSignatureUrl = "/signature-mandataire.png"; // Remplacez par le chemin correct
+      const mandataireSignatureResponse = await fetch(mandataireSignatureUrl);
+      const mandataireSignatureData =
+        await mandataireSignatureResponse.arrayBuffer();
+      const mandataireSignatureImage = await pdfDoc.embedPng(
+        mandataireSignatureData
+      );
+
+      // Dessiner l'image de la signature sur le PDF
+      page.drawImage(mandataireSignatureImage, {
+        x: (page.getWidth() - 200) / 2, // Centré horizontalement
+        y: currentY - 50, // Ajuster selon la position souhaitée
+        width: 200, // Largeur de l'image
+        height: 30, // Hauteur de l'image
+      });
+    } catch (error) {
+      console.error(
+        "Erreur lors du chargement de la signature du mandataire :",
+        error
+      );
+    }
+
+    // Footer text for attached document
+    currentY -= lineHeight * 10;
+    page.drawText(`Pièce jointe : Copie de la pièce d'identité.`, {
+      x: 50,
+      y: 30, // Bas de la page
+      size: 10,
+      font: helveticaFont,
+    });
+
+    // Save and download the PDF
+    const pdfBytes = await pdfDoc.save();
+    const blob = new Blob([pdfBytes], { type: "application/pdf" });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", `procuration-${formData.nomMandant}.pdf`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
   };
 
   return (
