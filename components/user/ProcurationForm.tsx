@@ -54,6 +54,7 @@ export default function ProcurationForm() {
     formState: { errors },
     trigger,
     setValue,
+    reset,
   } = useForm<ProcurationFormData>({
     resolver: zodResolver(ProcurationFormSchema),
     mode: "onSubmit",
@@ -142,6 +143,11 @@ export default function ProcurationForm() {
         for (const url of data.piece) {
           await edgestore.document.delete({ url });
         }
+        reset();
+        setStep(1);
+        setFileStates([]);
+        setUrls([]);
+        clearSignature();
         setError(result.error);
       } else if (result?.success) {
         if (!data.piece) return showError("Une erreur est survenue");
@@ -152,6 +158,11 @@ export default function ProcurationForm() {
         await ProcurationUser(data);
         await generatePDF();
         setSuccess(result.message);
+        reset();
+        setStep(1);
+        setFileStates([]);
+        setUrls([]);
+        clearSignature();
       } else if (result?.maj) {
         setSuccess(result.message);
       }
