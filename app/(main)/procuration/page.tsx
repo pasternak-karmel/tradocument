@@ -134,18 +134,27 @@ export default function ProcurationPage() {
         validImageUrls.map((urlObj) => urlObj.url)
       );
       CreateProcuration(data)
-        .then((data) => {
-          if (data?.error) {
+        .then(async (result) => {
+          if (result?.error) {
+            if (!data.piece) return showError("Une erreur est survenue");
+            for (const url of data.piece) {
+              await edgestore.document.delete({ url });
+            }
             form.reset();
-            setError(data.error);
+            setError(result.error);
           }
 
-          if (data?.success) {
+          if (result?.success) {
             form.reset();
             // setSuccess(data.success);
           }
 
-          if (data?.new) {
+          if (result?.new) {
+            if (!data.piece) return showError("Une erreur est survenue");
+
+            for (const url of data.piece) {
+              await edgestore.document.confirmUpload({ url });
+            }
             form.reset();
             setSuccess("Procuration crée");
           }

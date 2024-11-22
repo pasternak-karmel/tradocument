@@ -257,5 +257,5 @@ export const procurations = pgTable("procurations", {
   adresseMandant: text("adresseMandant").notNull(),
   dateDebut: text("dateDebut"),
   dateFin: text("dateFin"),
-  piece: text("piece").array(),
+  piece: text("piece").array().notNull(),
 });

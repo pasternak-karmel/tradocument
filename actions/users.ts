@@ -48,6 +48,7 @@ export const CreateProcuration = async (values: ProcurationFormData) => {
       .insert(procurations)
       .values({
         ...values,
+        piece: values.piece ? values.piece : [],
         userId: user.id,
       })
       .returning();

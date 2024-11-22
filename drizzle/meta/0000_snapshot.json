@@ -1,5 +1,5 @@
 {
-  "id": "a042d3b9-4b86-47ad-b8d3-c5c5596bcf65",
+  "id": "85916a9a-8147-41e2-b0a9-4e25637bca07",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -469,6 +469,110 @@
         }
       },
       "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "public.procurations": {
+      "name": "procurations",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "userId": {
+          "name": "userId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAT": {
+          "name": "createdAT",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "typeProcuration": {
+          "name": "typeProcuration",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "nomMandant": {
+          "name": "nomMandant",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "prenomMandant": {
+          "name": "prenomMandant",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "dateNaissanceMandant": {
+          "name": "dateNaissanceMandant",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "lieuNaissanceMandant": {
+          "name": "lieuNaissanceMandant",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "nationaliteMandant": {
+          "name": "nationaliteMandant",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "adresseMandant": {
+          "name": "adresseMandant",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "dateDebut": {
+          "name": "dateDebut",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "dateFin": {
+          "name": "dateFin",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "piece": {
+          "name": "piece",
+          "type": "text[]",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "procurations_userId_user_id_fk": {
+          "name": "procurations_userId_user_id_fk",
+          "tableFrom": "procurations",
+          "tableTo": "user",
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "checkConstraints": {}
