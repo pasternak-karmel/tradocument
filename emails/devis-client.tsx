@@ -17,6 +17,17 @@ import { z } from "zod";
 export default function DemandeDevisEmail(
   values: z.infer<typeof demandeDevis>
 ) {
+  const currentDate = new Date();
+  const formattedDate = currentDate.toLocaleDateString("fr-FR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
+  const formattedTime = currentDate.toLocaleTimeString("fr-FR", {
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+  });
   return (
     <Html>
       <Head />
@@ -73,6 +84,10 @@ export default function DemandeDevisEmail(
                     {/* <DetailRow label="Adresse d'expédition" value={values.deliveryAddress.shippingAddress} /> */}
                   </>
                 )}
+                 <DetailRow
+                  label="Reçu le"
+                  value={`${formattedDate} à ${formattedTime}`}
+                />
               </tbody>
             </table>
           </Section>

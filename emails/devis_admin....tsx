@@ -45,7 +45,7 @@ export default function DemandeDevisEmailAdmin(
             <table style={table}>
               <tbody>
                 <DetailRow
-                  label="Nom et prénom"
+                  label="Prénom et nom"
                   value={`${values.firstName} ${values.lastName}`}
                 />
                 <DetailRow label="Email" value={values.email} />
