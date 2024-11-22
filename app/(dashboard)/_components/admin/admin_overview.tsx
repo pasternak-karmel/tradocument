@@ -1,30 +1,19 @@
+import { DemandeDevisTable } from "@/components/user/demande-devis-table";
+import { db } from "@/db/drizzle";
+import { DemandeDevis } from "@/db/schema";
+import { currentRole } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
-"use client";
-import { DataTable } from "./data-table";
-import { Columns } from "./columns";
-import { useAdmin } from "@/hooks/useAdmin";
-
-const AdminOverview = () => {
-  const { tableauFichier, TableauisLoading, TableauisError } = useAdmin();
-
-  if (TableauisLoading) {
-    return <div>Chargement...</div>;
-  }
-
-  if (TableauisError) {
-    return <div>{TableauisError}</div>;
-  }
+const AdminOverviewNew = async () => {
+  const role = await currentRole();
+  if (!role || role !== "admin") redirect("/");
+  const demandeDevis = await db.select().from(DemandeDevis);
   return (
-    <div className="p-4">
-      <h1 className="text-2xl text-center mt-6 underline">
-        Tous les traductions
-      </h1>
-      <DataTable columns={Columns} data={tableauFichier} />
+    <div className="container mx-auto py-10">
+      <h1 className="text-2xl font-bold mb-5">Demandes de Devis</h1>
+      <DemandeDevisTable data={demandeDevis} />
     </div>
   );
 };
 
-export default AdminOverview;
-
-//admin can do assign traduction to other user (done)
-//admin can authorize rejoignez nous (done)
+export default AdminOverviewNew;

@@ -47,9 +47,6 @@ export default function DemandeDevisEmail(
                 <DetailRow label="Type de document" value={values.documentType} />
                 <DetailRow label="Langue source" value={values.sourceLanguage} />
                 <DetailRow label="Langue cible" value={values.targetLanguage} />
-                {values.deadline && (
-                  <DetailRow label="Délai souhaité" value={values.deadline} />
-                )}
                 {values.additionalInfo && (
                   <DetailRow label="Informations supplémentaires" value={values.additionalInfo} />
                 )}

@@ -99,7 +99,7 @@ export function NavUser({
               }}
             >
               <LogOut />
-              Log out
+              Déconnexion
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

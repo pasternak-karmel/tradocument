@@ -60,9 +60,6 @@ export default function DemandeDevisEmailAdmin(
                   value={values.sourceLanguage}
                 />
                 <DetailRow label="Langue cible" value={values.targetLanguage} />
-                {values.deadline && (
-                  <DetailRow label="Délai souhaité" value={values.deadline} />
-                )}
                 {values.additionalInfo && (
                   <DetailRow
                     label="Informations supplémentaires"

@@ -47,7 +47,7 @@ const data = {
     },
     {
       title: "Procuration",
-      url: "/procuration",
+      url: "/ma-procuration",
       icon: BookOpen,
     },
     {

@@ -18,20 +18,24 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from "@/components/ui/select";
 import { showError } from "@/function/notification-toast";
+import { useCurrentUser } from "@/hooks/use-current-user";
 import { useEdgeStore } from "@/lib/edgestore";
 import { ProcurationUser } from "@/lib/mail";
 import { ProcurationFormData, ProcurationFormSchema } from "@/schemas";
+import { useRouter } from "next/navigation";
 import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
 import { toast } from "sonner";
 
 export default function ProcurationForm() {
+    const user = useCurrentUser();
+    const router = useRouter()
   const [step, setStep] = useState(1);
   const [preview, setPreview] = useState(false);
   const signaturePadRef = useRef<SignaturePad>(null);
@@ -81,8 +85,8 @@ export default function ProcurationForm() {
     });
   }
 
-  const onSubmit = async (data: ProcurationFormData) => {
-    console.log("Form submitted", data);
+    const onSubmit = async (data: ProcurationFormData) => {
+      if(!user) return router.push(`/ma-procuration`);
 
     if (!signaturePadRef.current?.isEmpty()) {
       const signatureData = signaturePadRef.current?.toDataURL();

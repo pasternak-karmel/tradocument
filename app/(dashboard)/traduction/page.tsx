@@ -1,37 +1,22 @@
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
-import { DataTable } from "./data-table";
-import { Columns } from "./columns";
-import AddTraduction from "../_components/traduction";
+import { DemandeDevisTable } from "@/components/user/demande-devis-table";
+import { db } from "@/db/drizzle";
+import { DemandeDevis } from "@/db/schema";
+import { currentUserId } from "@/lib/auth";
+import { eq } from "drizzle-orm";
+import { redirect } from "next/navigation";
 
-import { GetTraduction } from "@/actions/getTraductions";
-import Link from "next/link";
-
-export default async function Traduction() {
-  const data = await GetTraduction();
+export default async function DemandeDevisPage() {
+  const userId = await currentUserId();
+  if (!userId) redirect("/auth/login");
+  const demandeDevis = await db
+    .select()
+    .from(DemandeDevis)
+    .where(eq(DemandeDevis.userId, userId));
 
   return (
-    <div className="h-auto">
-      <div className="h-auto flex justify-between items-center">
-        <div />
-        {/* <AddTraduction> */}
-        <Link href="/devis ">
-          <Button >
-            <Plus />
-            Nouvelle traduction
-        </Button>
-        </Link>
-          
-        {/* </AddTraduction> */}
-      </div>
-      <h1 className="text-2xl text-center mt-6 underline">
-        Vos traductions récentes
-      </h1>
-      {"error" in data ? (
-        <div className="text-center">{data.error}</div>
-      ) : (
-        <DataTable columns={Columns} data={data} />
-      )}
+    <div className="container mx-auto py-10">
+      <h1 className="text-2xl font-bold mb-5">Demandes de Devis</h1>
+      <DemandeDevisTable data={demandeDevis} />
     </div>
   );
 }

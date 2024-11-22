@@ -35,7 +35,8 @@ export const dashboardRoutes: string[] = ["/dashboard"];
 
 export const devisRoutes: string[] = [
   "/devis/nouvelleDevis",
-  "/devis/nouvelle_devis"
+  "/devis/nouvelle_devis",
+  "/traduction",
 ];
 
 export const adminRoutes: string[] = ["/autorisation"];

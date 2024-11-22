@@ -10,7 +10,6 @@ import { revalidatePath } from "next/cache";
 //traducteur: confirmation
 //admin: confirmed
 
-
 //a faire
 
 //rejoindre formulaire avec loading et envoyer un email (pending carmel)
@@ -22,6 +21,8 @@ import { revalidatePath } from "next/cache";
 //traduction page: faire contenir les infos sur la page
 
 //nom prenom lieu de naissance date nationnalité adresse document date 1 et date 2 piece d'identité signature
+
+//apreès a use tanstack query pour les données du devis sur la page traduction
 
 export async function updatedTraduction(
   TraductionId: string,
@@ -64,9 +65,7 @@ export async function updatedTraduction(
     console.error("Error updating course:", error);
     return { error: "Failed to update traduction" };
   }
-  
 }
-
 
 // export async function deleteCourse(
 //   courseId: string
