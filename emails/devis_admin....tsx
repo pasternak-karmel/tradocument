@@ -106,7 +106,7 @@ export default function DemandeDevisEmailAdmin(
                   />
                 )}
                  <DetailRow
-                  label="Envoyer le"
+                  label="Envoyé le"
                   value={`${formattedDate} à ${formattedTime}`}
                 />
               </tbody>
