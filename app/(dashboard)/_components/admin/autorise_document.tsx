@@ -26,13 +26,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { TRADUCTION } from "@/db/schema";
+import { DEMANDEDEVIS, TRADUCTION } from "@/db/schema";
 import { Check, Eye, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 const AuthorizeDocument = () => {
-  const [documents, setDocuments] = useState<TRADUCTION[]>([]);
+  const [documents, setDocuments] = useState<DEMANDEDEVIS[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -48,8 +48,8 @@ const AuthorizeDocument = () => {
       const data = await response.json();
       setDocuments(data);
     } catch (error) {
-      console.error("Error fetching documents:", error);
-      toast.error("Failed to load documents");
+      console.error("Error fetching devis:", error);
+      toast.error("Failed to load devis");
     } finally {
       setLoading(false);
     }
@@ -98,7 +98,7 @@ const AuthorizeDocument = () => {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div>Chargement...</div>;
   }
 
   return (
@@ -157,17 +157,17 @@ const AuthorizeDocument = () => {
                         </DialogHeader>
                         <div className="mt-4">
                           <p>Montant: {doc.montant}</p>
-                          <p>De: {doc.traduction_from}</p>
-                          <p>Vers: {doc.traduction_to}</p>
+                          <p>De: {doc.langueSource}</p>
+                          <p>Vers: {doc.langueTraduit}</p>
                           <p>
                             Fichier original:{" "}
-                            <a
-                              href={doc.fichier}
-                              target="_blank"
-                              rel="noopener noreferrer"
+                            <p
+                              // href={doc.fichier}
+                              // target="_blank"
+                              // rel="noopener noreferrer"
                             >
                               Voir le fichier
-                            </a>
+                            </p>
                           </p>
                           {doc.fichierTraduis && (
                             <p>

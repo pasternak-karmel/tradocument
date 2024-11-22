@@ -1,5 +1,5 @@
 import { db } from "@/db/drizzle";
-import { traduction, users } from "@/db/schema";
+import { DemandeDevis, users } from "@/db/schema";
 import { AcceptTraduction, rejectedTraduction } from "@/lib/mail";
 import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
@@ -7,11 +7,11 @@ import { NextResponse } from "next/server";
 export async function GET() {
   try {
     // Fetch all semesters
-    const Alltraduction = await db.select().from(traduction);
+    const Alltraduction = await db.select().from(DemandeDevis);
 
     if (Alltraduction.length === 0) {
       return NextResponse.json(
-        { message: "Pas de traduction trouvé" },
+        { message: "Pas de demande trouvé" },
         { status: 404 }
       );
     }
@@ -35,9 +35,9 @@ export async function PATCH(
 
   try {
     const [traductionUpdated] = await db
-      .update(traduction)
+      .update(DemandeDevis)
       .set({ status })
-      .where(eq(traduction.id, documentId))
+      .where(eq(DemandeDevis.id, documentId))
       .returning();
 
     if (status === "completed") {
@@ -54,15 +54,15 @@ export async function PATCH(
 
       // todo: delete file in edge storage
       const [] = await db
-        .update(traduction)
+        .update(DemandeDevis)
         .set({ status: "rejected", fichierTraduis: null })
-        .where(eq(traduction.id, documentId))
+        .where(eq(DemandeDevis.id, documentId))
         .returning();
     }
 
-    return NextResponse.json({ message: "Traduction mise à jour avec succès" });
+    return NextResponse.json({ message: "Devis mise à jour avec succès" });
   } catch (error) {
-    console.error("Error updating translation:", error);
+    console.error("Error updating devis:", error);
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 }
