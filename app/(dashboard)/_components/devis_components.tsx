@@ -92,12 +92,15 @@ const DevisForm = () => {
       email: "",
       phone: "",
       country: undefined,
-      documentType: "",
-      sourceLanguage: "",
-      targetLanguage: "",
-      deadline: "",
+      // documentType: "",
+      // sourceLanguage: "",
+      // targetLanguage: "",
       additionalInfo: "",
       termsAccepted: false,
+      deliveryAddress: {
+        departureAddress: "",
+        // shippingAddress: "",
+      },
     },
   });
 
@@ -107,7 +110,7 @@ const DevisForm = () => {
     }
   }, [montant]);
 
-   function updateFileProgress(key: string, progress: FileState["progress"]) {
+  function updateFileProgress(key: string, progress: FileState["progress"]) {
     setFileStates((fileStates) => {
       const newFileStates = structuredClone(fileStates);
       const fileState = newFileStates.find(
@@ -119,6 +122,13 @@ const DevisForm = () => {
       return newFileStates;
     });
   }
+
+  const annuler = () => {
+    form.reset();
+    setMontant(null);
+    setFileStates([]);
+    setUrls([]);
+  };
 
   async function onSubmit(values: z.infer<typeof demandeDevis>) {
     if (!user) return router.push(`/devis`);
@@ -450,9 +460,7 @@ const DevisForm = () => {
                       <FormItem>
                         <FormLabel>Type de document</FormLabel>
                         <Select
-                          disabled={
-                            montant !== null || loading
-                          }
+                          disabled={montant !== null || loading}
                           onValueChange={field.onChange}
                         >
                           <SelectTrigger>
@@ -621,6 +629,18 @@ const DevisForm = () => {
                     >
                       {loading ? <BeatLoader /> : "Envoyez demande de devis"}
                     </Button>
+                  )}
+
+                  {montant !== null && (
+                    <div>
+                      <Button
+                        variant={"destructive"}
+                        onClick={annuler}
+                        className="btn-primary"
+                      >
+                        Annuler
+                      </Button>
+                    </div>
                   )}
                 </form>
               </Form>

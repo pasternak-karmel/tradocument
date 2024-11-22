@@ -26,8 +26,6 @@ import { useForm } from "react-hook-form";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 
-import { useEdgeStore } from "@/lib/edgestore";
-
 import { useReCaptcha } from "next-recaptcha-v3";
 
 import { useCurrentUser } from "@/hooks/use-current-user";
@@ -69,11 +67,10 @@ import { Mail, User } from "lucide-react";
 import { BeatLoader } from "react-spinners";
 import { toast } from "sonner";
 
-const DevisFormProc = () => {
+const DevisAccueil = () => {
   const user = useCurrentUser();
   const { executeRecaptcha } = useReCaptcha();
   const router = useRouter();
-  const { edgestore } = useEdgeStore();
 
   const [showDeliveryAddress, setShowDeliveryAddress] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -88,12 +85,14 @@ const DevisFormProc = () => {
       email: "",
       phone: "",
       country: undefined,
-      documentType: "",
-      sourceLanguage: "",
-      targetLanguage: "",
-      deadline: "",
+      // documentType: "",
+      // sourceLanguage: "",
+      // targetLanguage: "",
       additionalInfo: "",
       termsAccepted: false,
+      // deliveryAddress: {
+      //   departureAddress: "",
+      // },
     },
   });
 
@@ -106,8 +105,8 @@ const DevisFormProc = () => {
   async function onSubmit(values: z.infer<typeof demandeDevis>) {
     if (!user) return router.push(`/devis`);
 
-    if (!values.deliveryAddress) {
-      showError("Adresse de livraison non renseignée");
+    if (!values.deliveryAddress?.departureAddress) {
+      showError("Adresse de récupération non renseignée");
       return;
     }
 
@@ -159,8 +158,8 @@ const DevisFormProc = () => {
 
       if (result.success) {
         form.reset();
-        await devisSent(formValues);
-        await devisSentAdmin(formValues, result.info);
+        await devisSent(result.info as z.infer<typeof demandeDevis>);
+        await devisSentAdmin(values, result.info);
         router.push(`/devis/payment?id=${result.message}`);
       } else {
         showError(result.message);
@@ -173,6 +172,11 @@ const DevisFormProc = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const annuler = () => {
+    form.reset();
+    setDistance(null);
   };
 
   const inputStyle = {
@@ -306,7 +310,6 @@ const DevisFormProc = () => {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Pays: </FormLabel>
-                        {/* <ComboboxDemo /> */}
                         <Popover>
                           <PopoverTrigger asChild>
                             <FormControl>
@@ -583,6 +586,18 @@ const DevisFormProc = () => {
                       )}
                     </Button>
                   )}
+
+                  {distance !== null && (
+                    <div>
+                      <Button
+                        variant={"destructive"}
+                        onClick={annuler}
+                        className="btn-primary"
+                      >
+                        Annuler
+                      </Button>
+                    </div>
+                  )}
                 </form>
               </Form>
             </CardContent>
@@ -594,4 +609,4 @@ const DevisFormProc = () => {
   );
 };
 
-export default DevisFormProc;
+export default DevisAccueil;

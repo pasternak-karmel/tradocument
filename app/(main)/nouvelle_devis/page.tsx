@@ -26,8 +26,6 @@ import { useForm } from "react-hook-form";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 
-import { useEdgeStore } from "@/lib/edgestore";
-
 import { useReCaptcha } from "next-recaptcha-v3";
 
 import { useCurrentUser } from "@/hooks/use-current-user";
@@ -73,7 +71,6 @@ const DevisAccueil = () => {
   const user = useCurrentUser();
   const { executeRecaptcha } = useReCaptcha();
   const router = useRouter();
-  const { edgestore } = useEdgeStore();
 
   const [showDeliveryAddress, setShowDeliveryAddress] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -88,12 +85,14 @@ const DevisAccueil = () => {
       email: "",
       phone: "",
       country: undefined,
-      documentType: "",
-      sourceLanguage: "",
-      targetLanguage: "",
-      deadline: "",
+      // documentType: "",
+      // sourceLanguage: "",
+      // targetLanguage: "",
       additionalInfo: "",
       termsAccepted: false,
+      // deliveryAddress: {
+      //   departureAddress: "",
+      // },
     },
   });
 
@@ -106,8 +105,8 @@ const DevisAccueil = () => {
   async function onSubmit(values: z.infer<typeof demandeDevis>) {
     if (!user) return router.push(`/devis`);
 
-    if (!values.deliveryAddress) {
-      showError("Adresse de livraison non renseignée");
+    if (!values.deliveryAddress?.departureAddress) {
+      showError("Adresse de récupération non renseignée");
       return;
     }
 
@@ -591,9 +590,12 @@ const DevisAccueil = () => {
                   {distance !== null && (
                     <div>
                       <Button
+                        variant={"destructive"}
                         onClick={annuler}
                         className="btn-primary"
-                      ></Button>
+                      >
+                        Annuler
+                      </Button>
                     </div>
                   )}
                 </form>
