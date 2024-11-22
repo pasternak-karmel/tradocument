@@ -214,35 +214,49 @@ const validateDate = (date: string) => {
   return isValidDate && day <= 31 && month <= 12 && year > 1900;
 };
 
-export const ProcurationFormSchema = z.object({
-  typeProcuration: z.string().min(1, "Le type de procuration est requis"),
-  nomMandant: z.string().min(1, "Le nom du mandant est requis"),
-  prenomMandant: z.string().min(1, "Le prénom du mandant est requis"),
-  dateNaissanceMandant: z
-    .string()
-    .min(1, "La date de naissance est requise")
-    .regex(
-      /^\d{4}-\d{2}-\d{2}$/,
-      "La date de naissance doit être au format AAAA-MM-JJ"
-    ),
-  lieuNaissanceMandant: z.string().min(1, "Le lieu de naissance est requis"),
-  nationaliteMandant: z.string().min(1, "La nationalité est requise"),
-  adresseMandant: z.string().min(1, "L'adresse est requise"),
-  dateDebut: z
-    .string()
-    .regex(
-      /^\d{4}-\d{2}-\d{2}$/,
-      "La date de début doit être au format AAAA-MM-JJ"
-    )
-    .optional(),
-  dateFin: z
-    .string()
-    .regex(
-      /^\d{4}-\d{2}-\d{2}$/,
-      "La date de fin doit être au format AAAA-MM-JJ"
-    )
-    .optional(),
-  piece: z.array(z.string()).optional(),
-});
+export const ProcurationFormSchema = z
+  .object({
+    typeProcuration: z.string().min(1, "Le type de procuration est requis"),
+    nomMandant: z.string().min(1, "Le nom du mandant est requis"),
+    prenomMandant: z.string().min(1, "Le prénom du mandant est requis"),
+    dateNaissanceMandant: z
+      .string()
+      .min(1, "La date de naissance est requise")
+      .regex(
+        /^\d{4}-\d{2}-\d{2}$/,
+        "La date de naissance doit être au format AAAA-MM-JJ"
+      ),
+    lieuNaissanceMandant: z.string().min(1, "Le lieu de naissance est requis"),
+    nationaliteMandant: z.string().min(1, "La nationalité est requise"),
+    adresseMandant: z.string().min(1, "L'adresse est requise"),
+    dateDebut: z
+      .string()
+      // .regex(
+      //   /^\d{4}-\d{2}-\d{2}$/,
+      //   "La date de début doit être au format AAAA-MM-JJ"
+      // )
+      .optional(),
+    dateFin: z
+      .string()
+      // .regex(
+      //   /^\d{4}-\d{2}-\d{2}$/,
+      //   "La date de fin doit être au format AAAA-MM-JJ"
+      // )
+      .optional(),
+    piece: z.array(z.string()).optional(),
+  })
+  .refine(
+    (data) => {
+      if (data.dateDebut && !data.dateFin) {
+        return false;
+      }
+      return true;
+    },
+    {
+      message: "La date de fin est requise si une date de début est spécifiée",
+      path: ["dateFin"],
+    }
+  );
 
 export type ProcurationFormData = z.infer<typeof ProcurationFormSchema>;
+

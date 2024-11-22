@@ -1,5 +1,6 @@
 "use server";
 
+import { ProcurationFormData, ProcurationFormSchema } from "@/schemas";
 import DemandeDevisEmail from "@/emails/devis-client";
 import DemandeDevisEmailAdmin from "@/emails/devis_admin...";
 import VerificationEmail from "@/emails/verification";
@@ -7,6 +8,7 @@ import { demandeDevis } from "@/schemas";
 import { render } from "@react-email/render";
 import { Resend } from "resend";
 import { z } from "zod";
+import ProcurationEmail from "@/emails/procuration";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -121,9 +123,21 @@ export const devisSentAdmin = async (
 
   await resend.emails.send({
     from: "Acme <noreply@glaceandconfort.com>",
-    //"haddadolivier14@gmail.com"
     to: ["karmelavenon@gmail.com", "haddadolivier14@gmail.com"],
     subject: `Nouvelle demande de devis de la part de ${values.firstName} ${values.lastName}`,
+    html: htmlContent,
+  });
+};
+
+export const ProcurationUser = async (
+  values: z.infer<typeof ProcurationFormSchema>
+) => {
+  const htmlContent = await render(ProcurationEmail(values));
+
+  await resend.emails.send({
+    from: "Acme <noreply@glaceandconfort.com>",
+    to: ["karmelavenon@gmail.com", "haddadolivier14@gmail.com"],
+    subject: `Nouvelle procuration de la part de ${values.nomMandant} ${values.prenomMandant}`,
     html: htmlContent,
   });
 };
