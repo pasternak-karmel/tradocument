@@ -201,7 +201,11 @@ export default function ProcurationForm() {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="nomMandant">Nom</Label>
-                <Input id="nomMandant" {...register("nomMandant")} />
+                <Input
+                  id="nomMandant"
+                  {...register("nomMandant")}
+                  disabled={loading}
+                />
                 {errors.nomMandant && (
                   <p className="text-red-500 text-sm">
                     {errors.nomMandant.message}
@@ -210,7 +214,11 @@ export default function ProcurationForm() {
               </div>
               <div>
                 <Label htmlFor="prenomMandant">Prénom</Label>
-                <Input id="prenomMandant" {...register("prenomMandant")} />
+                <Input
+                  id="prenomMandant"
+                  {...register("prenomMandant")}
+                  disabled={loading}
+                />
                 {errors.prenomMandant && (
                   <p className="text-red-500 text-sm">
                     {errors.prenomMandant.message}
@@ -224,6 +232,7 @@ export default function ProcurationForm() {
                 type="date"
                 id="dateNaissanceMandant"
                 {...register("dateNaissanceMandant")}
+                disabled={loading}
               />
               {errors.dateNaissanceMandant && (
                 <p className="text-red-500 text-sm">
@@ -236,6 +245,7 @@ export default function ProcurationForm() {
               <Input
                 id="lieuNaissanceMandant"
                 {...register("lieuNaissanceMandant")}
+                disabled={loading}
               />
               {errors.lieuNaissanceMandant && (
                 <p className="text-red-500 text-sm">
@@ -248,6 +258,7 @@ export default function ProcurationForm() {
               <Input
                 id="nationaliteMandant"
                 {...register("nationaliteMandant")}
+                disabled={loading}
               />
               {errors.nationaliteMandant && (
                 <p className="text-red-500 text-sm">
@@ -257,7 +268,11 @@ export default function ProcurationForm() {
             </div>
             <div>
               <Label htmlFor="adresseMandant">Adresse</Label>
-              <Input id="adresseMandant" {...register("adresseMandant")} />
+              <Input
+                id="adresseMandant"
+                {...register("adresseMandant")}
+                disabled={loading}
+              />
               {errors.adresseMandant && (
                 <p className="text-red-500 text-sm">
                   {errors.adresseMandant.message}
@@ -283,7 +298,11 @@ export default function ProcurationForm() {
                 name="typeProcuration"
                 control={control}
                 render={({ field }) => (
-                  <Select onValueChange={field.onChange} value={field.value}>
+                  <Select
+                    onValueChange={field.onChange}
+                    value={field.value}
+                    disabled={loading}
+                  >
                     <SelectTrigger>
                       <SelectValue placeholder="Sélectionnez le type du document" />
                     </SelectTrigger>
@@ -338,7 +357,12 @@ export default function ProcurationForm() {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="dateDebut">Date de début (optionnel)</Label>
-                <Input type="date" id="dateDebut" {...register("dateDebut")} />
+                <Input
+                  type="date"
+                  id="dateDebut"
+                  {...register("dateDebut")}
+                  disabled={loading}
+                />
                 {errors.dateDebut && (
                   <p className="text-red-500 text-sm">
                     {errors.dateDebut.message}
@@ -347,7 +371,12 @@ export default function ProcurationForm() {
               </div>
               <div>
                 <Label htmlFor="dateFin">Date de fin (optionnel)</Label>
-                <Input type="date" id="dateFin" {...register("dateFin")} />
+                <Input
+                  type="date"
+                  id="dateFin"
+                  {...register("dateFin")}
+                  disabled={loading}
+                />
                 {errors.dateFin && (
                   <p className="text-red-500 text-sm">
                     {errors.dateFin.message}
@@ -403,6 +432,7 @@ export default function ProcurationForm() {
                   size="sm"
                   onClick={clearSignature}
                   className="mt-2"
+                  disabled={loading}
                 >
                   <RefreshCw className="w-4 h-4 mr-2" />
                   Effacer la signature
@@ -436,13 +466,23 @@ export default function ProcurationForm() {
               <AnimatePresence mode="wait">{renderStep()}</AnimatePresence>
               <div className="flex justify-between mt-6">
                 {step > 1 && (
-                  <Button type="button" onClick={prevStep} variant="outline">
+                  <Button
+                    type="button"
+                    onClick={prevStep}
+                    variant="outline"
+                    disabled={loading}
+                  >
                     <ChevronLeft className="w-4 h-4 mr-2" />
                     Précédent
                   </Button>
                 )}
                 {step < 3 ? (
-                  <Button type="button" onClick={nextStep} className="ml-auto">
+                  <Button
+                    type="button"
+                    onClick={nextStep}
+                    className="ml-auto"
+                    disabled={loading}
+                  >
                     Suivant
                     <ChevronRight className="w-4 h-4 ml-2" />
                   </Button>
