@@ -85,7 +85,7 @@ export default function DemandeDevisEmail(
                   </>
                 )}
                  <DetailRow
-                  label="Reçu le"
+                  label="Envoyé le"
                   value={`${formattedDate} à ${formattedTime}`}
                 />
               </tbody>

@@ -19,6 +19,17 @@ export default function DemandeDevisEmailAdmin(
   values: z.infer<typeof demandeDevis>,
   info: Info
 ) {
+  const currentDate = new Date();
+  const formattedDate = currentDate.toLocaleDateString("fr-FR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
+  const formattedTime = currentDate.toLocaleTimeString("fr-FR", {
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+  });
   return (
     <Html>
       <Head />
@@ -94,6 +105,10 @@ export default function DemandeDevisEmailAdmin(
                       .join(", ")}
                   />
                 )}
+                 <DetailRow
+                  label="Envoyer le"
+                  value={`${formattedDate} à ${formattedTime}`}
+                />
               </tbody>
             </table>
           </Section>
