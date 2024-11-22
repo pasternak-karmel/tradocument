@@ -75,7 +75,6 @@ const DevisForm = () => {
   const router = useRouter();
   const { edgestore } = useEdgeStore();
 
-  const [showDeliveryAddress, setShowDeliveryAddress] = useState(false);
   const [loading, setLoading] = useState(false);
   const [fileStates, setFileStates] = useState<FileState[]>([]);
   const [, setUrls] = useState<{ url: string; thumbnailUrl: string | null }[]>(
@@ -108,7 +107,7 @@ const DevisForm = () => {
     }
   }, [montant]);
 
-  function updateFileProgress(key: string, progress: FileState["progress"]) {
+   function updateFileProgress(key: string, progress: FileState["progress"]) {
     setFileStates((fileStates) => {
       const newFileStates = structuredClone(fileStates);
       const fileState = newFileStates.find(

@@ -68,7 +68,6 @@ import { languages } from "@/type";
 import { Mail, User } from "lucide-react";
 import { BeatLoader } from "react-spinners";
 import { toast } from "sonner";
-import { calculateDistanceToCapital } from "@/actions/calculateDistanceTest";
 
 const DevisAccueil = () => {
   const user = useCurrentUser();
@@ -107,7 +106,7 @@ const DevisAccueil = () => {
   async function onSubmit(values: z.infer<typeof demandeDevis>) {
     if (!user) return router.push(`/devis`);
 
-    if (!values.deliveryAddress ) {
+    if (!values.deliveryAddress) {
       showError("Adresse de livraison non renseignée");
       return;
     }
@@ -174,6 +173,11 @@ const DevisAccueil = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const annuler = () => {
+    form.reset();
+    setDistance(null);
   };
 
   const inputStyle = {
@@ -428,7 +432,7 @@ const DevisAccueil = () => {
                             <SelectValue placeholder="Sélectionnez la langue source" />
                           </SelectTrigger>
                           <SelectContent>
-                          <SelectItem value="Français">Français</SelectItem>
+                            <SelectItem value="Français">Français</SelectItem>
                             <SelectItem value="Arabe">Arabe</SelectItem>
                             <SelectItem value="Anglais">Anglais</SelectItem>
                             <SelectItem value="Italien">Espagnol</SelectItem>
@@ -559,9 +563,7 @@ const DevisAccueil = () => {
                           {distance.toFixed(2)}€ pour le transport (0.25€/km)
                         </pre>
                       )}
-                      <pre>
-                        {distance.toFixed(2)}€ (0.25€/Km)
-                      </pre>
+                      <pre>{distance.toFixed(2)}€ (0.25€/Km)</pre>
                     </div>
                   )}
                   {distance !== null ? (
@@ -584,6 +586,15 @@ const DevisAccueil = () => {
                         "Soumettre la demande de devis"
                       )}
                     </Button>
+                  )}
+
+                  {distance !== null && (
+                    <div>
+                      <Button
+                        onClick={annuler}
+                        className="btn-primary"
+                      ></Button>
+                    </div>
                   )}
                 </form>
               </Form>

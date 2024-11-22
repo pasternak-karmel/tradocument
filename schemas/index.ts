@@ -172,7 +172,7 @@ export const demandeDevis = z
     deliveryAddress: z
       .object({
         departureAddress: z.string(),
-        shippingAddress: z.string().optional(),
+        shippingAddress: z.string(),
       })
       .optional(),
     url: z.array(z.string()).optional(),
@@ -207,3 +207,42 @@ export const AddTraducteur = z.object({
   }),
   password: z.string().optional(),
 });
+
+const validateDate = (date: string) => {
+  const [day, month, year] = date.split("-").map(Number);
+  const isValidDate = !isNaN(new Date(year, month - 1, day).getTime());
+  return isValidDate && day <= 31 && month <= 12 && year > 1900;
+};
+
+export const ProcurationFormSchema = z.object({
+  typeProcuration: z.string().min(1, "Le type de procuration est requis"),
+  nomMandant: z.string().min(1, "Le nom du mandant est requis"),
+  prenomMandant: z.string().min(1, "Le prénom du mandant est requis"),
+  dateNaissanceMandant: z
+    .string()
+    .min(1, "La date de naissance est requise")
+    .regex(
+      /^\d{4}-\d{2}-\d{2}$/,
+      "La date de naissance doit être au format AAAA-MM-JJ"
+    ),
+  lieuNaissanceMandant: z.string().min(1, "Le lieu de naissance est requis"),
+  nationaliteMandant: z.string().min(1, "La nationalité est requise"),
+  adresseMandant: z.string().min(1, "L'adresse est requise"),
+  dateDebut: z
+    .string()
+    .regex(
+      /^\d{4}-\d{2}-\d{2}$/,
+      "La date de début doit être au format AAAA-MM-JJ"
+    )
+    .optional(),
+  dateFin: z
+    .string()
+    .regex(
+      /^\d{4}-\d{2}-\d{2}$/,
+      "La date de fin doit être au format AAAA-MM-JJ"
+    )
+    .optional(),
+  piece: z.array(z.string()).optional(),
+});
+
+export type ProcurationFormData = z.infer<typeof ProcurationFormSchema>;

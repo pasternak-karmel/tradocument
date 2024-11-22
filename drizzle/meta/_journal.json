@@ -8,6 +8,27 @@
       "when": 1732112537364,
       "tag": "0000_chilly_donald_blake",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1732210378081,
+      "tag": "0001_heavy_gressill",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1732275852265,
+      "tag": "0002_wise_santa_claus",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1732276037238,
+      "tag": "0003_volatile_lorna_dane",
+      "breakpoints": true
     }
   ]
 }

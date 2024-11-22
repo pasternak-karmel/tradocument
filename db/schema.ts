@@ -1,6 +1,5 @@
 import {
   boolean,
-  date,
   integer,
   pgTable,
   primaryKey,
@@ -10,10 +9,8 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 
-import type { AdapterAccountType } from "next-auth/adapters";
 import { createInsertSchema } from "drizzle-zod";
-import { sql } from "drizzle-orm";
-import { demandeDevis } from "@/schemas";
+import type { AdapterAccountType } from "next-auth/adapters";
 
 export const UserRoleEnum = {
   ADMIN: "admin",
@@ -38,7 +35,6 @@ export const users = pgTable("user", {
   two_factor_enabled: boolean("two_factor_enabled").default(false),
 });
 export type USERS = typeof users.$inferSelect;
-
 
 export const InsertUserSchema = createInsertSchema(users);
 
@@ -213,7 +209,6 @@ export const DemandeDevis = pgTable("demande_devis", {
 });
 export type DEMANDEDEVIS = typeof DemandeDevis.$inferSelect;
 
-
 export const rejoindrEquipe = pgTable("rejoindreEquipe", {
   id: text("id")
     .primaryKey()
@@ -245,20 +240,22 @@ export const contact = pgTable("contact", {
   message: text("message").notNull(),
 });
 
-
-// export const procurations = pgTable('procurations', {
-//   id: text("id")
-//     .primaryKey()
-//     .$defaultFn(() => crypto.randomUUID()),
-//   mandantNom: varchar('mandant_nom', { length: 255 }).notNull(),
-//   mandantPrenom: varchar('mandant_prenom', { length: 255 }).notNull(),
-//   mandantAdresse: text('mandant_adresse').notNull(),
-//   mandataireNom: varchar('mandataire_nom', { length: 255 }).notNull(),
-//   mandatairePrenom: varchar('mandataire_prenom', { length: 255 }).notNull(),
-//   mandataireAdresse: text('mandataire_adresse').notNull(),
-//   pouvoirs: text('pouvoirs').notNull(),
-//   dateDebut: date('date_debut').notNull(),
-//   dateFin: date('date_fin'),
-//   lieuSignature: varchar('lieu_signature', { length: 255 }).notNull(),
-//   dateSignature: date('date_signature').notNull(),
-// });
+export const procurations = pgTable("procurations", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  userId: text("userId")
+    .notNull()
+    .references(() => users.id),
+  created_at: timestamp("createdAT", { mode: "date" }).notNull().defaultNow(),
+  typeProcuration: text("typeProcuration").notNull(),
+  nomMandant: varchar("nomMandant", { length: 255 }).notNull(),
+  prenomMandant: varchar("prenomMandant", { length: 255 }).notNull(),
+  dateNaissanceMandant: text("dateNaissanceMandant"),
+  lieuNaissanceMandant: text("lieuNaissanceMandant").notNull(),
+  nationaliteMandant: text("nationaliteMandant").notNull(),
+  adresseMandant: text("adresseMandant").notNull(),
+  dateDebut: text("dateDebut"),
+  dateFin: text("dateFin"),
+  piece: text("piece").array(),
+});

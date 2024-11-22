@@ -26,7 +26,6 @@ import { IconSpinner } from "../ui/icons";
 
 export const LoginForm = () => {
   const searchParams = useSearchParams();
-  const router = useRouter();
   const callbackUrl = searchParams.get("callbackUrl");
   const urlError =
     searchParams.get("error") === "OAuthAccountNotLinked"

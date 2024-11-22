@@ -21,7 +21,7 @@ import { revalidatePath } from "next/cache";
 
 //traduction page: faire contenir les infos sur la page
 
-//
+//nom prenom lieu de naissance date nationnalité adresse document date 1 et date 2 piece d'identité signature
 
 export async function updatedTraduction(
   TraductionId: string,
