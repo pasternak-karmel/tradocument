@@ -606,7 +606,7 @@ const DevisAccueil = () => {
                       disabled={loading}
                       onClick={form.handleSubmit(onSubmit)}
                     >
-                      {loading ? <BeatLoader /> : "Soumettre la demande devis"}
+                      {loading ? <BeatLoader /> : "Soumettre demande devis"}
                     </Button>
                   )}
 
