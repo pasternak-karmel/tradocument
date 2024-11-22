@@ -288,18 +288,42 @@ export default function ProcurationForm() {
                       <SelectValue placeholder="Sélectionnez le type du document" />
                     </SelectTrigger>
                     <SelectContent>
+                      {/* Documents courants */}
+                      <SelectItem value="Carte d'identité">
+                        Carte d'identité
+                      </SelectItem>
+                      <SelectItem value="Passeport">Passeport</SelectItem>
                       <SelectItem value="Acte de naissance">
                         Acte de naissance
-                      </SelectItem>
-                      <SelectItem value="Permis de conduire">
-                        Permis de conduire
                       </SelectItem>
                       <SelectItem value="Acte de mariage">
                         Acte de mariage
                       </SelectItem>
-                      <SelectItem value="Autorisation pour ken">
-                        Autorisation pour ken
+                      <SelectItem value="Permis de conduire">
+                        Permis de conduire
                       </SelectItem>
+                      <SelectItem value="Document notarié">
+                        Document notarié
+                      </SelectItem>
+
+                      {/* Types de procuration */}
+                      <SelectItem value="Procuration bancaire">
+                        Procuration bancaire
+                      </SelectItem>
+                      <SelectItem value="Procuration administrative">
+                        Procuration administrative
+                      </SelectItem>
+                      <SelectItem value="Procuration médicale">
+                        Procuration médicale
+                      </SelectItem>
+                      <SelectItem value="Procuration immobilière">
+                        Procuration immobilière
+                      </SelectItem>
+                      <SelectItem value="Procuration pour actes juridiques">
+                        Procuration pour actes juridiques
+                      </SelectItem>
+
+                      {/* Option générique */}
                       <SelectItem value="Autre">Autre</SelectItem>
                     </SelectContent>
                   </Select>
