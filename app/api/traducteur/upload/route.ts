@@ -1,16 +1,15 @@
 import { auth } from "@/auth";
 import { db } from "@/db/drizzle";
-import { traduction } from "@/db/schema";
+import { DemandeDevis } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   const values = await req.json();
-
+  console.log(values);
 
   const { id, url } = values;
-
 
   if (!id || !url) {
     return NextResponse.json(
@@ -20,7 +19,6 @@ export async function POST(req: Request) {
   }
 
   const session = await auth();
-
 
   if (
     !session ||
@@ -34,8 +32,8 @@ export async function POST(req: Request) {
   try {
     const [traductionExist] = await db
       .select()
-      .from(traduction)
-      .where(eq(traduction.id, id))
+      .from(DemandeDevis)
+      .where(eq(DemandeDevis.id, id))
       .limit(1);
 
     if (traductionExist.traducteur !== session?.user.id) {
@@ -55,9 +53,9 @@ export async function POST(req: Request) {
     }
 
     await db
-      .update(traduction)
+      .update(DemandeDevis)
       .set({ fichierTraduis: url, status: "confirmation" })
-      .where(eq(traduction.id, id));
+      .where(eq(DemandeDevis.id, id));
 
     revalidatePath("/dashboard");
     return NextResponse.json({ success: true });

@@ -1,7 +1,8 @@
 "use server";
 import { db } from "@/db/drizzle";
-import { traduction, TRADUCTION, users } from "@/db/schema";
+import { DemandeDevis, DEMANDEDEVIS, traduction, TRADUCTION, users } from "@/db/schema";
 import { ServerActionResponse } from "@/types";
+import { de } from "date-fns/locale";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
@@ -28,20 +29,20 @@ export async function updatedTraduction(
   TraductionId: string,
   traducteurId: string
 ): Promise<
-  ServerActionResponse<{ traduction: TRADUCTION; translatorEmail: string }>
+  ServerActionResponse<{ traduction: DEMANDEDEVIS; translatorEmail: string }>
 > {
   try {
     const [updatedTraduction] = await db
-      .update(traduction)
+      .update(DemandeDevis)
       .set({
         traducteur: traducteurId,
         status: "processing",
       })
-      .where(eq(traduction.id, TraductionId))
+      .where(eq(DemandeDevis.id, TraductionId))
       .returning();
 
     if (!updatedTraduction) {
-      return { error: "Traduction not found" };
+      return { error: "Devis non trouvé" };
     }
 
     const [translator] = await db
@@ -62,8 +63,8 @@ export async function updatedTraduction(
       },
     };
   } catch (error) {
-    console.error("Error updating course:", error);
-    return { error: "Failed to update traduction" };
+    console.error("Error updating devis:", error);
+    return { error: "Failed to update devis" };
   }
 }
 

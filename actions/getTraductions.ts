@@ -3,11 +3,10 @@
 import { auth } from "@/auth";
 import { getUserByEmail } from "@/data/user";
 import { db } from "@/db/drizzle";
-import { TRADUCTION, traduction, users } from "@/db/schema";
+import { DemandeDevis, traduction, users } from "@/db/schema";
 import { currentUserId } from "@/lib/auth";
 import { AcceptTraducteur } from "@/lib/mail";
 import { AddTraducteur } from "@/schemas";
-import { ServerActionResponse } from "@/types";
 import bcrypt from "bcryptjs";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
@@ -30,7 +29,7 @@ export const GetTraduction = async () => {
   return articleAttente;
 };
 
-export const GetAdminTraduction = async ()=> {
+export const GetAdminTraduction = async () => {
   const session = await auth();
   if (
     !session ||
@@ -43,6 +42,28 @@ export const GetAdminTraduction = async ()=> {
 
   if (!articleAttente || articleAttente.length === 0) {
     return { error: "Pas encore de traduction. Commencez par en créer une!" };
+  }
+
+  return articleAttente;
+  // return {data: articleAttente};
+};
+
+export const GetAdminTraducteurTraduction = async () => {
+  const session = await auth();
+  if (
+    !session ||
+    (session?.user.role !== "admin" && session?.user.role !== "traducteur")
+  ) {
+    return { error: "Vous n'êtes pas autorisé à être ici" };
+  }
+
+  const articleAttente = await db
+    .select()
+    .from(DemandeDevis)
+    .where(eq(DemandeDevis.traducteur, session.user.id));
+
+  if (!articleAttente || articleAttente.length === 0) {
+    return { error: "Aucune demande de devis ne vous a été assignée" };
   }
 
   return articleAttente;

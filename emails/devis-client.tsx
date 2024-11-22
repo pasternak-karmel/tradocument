@@ -13,7 +13,6 @@ import {
   Text,
 } from "@react-email/components";
 import { z } from "zod";
-import * as React from "react";
 
 export default function DemandeDevisEmail(
   values: z.infer<typeof demandeDevis>
@@ -33,10 +32,16 @@ export default function DemandeDevisEmail(
           />
           <Heading style={heading}>Récapitulatif de votre demande</Heading>
           <Text style={subheading}>
-            Bonjour <strong style={strongText}>{values.firstName} {values.lastName}</strong>,
+            Bonjour{" "}
+            <strong style={strongText}>
+              {values.firstName} {values.lastName}
+            </strong>
+            ,
           </Text>
           <Text style={paragraph}>
-            Nous vous remercions pour votre demande de devis. Voici un récapitulatif détaillé des informations que vous nous avez fournies :
+            Nous vous remercions pour votre demande de devis. Voici un
+            récapitulatif détaillé des informations que vous nous avez fournies
+            :
           </Text>
           <Section style={detailsContainer}>
             <table style={table}>
@@ -44,15 +49,27 @@ export default function DemandeDevisEmail(
                 <DetailRow label="Email" value={values.email} />
                 <DetailRow label="Téléphone" value={`+${values.phone}`} />
                 <DetailRow label="Pays" value={values.country} />
-                <DetailRow label="Type de document" value={values.documentType} />
-                <DetailRow label="Langue source" value={values.sourceLanguage} />
+                <DetailRow
+                  label="Type de document"
+                  value={values.documentType}
+                />
+                <DetailRow
+                  label="Langue source"
+                  value={values.sourceLanguage}
+                />
                 <DetailRow label="Langue cible" value={values.targetLanguage} />
                 {values.additionalInfo && (
-                  <DetailRow label="Informations supplémentaires" value={values.additionalInfo} />
+                  <DetailRow
+                    label="Informations supplémentaires"
+                    value={values.additionalInfo}
+                  />
                 )}
                 {values.deliveryAddress && (
                   <>
-                    <DetailRow label="Adresse de départ" value={values.deliveryAddress.departureAddress} />
+                    <DetailRow
+                      label="Adresse de départ"
+                      value={values.deliveryAddress.departureAddress}
+                    />
                     {/* <DetailRow label="Adresse d'expédition" value={values.deliveryAddress.shippingAddress} /> */}
                   </>
                 )}
@@ -60,11 +77,21 @@ export default function DemandeDevisEmail(
             </table>
           </Section>
           <Text style={paragraph}>
-            Notre équipe d'experts va examiner attentivement votre demande et vous contactera dans les plus brefs délais avec un devis personnalisé adapté à vos besoins spécifiques.
+            Notre équipe d'experts va examiner attentivement votre demande et
+            vous contactera dans les plus brefs délais.
           </Text>
           <Hr style={hr} />
           <Text style={paragraph}>
-            Si vous souhaitez modifier ces informations ou avez des questions supplémentaires, n'hésitez pas à nous contacter à <Link href="mailto:contact@tradocument.com" style={link}>contact@tradocument.com</Link> ou au <Link href="tel:+33123456789" style={link}>+33 1 23 45 67 89</Link>.
+            Si vous souhaitez modifier ces informations ou avez des questions
+            supplémentaires, n'hésitez pas à nous contacter à{" "}
+            <Link href="mailto:contact@tradocument.com" style={link}>
+              contact@tradocument.com
+            </Link>{" "}
+            ou au{" "}
+            <Link href="tel:+33123456789" style={link}>
+              +33 1 23 45 67 89
+            </Link>
+            .
           </Text>
           <Text style={footer}>
             © {new Date().getFullYear()} Tradocument. Tous droits réservés.
