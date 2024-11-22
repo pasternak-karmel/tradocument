@@ -434,7 +434,7 @@ const DevisAccueil = () => {
                             <SelectItem value="Français">Français</SelectItem>
                             <SelectItem value="Arabe">Arabe</SelectItem>
                             <SelectItem value="Anglais">Anglais</SelectItem>
-                            <SelectItem value="Italien">Espagnol</SelectItem>
+                            <SelectItem value="Espagnol">Espagnol</SelectItem>
                             <SelectItem value="Italien">Italien</SelectItem>
                           </SelectContent>
                         </Select>
@@ -460,7 +460,7 @@ const DevisAccueil = () => {
                             <SelectItem value="Français">Français</SelectItem>
                             <SelectItem value="Arabe">Arabe</SelectItem>
                             <SelectItem value="Anglais">Anglais</SelectItem>
-                            <SelectItem value="Italien">Espagnol</SelectItem>
+                            <SelectItem value="Espagnol">Espagnol</SelectItem>
                             <SelectItem value="Italien">Italien</SelectItem>
                           </SelectContent>
                         </Select>
@@ -582,7 +582,7 @@ const DevisAccueil = () => {
                       {loading ? (
                         <BeatLoader />
                       ) : (
-                        "Soumettre la demande de devis"
+                        "Soumettre la demande devis"
                       )}
                     </Button>
                   )}

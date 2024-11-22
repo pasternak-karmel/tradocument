@@ -509,7 +509,7 @@ const DevisForm = () => {
                             <SelectItem value="Français">Français</SelectItem>
                             <SelectItem value="Arabe">Arabe</SelectItem>
                             <SelectItem value="Anglais">Anglais</SelectItem>
-                            <SelectItem value="Italien">Espagnol</SelectItem>
+                            <SelectItem value="Espagnol">Espagnol</SelectItem>
                             <SelectItem value="Italien">Italien</SelectItem>
                           </SelectContent>
                         </Select>
@@ -535,7 +535,7 @@ const DevisForm = () => {
                             <SelectItem value="Français">Français</SelectItem>
                             <SelectItem value="Arabe">Arabe</SelectItem>
                             <SelectItem value="Anglais">Anglais</SelectItem>
-                            <SelectItem value="Italien">Espagnol</SelectItem>
+                            <SelectItem value="Espagnol">Espagnol</SelectItem>
                             <SelectItem value="Italien">Italien</SelectItem>
                           </SelectContent>
                         </Select>
@@ -564,7 +564,7 @@ const DevisForm = () => {
                   />
 
                   <div className="space-y-4">
-                    <FormLabel>Télécharger le document à traduire</FormLabel>
+                    <FormLabel>Téléchargez le document à traduire</FormLabel>
                     <MultiFileDropzone
                       disabled={montant !== null || loading}
                       value={fileStates}
@@ -627,7 +627,7 @@ const DevisForm = () => {
                       disabled={loading}
                       onClick={form.handleSubmit(onSubmit)}
                     >
-                      {loading ? <BeatLoader /> : "Envoyez demande de devis"}
+                      {loading ? <BeatLoader /> : "Envoyez demande devis"}
                     </Button>
                   )}
 
