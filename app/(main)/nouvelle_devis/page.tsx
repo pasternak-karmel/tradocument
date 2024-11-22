@@ -68,6 +68,8 @@ import { BeatLoader } from "react-spinners";
 import { toast } from "sonner";
 
 const DevisAccueil = () => {
+  const [resetKey, setResetKey] = useState(0);
+
   const user = useCurrentUser();
   const { executeRecaptcha } = useReCaptcha();
   const router = useRouter();
@@ -175,7 +177,29 @@ const DevisAccueil = () => {
   };
 
   const annuler = () => {
-    form.reset();
+    form.reset({
+      firstName: "",
+      lastName: "",
+      email: "",
+      phone: "",
+      country: undefined,
+      documentType: undefined,
+      sourceLanguage: undefined,
+      targetLanguage: undefined,
+      additionalInfo: "",
+      termsAccepted: false,
+      deliveryAddress: {
+        departureAddress: "",
+      },
+    });
+    // const selects = document.querySelectorAll('button[role="combobox"]');
+    // selects.forEach((select: any) => {
+    //   if (select.firstChild) {
+    //     select.firstChild.textContent =
+    //       select.getAttribute("data-placeholder") || "Sélectionnez...";
+    //   }
+    // });
+    setResetKey((prev) => prev + 1);
     setDistance(null);
   };
 
@@ -383,6 +407,7 @@ const DevisAccueil = () => {
                       <FormItem>
                         <FormLabel>Type de document</FormLabel>
                         <Select
+                          key={`documentType-${resetKey}`}
                           disabled={
                             distance !== null || distance !== null || loading
                           }
@@ -424,6 +449,7 @@ const DevisAccueil = () => {
                       <FormItem>
                         <FormLabel>Langue du document</FormLabel>
                         <Select
+                          key={`sourceLanguage-${resetKey}`}
                           disabled={distance !== null || loading}
                           onValueChange={field.onChange}
                         >
@@ -450,6 +476,7 @@ const DevisAccueil = () => {
                       <FormItem>
                         <FormLabel>Le document sera traduit en :</FormLabel>
                         <Select
+                          key={`targetLanguage-${resetKey}`}
                           disabled={distance !== null || loading}
                           onValueChange={field.onChange}
                         >
@@ -500,7 +527,7 @@ const DevisAccueil = () => {
                           <FormControl>
                             <Input
                               disabled={distance !== null || loading}
-                              placeholder="eg: France, Paris"
+                              placeholder="eg: Pays, commune"
                               style={inputStyle}
                               {...field}
                               required
@@ -579,11 +606,7 @@ const DevisAccueil = () => {
                       disabled={loading}
                       onClick={form.handleSubmit(onSubmit)}
                     >
-                      {loading ? (
-                        <BeatLoader />
-                      ) : (
-                        "Soumettre la demande devis"
-                      )}
+                      {loading ? <BeatLoader /> : "Soumettre la demande devis"}
                     </Button>
                   )}
 

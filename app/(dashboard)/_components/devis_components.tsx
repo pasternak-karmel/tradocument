@@ -70,6 +70,7 @@ import { BeatLoader } from "react-spinners";
 import { toast } from "sonner";
 
 const DevisForm = () => {
+  const [resetKey, setResetKey] = useState(0);
   const user = useCurrentUser();
   const { executeRecaptcha } = useReCaptcha();
   const router = useRouter();
@@ -124,7 +125,29 @@ const DevisForm = () => {
   }
 
   const annuler = () => {
-    form.reset();
+    form.reset({
+      firstName: "",
+      lastName: "",
+      email: "",
+      phone: "",
+      country: undefined,
+      documentType: undefined,
+      sourceLanguage: undefined,
+      targetLanguage: undefined,
+      additionalInfo: "",
+      termsAccepted: false,
+      deliveryAddress: {
+        departureAddress: "",
+      },
+    });
+    // const selects = document.querySelectorAll('button[role="combobox"]');
+    // selects.forEach((select: any) => {
+    //   if (select.firstChild) {
+    //     select.firstChild.textContent =
+    //       select.getAttribute("data-placeholder") || "Sélectionnez...";
+    //   }
+    // });
+    setResetKey((prev) => prev + 1);
     setMontant(null);
     setFileStates([]);
     setUrls([]);
@@ -460,6 +483,7 @@ const DevisForm = () => {
                       <FormItem>
                         <FormLabel>Type de document</FormLabel>
                         <Select
+                          key={`documentType-${resetKey}`}
                           disabled={montant !== null || loading}
                           onValueChange={field.onChange}
                         >
@@ -499,10 +523,14 @@ const DevisForm = () => {
                       <FormItem>
                         <FormLabel>Langue du document</FormLabel>
                         <Select
+                          key={`sourceLanguage-${resetKey}`}
                           disabled={montant !== null || loading}
                           onValueChange={field.onChange}
                         >
-                          <SelectTrigger style={inputStyle}>
+                          <SelectTrigger
+                            style={inputStyle}
+                            data-placeholder="Sélectionnez la langue source"
+                          >
                             <SelectValue placeholder="Sélectionnez la langue source" />
                           </SelectTrigger>
                           <SelectContent>
@@ -525,10 +553,14 @@ const DevisForm = () => {
                       <FormItem>
                         <FormLabel>Le document sera traduit en :</FormLabel>
                         <Select
+                          key={`targetLanguage-${resetKey}`}
                           disabled={montant !== null || loading}
                           onValueChange={field.onChange}
                         >
-                          <SelectTrigger style={inputStyle}>
+                          <SelectTrigger
+                            style={inputStyle}
+                            data-placeholder="Sélectionnez la langue cible"
+                          >
                             <SelectValue placeholder="Sélectionnez la langue cible" />
                           </SelectTrigger>
                           <SelectContent>
