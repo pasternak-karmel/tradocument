@@ -1,142 +1,150 @@
 "use server";
 
 import axios from "axios";
-import levenshtein from "fast-levenshtein";
 
-interface Point {
-  departLocation: string; // "Country, City"
+// Interfaces for data handling
+interface Coordinates {
+  longitude: number;
+  latitude: number;
 }
 
-const axiosInstance = axios.create({
-  headers: {
-    "x-rapidapi-key": process.env.DISTANCE_API_KEY || "",
-    "x-rapidapi-host": "distanceto.p.rapidapi.com",
-    "Content-Type": "application/json",
-  },
-});
+// Function to fetch coordinates using OpenRouteService Geocoding API
+const getCoordinates = async (
+  location: string,
+  apiKey: string
+): Promise<Coordinates> => {
+  const geocodeURL = "https://api.openrouteservice.org/geocode/search";
 
-// Helper to fetch and find the closest country name
-const findClosestCountry = async (countryName: string) => {
   try {
-    const response = await axios.get(`https://restcountries.com/v3.1/all`);
-    const countries = response.data;
-
-    let closestMatch = countryName;
-    let minDistance = Infinity;
-
-    countries.forEach((country: any) => {
-      const name = country.name.common;
-      const distance = levenshtein.get(
-        name.toLowerCase(),
-        countryName.toLowerCase()
-      );
-
-      if (distance < minDistance) {
-        minDistance = distance;
-        closestMatch = name;
-      }
+    const response = await axios.get(geocodeURL, {
+      params: {
+        text: location,
+        api_key: apiKey,
+      },
     });
 
-    return closestMatch;
-  } catch (error) {
-    console.error("Error fetching countries", error);
-    return countryName;
+    const feature = response.data.features[0];
+    if (!feature) {
+      throw new Error(`Coordinates not found for: ${location}`);
+    }
+
+    const [longitude, latitude] = feature.geometry.coordinates;
+    return { longitude, latitude };
+  } catch (error: any) {
+    console.error("Error fetching coordinates:", error.message);
+    throw new Error("Failed to fetch coordinates");
   }
 };
 
-// Helper to get the capital of a country
-const getCapitalCity = async (countryName: string) => {
+// Function to fetch the capital city using REST Countries API
+const getCapitalCity = async (country: string): Promise<string> => {
+  const restCountriesURL = `https://restcountries.com/v3.1/name/${country}`;
+
   try {
-    const response = await axios.get(
-      `https://restcountries.com/v3.1/name/${countryName}`
-    );
-    const capital = response.data[0]?.capital?.[0];
-    if (!capital) throw new Error("Capital not found");
+    const response = await axios.get(restCountriesURL);
+    const countryData = response.data[0];
+    const capital = countryData?.capital?.[0];
+
+    if (!capital) {
+      throw new Error("Capital not found for the given country");
+    }
+
     return capital;
-  } catch (error) {
-    console.error("Error fetching capital city", error);
+  } catch (error: any) {
+    console.error("Error fetching capital city:", error.message);
     throw new Error("Failed to fetch capital city");
   }
 };
 
-// Helper to validate city within a country
-const validateCity = async (countryCode: string, cityName: string) => {
+// Function to calculate the distance using OpenRouteService Directions API
+const calculate = async (
+  startCoords: Coordinates,
+  endCoords: Coordinates,
+  apiKey: string
+): Promise<number> => {
+  const orsURL = "https://api.openrouteservice.org/v2/directions/driving-car";
+
   try {
-    const response = await axios.get(`https://api.geonames.org/searchJSON`, {
-      params: {
-        q: cityName,
-        country: countryCode,
-        maxRows: 1,
-        username: process.env.GEONAMES_USERNAME,
+    const response = await axios.post(
+      orsURL,
+      {
+        coordinates: [
+          [startCoords.longitude, startCoords.latitude],
+          [endCoords.longitude, endCoords.latitude],
+        ],
       },
-    });
-
-    const city = response.data.geonames[0];
-    return city ? city.name : cityName; // Return validated city name
-  } catch (error) {
-    console.error("City validation failed", error);
-    return cityName;
-  }
-};
-
-// Function to calculate distance
-export const calculateDistance = async ({ departLocation }: Point) => {
-  const [country, city] = departLocation.split(",").map((item) => item.trim());
-  let countryCode = "";
-  let validCity = city;
-  let capitalCity = "";
-
-  try {
-    const normalizedCountry = await findClosestCountry(country);
-    const countryResponse = await axios.get(
-      `https://restcountries.com/v3.1/name/${normalizedCountry}`
+      {
+        headers: {
+          Authorization: apiKey,
+        },
+      }
     );
-    countryCode = countryResponse.data[0]?.cca2 || "";
 
-    if (countryCode) {
-      validCity = await validateCity(countryCode, city);
-      capitalCity = await getCapitalCity(normalizedCountry);
-    }
-  } catch (error) {
-    console.error("Error fetching country or city", error);
-    throw new Error("Invalid country or city");
-  }
-
-  if (!countryCode || !capitalCity) {
-    throw new Error("Invalid country or capital city");
-  }
-
-  const options = {
-    method: "POST",
-    url: "https://distanceto.p.rapidapi.com/distance/route",
-    params: { sea: "true" },
-    data: {
-      route: [
-        {
-          country: countryCode,
-          name: validCity,
-        },
-        {
-          country: countryCode,
-          name: capitalCity,
-        },
-      ],
-    },
-  };
-
-  try {
-    const response = await axiosInstance.request(options);
-    const distanceKm = response.data?.route?.greatCircle;
-
-    if (!distanceKm) {
+    const distanceMeters = response.data.routes[0]?.summary?.distance;
+    if (!distanceMeters) {
       throw new Error("Distance calculation failed");
     }
 
-    return distanceKm * 0.25;
-  } catch (error) {
-    console.error("Error calculating distance", error);
+    return distanceMeters / 1000; // Convert to kilometers
+  } catch (error: any) {
+    console.error("Error calculating distance:", error.message);
     throw new Error("Failed to calculate distance");
   }
 };
 
-//calculateDistance
+// Main function to integrate all steps
+export const calculateDistance = async (
+  userInput: string
+): Promise<number | null> => {
+  const orsApiKey = process.env.DISTANCE_API_KEY;
+
+  if (!orsApiKey) {
+    throw new Error("Missing OpenRouteService API key");
+  }
+
+  try {
+    const [country, city] = userInput.split(",").map((part) => part.trim());
+
+    if (!country || !city) {
+      throw new Error("Invalid input. Please provide input as 'country, city'");
+    }
+
+    const capitalCity = await getCapitalCity(country);
+
+    // Check if the user city is the same as the capital city (case-insensitive)
+    if (city.toLowerCase() === capitalCity.toLowerCase()) {
+      return 0; // Distance between the same city is 0
+    }
+
+    const userCityCoords = await getCoordinates(
+      `${city}, ${country}`,
+      orsApiKey
+    );
+    const capitalCityCoords = await getCoordinates(
+      `${capitalCity}, ${country}`,
+      orsApiKey
+    );
+
+    const distance = await calculate(
+      userCityCoords,
+      capitalCityCoords,
+      orsApiKey
+    );
+    console.log(
+      `Distance between ${city} and ${capitalCity}: ${distance.toFixed(2)} km`
+    );
+
+    return distance * 0.35;
+  } catch (error: any) {
+    console.error("Error:", error.message);
+    // ShowError(error.message);
+    return null;
+  }
+};
+
+// calculateDistance
+
+// const [country, city] = departLocation.split(",").map((item) => item.trim());
+//   let countryCode = "";
+//   let validCity = city;
+//   let capitalCity = "";

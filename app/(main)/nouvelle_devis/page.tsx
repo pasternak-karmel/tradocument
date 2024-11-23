@@ -99,7 +99,7 @@ const DevisAccueil = () => {
   });
 
   useEffect(() => {
-    if (distance !== null && distance !== 0) {
+    if (distance !== null) {
       setTotalAmount(distance);
     }
   }, [distance]);
@@ -118,10 +118,16 @@ const DevisAccueil = () => {
         setLoading(true);
         let calculatedDistance = 0;
 
-        calculatedDistance = await calculateDistance({
-          departLocation: values.deliveryAddress.departureAddress!,
-          // arriverLocation: values.deliveryAddress.shippingAddress!,
-        });
+        const tempDistance = await calculateDistance(
+          values.deliveryAddress.departureAddress!
+        );
+
+        if (tempDistance === null)
+          return showError(
+            "Une erreur s'est produite lors du calcul de la distance, veuillez réessayer plus tard."
+          );
+
+        calculatedDistance = tempDistance;
 
         if (showDeliveryAddress && calculatedDistance === null)
           return showError("Distance non existante");
@@ -583,13 +589,12 @@ const DevisAccueil = () => {
                   {distance !== null && (
                     <div className="mt-4">
                       <h3>Montant total à payer:</h3>
-                      <pre>{totalAmount?.toFixed(2)}€ soit:</pre>
                       {showDeliveryAddress && distance !== null && (
                         <pre>
-                          {distance.toFixed(2)}€ pour le transport (0.25€/km)
+                          {distance.toFixed(2)}€ pour le transport (0.35€/km)
                         </pre>
                       )}
-                      <pre>{distance.toFixed(2)}€ (0.25€/Km)</pre>
+                      <pre>{distance.toFixed(2)}€ (0.35€/Km)</pre>
                     </div>
                   )}
                   {distance !== null ? (

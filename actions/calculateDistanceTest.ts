@@ -134,7 +134,7 @@ export const calculateDistanceToCapital = async ({
       throw new Error("Distance calculation failed");
     }
 
-    return distanceKm * 0.25;
+    return distanceKm * 0.35;
   } catch (error) {
     console.error("Error calculating distance", error);
     throw new Error("Failed to calculate distance");
