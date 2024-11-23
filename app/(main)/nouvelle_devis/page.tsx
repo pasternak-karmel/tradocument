@@ -66,6 +66,7 @@ import { languages } from "@/type";
 import { Mail, User } from "lucide-react";
 import { BeatLoader } from "react-spinners";
 import { toast } from "sonner";
+import { CountrySelector } from "../karmel/select-country-list";
 
 const DevisAccueil = () => {
   const [resetKey, setResetKey] = useState(0);
@@ -531,39 +532,23 @@ const DevisAccueil = () => {
                             Adresse de récupération du document
                           </FormLabel>
                           <FormControl>
-                            <Input
-                              disabled={distance !== null || loading}
-                              placeholder="eg: Pays, commune"
-                              style={inputStyle}
-                              {...field}
-                              required
+                            <CountrySelector
+                              // disabled={distance !== null || loading}
+                              onChange={(address: any) => {
+                                form.setValue(
+                                  "deliveryAddress.departureAddress",
+                                  address
+                                );
+                                console.log(address);
+                              }}
                             />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
-
-                    {/* <FormField
-                      control={form.control}
-                      name="deliveryAddress.shippingAddress"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Adresse d'expédition</FormLabel>
-                          <FormControl>
-                            <Input
-                              disabled={distance !== null || loading}
-                              placeholder="eg: Maroc, rabat"
-                              style={inputStyle}
-                              required
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    /> */}
                   </div>
+
                   <div className="flex items-center space-x-2">
                     <FormField
                       control={form.control}
@@ -638,3 +623,13 @@ const DevisAccueil = () => {
 };
 
 export default DevisAccueil;
+
+{
+  /* <Input
+                              disabled={distance !== null || loading}
+                              placeholder="eg: Pays, commune"
+                              style={inputStyle}
+                              {...field}
+                              required
+                            /> */
+}

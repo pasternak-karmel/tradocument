@@ -6,7 +6,7 @@ export default function TestPage() {
   return (
       <div className="h-screen flex flex-col items-center justify-center">
       <p>Hello world</p>
-      <CountrySelector />
+      {/* <CountrySelector /> */}
     </div>
   );
 }

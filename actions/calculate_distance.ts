@@ -142,8 +142,6 @@ export const calculateDistance = async (userInput: string): Promise<number> => {
       getCoordinates(`${capital}, ${normalizedName}`),
     ]);
 
-    console.log(userCityCoords);
-
     // Step 4: Calculate distance between the two locations
     const distance = await calculate(userCityCoords, capitalCoords);
 
