@@ -216,6 +216,7 @@ export const ProcurationFormSchema = z
     typeProcuration: z.string().min(1, "Le type de procuration est requis"),
     nomMandant: z.string().min(1, "Le nom du mandant est requis"),
     prenomMandant: z.string().min(1, "Le prénom du mandant est requis"),
+    // phone: z.string().min(10, { message: "Numéro de téléphone invalide" }),
     dateNaissanceMandant: z
       .string()
       .min(1, "La date de naissance est requise")
