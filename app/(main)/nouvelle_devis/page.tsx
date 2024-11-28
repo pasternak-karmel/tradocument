@@ -533,13 +533,13 @@ const DevisAccueil = () => {
                           </FormLabel>
                           <FormControl>
                             <CountrySelector
-                              // disabled={distance !== null || loading}
+                              disabled={distance !== null || loading}
+                              resetKey={resetKey}
                               onChange={(address: any) => {
                                 form.setValue(
                                   "deliveryAddress.departureAddress",
                                   address
                                 );
-                                console.log(address);
                               }}
                             />
                           </FormControl>

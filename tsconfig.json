@@ -21,6 +21,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/(main)/test/countryProps.tsx", "app/(main)/karmel/select-country-list.jsx", "app/(main)/karmel/DeliveryAddressForm.jsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/(main)/test/countryProps.tsx", "app/(main)/karmel/select-country-list.jsx", "app/(main)/karmel/DeliveryAddressForm.jsx", "app/test/page.js", "app/test/CountrySelect.jsx"],
   "exclude": ["node_modules"]
 }

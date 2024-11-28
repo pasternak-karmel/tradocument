@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   CitySelect,
   CountrySelect,
@@ -7,7 +7,7 @@ import {
 } from "react-country-state-city";
 import "react-country-state-city/dist/react-country-state-city.css";
 
-export function CountrySelector({ onChange }) {
+export function CountrySelector({ onChange, disabled, resetKey }) {
   const [countryid, setCountryid] = useState(0);
   const [stateid, setstateid] = useState(0);
   const [selectedAddress, setSelectedAddress] = useState({
@@ -15,6 +15,17 @@ export function CountrySelector({ onChange }) {
     state: "",
     city: "",
   });
+
+  useEffect(() => {
+    setCountryid(0);
+    setstateid(0);
+    setSelectedAddress({
+      country: "",
+      state: "",
+      city: ""
+    });
+    onChange("");
+  }, [resetKey]);
 
   const updateAddress = (newData, type) => {
     const updated = { ...selectedAddress, [type]: newData.name || "" };
@@ -27,32 +38,34 @@ export function CountrySelector({ onChange }) {
   };
   return (
     <div>
-      <h6>All Country</h6>
+      <h6>Pays</h6>
       <CountrySelect
+        disabled={disabled}
         onChange={(e) => {
           setCountryid(e.id);
           updateAddress(e, "country");
         }}
-        placeHolder="Select Country"
+        placeHolder="Selectionnez le pays"
       />
 
-      <h6>State</h6>
+      <h6>Région</h6>
       <StateSelect
+        disabled={disabled}
         countryid={countryid}
         onChange={(e) => {
           setstateid(e.id);
-          // updateAddress(e, "state");
         }}
-        placeHolder="Select State"
+        placeHolder="Selectionnez la région"
       />
-      <h6>City</h6>
+      <h6>Ville</h6>
       <CitySelect
+        disabled={disabled}
         countryid={countryid}
         stateid={stateid}
         onChange={(e) => {
           updateAddress(e, "city");
         }}
-        placeHolder="Select City"
+        placeHolder="Selectionnez la ville"
       />
     </div>
   );
