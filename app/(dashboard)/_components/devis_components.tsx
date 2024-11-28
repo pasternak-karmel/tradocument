@@ -297,7 +297,7 @@ const DevisForm = () => {
           <Card className="w-full">
             <CardHeader>
               <CardTitle className="text-2xl font-bold text-center">
-                Demande de Devis
+                Devis de traduction
               </CardTitle>
               <CardDescription className="text-center">
                 Remplissez ce formulaire pour obtenir un devis personnalisé pour

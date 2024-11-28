@@ -229,11 +229,11 @@ const DevisAccueil = () => {
           <Card className="w-full">
             <CardHeader>
               <CardTitle className="text-2xl font-bold text-center">
-                Demande de Devis
+                Devis de Livraison
               </CardTitle>
               <CardDescription className="text-center">
                 Remplissez ce formulaire pour obtenir un devis personnalisé pour
-                nos services de traduction.
+                nos services de livraison.
               </CardDescription>
             </CardHeader>
             <CardContent>
