@@ -183,6 +183,9 @@ export const RejoindreSchema = z.object({
   nom: z
     .string()
     .min(2, { message: "Le nom doit contenir au moins 2 caractères" }),
+  nomSociete: z
+    .string()
+    .min(2, { message: "Le nom doit contenir au moins 2 caractères" }),
   prenom: z
     .string()
     .min(2, { message: "Le prénom doit contenir au moins 2 caractères" }),
@@ -190,8 +193,13 @@ export const RejoindreSchema = z.object({
   pays: z.string().min(1, { message: "Entrez votre pays." }),
   ville: z.string().min(1, { message: "Entrez votre ville." }),
   adresse: z.string().min(1, { message: "Entrez votre adresse." }),
+  adresseSociete: z.string().min(1, { message: "Entrez votre adresse." }),
+  telephoneSociete: z
+    .string()
+    .min(10, { message: "Numéro de téléphone invalide" }),
   specialite: z.string().min(1, { message: "Sélectionnez votre spécialité." }),
   commentaire: z.string().optional(),
+  url: z.array(z.string()).optional(),
 });
 
 export type RejoindreFormValues = z.infer<typeof RejoindreSchema>;

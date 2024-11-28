@@ -1,6 +1,7 @@
 "use client";
 
 import { UserRejoindre } from "@/actions/rejoindre";
+import { FileState, MultiFileDropzone } from "@/components/multi-file";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -19,7 +20,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { showError } from "@/function/notification-toast";
+import { useEdgeStore } from "@/lib/edgestore";
 import { RejoindreFormValues, RejoindreSchema } from "@/schemas";
+import { acceptedFileTypes } from "@/type";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
 import { Briefcase, Globe, GraduationCap, Send, Users } from "lucide-react";
@@ -28,6 +32,12 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 export default function RejoignezNous() {
+  const [fileStates, setFileStates] = useState<FileState[]>([]);
+  const [, setUrls] = useState<{ url: string; thumbnailUrl: string | null }[]>(
+    []
+  );
+  const { edgestore } = useEdgeStore();
+
   const [isLoading, setIsLoading] = useState(false);
   const form = useForm<RejoindreFormValues>({
     resolver: zodResolver(RejoindreSchema),
@@ -59,11 +69,63 @@ export default function RejoignezNous() {
 
   const specialties = ["Traducteur/Traductrice agréé(e)", "Transport Coursier"];
 
+  function updateFileProgress(key: string, progress: FileState["progress"]) {
+    setFileStates((fileStates) => {
+      const newFileStates = structuredClone(fileStates);
+      const fileState = newFileStates.find(
+        (fileState) => fileState.key === key
+      );
+      if (fileState) {
+        fileState.progress = progress;
+      }
+      return newFileStates;
+    });
+  }
+
   async function onSubmit(data: RejoindreFormValues) {
+    if (fileStates.length === 0)
+      return showError("Veuillez sélectionner le fichier à traduire");
     setIsLoading(true);
+
+    const imageUrls = await Promise.all(
+      fileStates.map(async (fileState) => {
+        if (fileState.file instanceof File) {
+          try {
+            const res = await edgestore.document.upload({
+              options: { temporary: true },
+              file: fileState.file,
+              input: { type: "post" },
+              onProgressChange: (progress) => {
+                updateFileProgress(fileState.key, progress);
+              },
+            });
+            return {
+              url: res.url,
+            };
+          } catch (err) {
+            toast.error(`Une erreur s'est produite`, {
+              description: `Connexion erreur`,
+            });
+            return null;
+          }
+        } else {
+          return null;
+        }
+      })
+    );
+
+    const validImageUrls = imageUrls.filter(
+      (res): res is { url: string; thumbnailUrl: string | null } => res !== null
+    );
+
+    data.url = validImageUrls.map((urlObj) => urlObj.url);
     const result = await UserRejoindre(data);
     setIsLoading(false);
-    if (result.error)
+    if (result.error) {
+      for (const url of data.url) {
+        await edgestore.document.delete({ url });
+      }
+
       return toast("Erreur!!!", {
         description: result.error,
         action: {
@@ -71,9 +133,13 @@ export default function RejoignezNous() {
           onClick: () => console.log("Toast fermé"),
         },
       });
+    }
+    for (const url of data.url) {
+      await edgestore.document.confirmUpload({ url });
+    }
     form.reset();
     return toast("Succès", {
-      description: "Votre demande a été envoyé avec succès",
+      description: "Votre demande a été envoyée avec succès",
       action: {
         label: "Fermer",
         onClick: () => console.log("Toast fermé"),
@@ -81,16 +147,11 @@ export default function RejoignezNous() {
     });
   }
 
-  const inputStyle = {
-    borderWidth: "2 px",
-    borderColor: "black",
-    borderRadius: "0.375rem",
-    padding: "0.5rem",
-    width: "100%",
-  };
+  const inputStyle =
+    "w-full p-2 border-2 border-gray-300 rounded-md focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50";
 
   return (
-    <div className="mt-10 min-h-screen bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
         <motion.h1
           className="text-4xl font-bold text-center text-gray-900 mb-8"
@@ -152,117 +213,187 @@ export default function RejoignezNous() {
               <Form {...form}>
                 <form
                   onSubmit={form.handleSubmit(onSubmit)}
-                  className="space-y-4"
+                  className="space-y-6"
                 >
-                  <FormField
-                    control={form.control}
-                    name="nom"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Nom</FormLabel>
-                        <FormControl>
-                          <Input
-                            {...field}
-                            placeholder="Nom"
-                            style={inputStyle}
-                            disabled={isLoading}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="prenom"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Prénom</FormLabel>
-                        <FormControl>
-                          <Input
-                            {...field}
-                            placeholder="Prénom"
-                            style={inputStyle}
-                            disabled={isLoading}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Email</FormLabel>
-                        <FormControl>
-                          <Input
-                            {...field}
-                            placeholder="Email"
-                            type="email"
-                            style={inputStyle}
-                            disabled={isLoading}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="pays"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Pays</FormLabel>
-                        <FormControl>
-                          <Input
-                            {...field}
-                            placeholder="Pays"
-                            style={inputStyle}
-                            disabled={isLoading}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="ville"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Ville</FormLabel>
-                        <FormControl>
-                          <Input
-                            {...field}
-                            placeholder="Ville"
-                            style={inputStyle}
-                            disabled={isLoading}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="adresse"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Adresse</FormLabel>
-                        <FormControl>
-                          <Input
-                            {...field}
-                            placeholder="Adresse"
-                            style={inputStyle}
-                            disabled={isLoading}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-semibold">
+                      Informations personnelles
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="nom"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Nom</FormLabel>
+                            <FormControl>
+                              <Input
+                                {...field}
+                                placeholder="Nom"
+                                className={inputStyle}
+                                disabled={isLoading}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="prenom"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Prénom</FormLabel>
+                            <FormControl>
+                              <Input
+                                {...field}
+                                placeholder="Prénom"
+                                className={inputStyle}
+                                disabled={isLoading}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    <FormField
+                      control={form.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Email</FormLabel>
+                          <FormControl>
+                            <Input
+                              {...field}
+                              placeholder="Email"
+                              type="email"
+                              className={inputStyle}
+                              disabled={isLoading}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="pays"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Pays</FormLabel>
+                            <FormControl>
+                              <Input
+                                {...field}
+                                placeholder="Pays"
+                                className={inputStyle}
+                                disabled={isLoading}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="ville"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Ville</FormLabel>
+                            <FormControl>
+                              <Input
+                                {...field}
+                                placeholder="Ville"
+                                className={inputStyle}
+                                disabled={isLoading}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    <FormField
+                      control={form.control}
+                      name="adresse"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Adresse</FormLabel>
+                          <FormControl>
+                            <Input
+                              {...field}
+                              placeholder="Adresse"
+                              className={inputStyle}
+                              disabled={isLoading}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-semibold">
+                      Informations de l'entreprise
+                    </h3>
+                    <FormField
+                      control={form.control}
+                      name="nomSociete"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Nom de la société</FormLabel>
+                          <FormControl>
+                            <Input
+                              {...field}
+                              placeholder="Nom de la société"
+                              className={inputStyle}
+                              disabled={isLoading}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="adresseSociete"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Adresse de la société</FormLabel>
+                          <FormControl>
+                            <Input
+                              {...field}
+                              placeholder="Adresse de la société"
+                              className={inputStyle}
+                              disabled={isLoading}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="telephoneSociete"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Téléphone de la société</FormLabel>
+                          <FormControl>
+                            <Input
+                              {...field}
+                              placeholder="Téléphone de la société"
+                              className={inputStyle}
+                              disabled={isLoading}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
                   <FormField
                     control={form.control}
                     name="specialite"
@@ -275,11 +406,8 @@ export default function RejoignezNous() {
                           disabled={isLoading}
                         >
                           <FormControl>
-                            <SelectTrigger className="w-full">
-                              <SelectValue
-                                placeholder="Choisissez votre spécialité"
-                                style={inputStyle}
-                              />
+                            <SelectTrigger className={inputStyle}>
+                              <SelectValue placeholder="Choisissez votre spécialité" />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
@@ -299,6 +427,31 @@ export default function RejoignezNous() {
                       </FormItem>
                     )}
                   />
+                  <div className="space-y-4">
+                    <FormLabel>
+                      Justificatif légal ou administratif de l'entreprise
+                    </FormLabel>
+                    <p className="text-sm text-gray-500">
+                      Veuillez joindre un fichier prouvant l'existence ou
+                      l'activité de votre société (exemple : extrait Kbis,
+                      certificat de création, facture récente, etc.).
+                    </p>
+                    <MultiFileDropzone
+                      disabled={isLoading}
+                      value={fileStates}
+                      dropzoneOptions={{
+                        maxFiles: 5,
+                        accept: acceptedFileTypes,
+                      }}
+                      onChange={(files) => {
+                        setFileStates(files);
+                      }}
+                      onFilesAdded={async (addedFiles) => {
+                        const updatedFiles = [...fileStates, ...addedFiles];
+                        setFileStates(updatedFiles);
+                      }}
+                    />
+                  </div>
                   <FormField
                     control={form.control}
                     name="commentaire"
@@ -310,21 +463,20 @@ export default function RejoignezNous() {
                             {...field}
                             rows={4}
                             placeholder="Avez-vous un commentaire ?"
-                            className="block w-full p-2 border rounded"
-                            style={inputStyle}
+                            className={`${inputStyle} resize-none`}
                             disabled={isLoading}
                           />
                         </FormControl>
                       </FormItem>
                     )}
                   />
+
                   <Button
                     type="submit"
                     className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-2 rounded-full"
                     disabled={isLoading}
                   >
                     {isLoading ? (
-                      // <Loader className="mr-2 h-4 w-4 animate-spin" />
                       <div className="w-5 h-5 border-4 border-t-transparent border-white rounded-full animate-spin"></div>
                     ) : (
                       <Send className="mr-2 h-4 w-4" />

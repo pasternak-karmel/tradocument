@@ -12,7 +12,7 @@ import {
 import { createInsertSchema } from "drizzle-zod";
 import type { AdapterAccountType } from "next-auth/adapters";
 
-export const UserRoleEnum = {
+export const UserRoleEnum = { 
   ADMIN: "admin",
   USER: "user",
   TRADUCTEUR: "traducteur",
@@ -217,6 +217,9 @@ export const rejoindrEquipe = pgTable("rejoindreEquipe", {
     // .notNull()
     .references(() => users.id),
   nom: text("nom").notNull(),
+  nomSociete: text("nomSociete").notNull(),
+  adresseSociete: text("adresseSociete").notNull(),
+  telephoneSociete: text("telephoneSociete").notNull(),
   prenom: text("prenom").notNull(),
   email: text("email").notNull().unique(),
   pays: text("pays").notNull(),
@@ -228,6 +231,7 @@ export const rejoindrEquipe = pgTable("rejoindreEquipe", {
   approved_at: timestamp("approved_at", { mode: "date" }),
   status: text("status").default("attente").notNull(),
   isAccepter: boolean("isAccepter").default(false),
+  url: text("url").array().notNull(),
 });
 
 export const contact = pgTable("contact", {

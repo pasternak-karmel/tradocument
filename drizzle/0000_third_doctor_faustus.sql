@@ -87,6 +87,9 @@ CREATE TABLE IF NOT EXISTS "rejoindreEquipe" (
 	"id" text PRIMARY KEY NOT NULL,
 	"userId" text,
 	"nom" text NOT NULL,
+	"nomSociete" text NOT NULL,
+	"adresseSociete" text NOT NULL,
+	"telephoneSociete" text NOT NULL,
 	"prenom" text NOT NULL,
 	"email" text NOT NULL,
 	"pays" text NOT NULL,
@@ -98,6 +101,7 @@ CREATE TABLE IF NOT EXISTS "rejoindreEquipe" (
 	"approved_at" timestamp,
 	"status" text DEFAULT 'attente' NOT NULL,
 	"isAccepter" boolean DEFAULT false,
+	"url" text[] NOT NULL,
 	CONSTRAINT "rejoindreEquipe_email_unique" UNIQUE("email")
 );
 --> statement-breakpoint

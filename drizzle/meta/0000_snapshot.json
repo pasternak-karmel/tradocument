@@ -1,5 +1,5 @@
 {
-  "id": "85916a9a-8147-41e2-b0a9-4e25637bca07",
+  "id": "45163e32-76ae-4354-b201-dcf0420994d0",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -599,6 +599,24 @@
           "primaryKey": false,
           "notNull": true
         },
+        "nomSociete": {
+          "name": "nomSociete",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "adresseSociete": {
+          "name": "adresseSociete",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "telephoneSociete": {
+          "name": "telephoneSociete",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
         "prenom": {
           "name": "prenom",
           "type": "text",
@@ -667,6 +685,12 @@
           "primaryKey": false,
           "notNull": false,
           "default": false
+        },
+        "url": {
+          "name": "url",
+          "type": "text[]",
+          "primaryKey": false,
+          "notNull": true
         }
       },
       "indexes": {},
