@@ -2,11 +2,14 @@
 
 import React from "react"
 import { motion } from "framer-motion"
+import { useRouter } from "next/navigation" // Utilisé pour naviguer
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { FileText, Truck, ArrowRight, ClipboardList, Package, Clock, MapPin } from "lucide-react"
 
 export default function NosServices() {
+  const router = useRouter() // Initialiser le routeur
+
   const services = [
     {
       title: "Aide Administrative",
@@ -17,8 +20,9 @@ export default function NosServices() {
         { icon: <FileText className="h-5 w-5" />, text: "Assistance pour les formulaires administratifs" },
         { icon: <Clock className="h-5 w-5" />, text: "Service rapide et efficace" },
       ],
-      cta: "Demander de l'aide",
+      cta: "Demander une traduction",
       color: "from-[#F49C60]",
+      href: "/nouvelleDevis", // Lien pour ce bouton
     },
     {
       title: "Service de Livraison",
@@ -26,11 +30,12 @@ export default function NosServices() {
       description: "Livraison rapide et sécurisée de vos documents importants.",
       features: [
         { icon: <Package className="h-5 w-5" />, text: "Livraison de documents" },
-        { icon: <Clock className="h-5 w-5" />, text: "Options de livraison express" },
-        { icon: <MapPin className="h-5 w-5" />, text: "Suivi en temps réel" },
+        { icon: <Clock className="h-5 w-5" />, text: "Livraison rapide" },
+        { icon: <MapPin className="h-5 w-5" />, text: "Envoi des documents par boite mail" },
       ],
       cta: "Organiser une livraison",
       color: "from-green-500 to-emerald-500",
+      href: "/nouvelle_devis", // Lien pour ce bouton
     },
   ]
 
@@ -82,7 +87,10 @@ export default function NosServices() {
                   </ul>
                 </CardContent>
                 <CardFooter>
-                  <Button className={`w-full bg-gradient-to-r ${service.color} text-white`}>
+                  <Button
+                    className={`w-full bg-gradient-to-r ${service.color} text-white`}
+                    onClick={() => router.push(service.href)} // Redirection au clic
+                  >
                     {service.cta}
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
