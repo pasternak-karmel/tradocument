@@ -42,6 +42,21 @@ export default function RejoignezNous() {
   const [isLoading, setIsLoading] = useState(false);
   const form = useForm<RejoindreFormValues>({
     resolver: zodResolver(RejoindreSchema),
+    defaultValues: {
+      nom: "",
+      prenom: "",
+      email: "",
+      nomSociete: "",
+      adresseSociete: "",
+      telephoneSociete:"",
+      adresse: "",
+      ville: "",
+      pays: "",
+      commentaire: "",
+      specialite: "",
+      url: [],
+
+    },
   });
 
   const benefits = [
