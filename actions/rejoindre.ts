@@ -3,9 +3,9 @@
 import { db } from "@/db/drizzle";
 import { rejoindrEquipe } from "@/db/schema";
 import { RejoindreSchema } from "@/schemas";
+import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { eq } from "drizzle-orm";
 
 export async function UserRejoindre(values: z.infer<typeof RejoindreSchema>) {
   try {
@@ -22,7 +22,10 @@ export async function UserRejoindre(values: z.infer<typeof RejoindreSchema>) {
 
     const [updatedTraduction] = await db
       .insert(rejoindrEquipe)
-      .values(values)
+      .values({
+        ...values,
+        url: values.url ?? [],
+      })
       .returning();
 
     //   .set({
