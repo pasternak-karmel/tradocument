@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/select";
 import { showError } from "@/function/notification-toast";
 import { useEdgeStore } from "@/lib/edgestore";
+import { RegisterAdmin } from "@/lib/mail";
 import { RejoindreFormValues, RejoindreSchema } from "@/schemas";
 import { acceptedFileTypes } from "@/type";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -57,8 +58,7 @@ export default function RejoignezNous() {
     {
       icon: <GraduationCap className="h-6 w-6 text-purple-500" />,
       title: "Traduction de qualité",
-      description:
-        "Bénéficiez d'une traduction optimale de l'Arabe au Français et du Français en Arabe",
+      description: "Bénéficiez d'une traduction optimale",
     },
     {
       icon: <Globe className="h-6 w-6 text-pink-500" />,
@@ -138,6 +138,11 @@ export default function RejoignezNous() {
       await edgestore.document.confirmUpload({ url });
     }
     form.reset();
+    setFileStates([]);
+    setUrls([]);
+
+    await RegisterAdmin(data);
+    
     return toast("Succès", {
       description: "Votre demande a été envoyée avec succès",
       action: {
@@ -225,7 +230,7 @@ export default function RejoignezNous() {
                         name="nom"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Nom</FormLabel>
+                            <FormLabel>Nom*</FormLabel>
                             <FormControl>
                               <Input
                                 {...field}
@@ -243,7 +248,7 @@ export default function RejoignezNous() {
                         name="prenom"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Prénom</FormLabel>
+                            <FormLabel>Prénom*</FormLabel>
                             <FormControl>
                               <Input
                                 {...field}
@@ -262,7 +267,7 @@ export default function RejoignezNous() {
                       name="email"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Email</FormLabel>
+                          <FormLabel>Email*</FormLabel>
                           <FormControl>
                             <Input
                               {...field}
@@ -282,7 +287,7 @@ export default function RejoignezNous() {
                         name="pays"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Pays</FormLabel>
+                            <FormLabel>Pays*</FormLabel>
                             <FormControl>
                               <Input
                                 {...field}
@@ -300,7 +305,7 @@ export default function RejoignezNous() {
                         name="ville"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Ville</FormLabel>
+                            <FormLabel>Ville*</FormLabel>
                             <FormControl>
                               <Input
                                 {...field}
@@ -319,7 +324,7 @@ export default function RejoignezNous() {
                       name="adresse"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Adresse</FormLabel>
+                          <FormLabel>Adresse*</FormLabel>
                           <FormControl>
                             <Input
                               {...field}
@@ -343,7 +348,7 @@ export default function RejoignezNous() {
                       name="nomSociete"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Nom de la société</FormLabel>
+                          <FormLabel>Nom de la société*</FormLabel>
                           <FormControl>
                             <Input
                               {...field}
@@ -361,7 +366,7 @@ export default function RejoignezNous() {
                       name="adresseSociete"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Adresse de la société</FormLabel>
+                          <FormLabel>Adresse complète de la société*</FormLabel>
                           <FormControl>
                             <Input
                               {...field}
@@ -379,7 +384,7 @@ export default function RejoignezNous() {
                       name="telephoneSociete"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Téléphone de la société</FormLabel>
+                          <FormLabel>Téléphone de la société*</FormLabel>
                           <FormControl>
                             <Input
                               {...field}
@@ -399,7 +404,7 @@ export default function RejoignezNous() {
                     name="specialite"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Spécialité</FormLabel>
+                        <FormLabel>Spécialité*</FormLabel>
                         <Select
                           onValueChange={field.onChange}
                           defaultValue={field.value}
@@ -429,7 +434,7 @@ export default function RejoignezNous() {
                   />
                   <div className="space-y-4">
                     <FormLabel>
-                      Justificatif légal ou administratif de l'entreprise
+                      Justificatif légal ou administratif de l'entreprise*
                     </FormLabel>
                     <p className="text-sm text-gray-500">
                       Veuillez joindre un fichier prouvant l'existence ou

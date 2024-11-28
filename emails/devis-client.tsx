@@ -84,7 +84,7 @@ export default function DemandeDevisEmail(
                     {/* <DetailRow label="Adresse d'expédition" value={values.deliveryAddress.shippingAddress} /> */}
                   </>
                 )}
-                 <DetailRow
+                <DetailRow
                   label="Envoyé le"
                   value={`${formattedDate} à ${formattedTime}`}
                 />
