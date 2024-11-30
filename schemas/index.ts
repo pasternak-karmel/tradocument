@@ -198,7 +198,7 @@ export const RejoindreSchema = z.object({
     .string()
     .min(10, { message: "Numéro de téléphone invalide" }),
   specialite: z.string().min(1, { message: "Sélectionnez votre spécialité." }),
-  commentaire: z.string().optional(),
+  commentaire: z.string().min(1, { message: "Veuillez entrer la langue de traduction ou la zone de livraison." }),
   url: z.array(z.string()).optional(),
 });
 
