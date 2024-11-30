@@ -1,0 +1,1 @@
+ALTER TABLE "rejoindreEquipe" ADD COLUMN "whatsapp" text NOT NULL;

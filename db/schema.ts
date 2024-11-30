@@ -220,6 +220,7 @@ export const rejoindrEquipe = pgTable("rejoindreEquipe", {
   nomSociete: text("nomSociete").notNull(),
   adresseSociete: text("adresseSociete").notNull(),
   telephoneSociete: text("telephoneSociete").notNull(),
+  whatsapp: text("whatsapp").notNull(),
   prenom: text("prenom").notNull(),
   email: text("email").notNull().unique(),
   pays: text("pays").notNull(),

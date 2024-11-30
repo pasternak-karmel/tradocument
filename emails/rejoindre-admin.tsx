@@ -54,6 +54,10 @@ export default function RejoindreAdminEmailTemplate(
               label="Téléphone de la Société"
               value={data.telephoneSociete}
             />
+            <InfoRow
+              label="Téléphone Mobile de la Société"
+              value={data.whatsapp}
+            />
           </tbody>
         </table>
       </div>

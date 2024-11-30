@@ -8,6 +8,13 @@
       "when": 1732806863964,
       "tag": "0000_third_doctor_faustus",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1732977793645,
+      "tag": "0001_wakeful_spectrum",
+      "breakpoints": true
     }
   ]
 }

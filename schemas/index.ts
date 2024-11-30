@@ -196,7 +196,10 @@ export const RejoindreSchema = z.object({
   adresseSociete: z.string().min(1, { message: "Entrez votre adresse." }),
   telephoneSociete: z
     .string()
-    .min(10, { message: "Numéro de téléphone invalide" }),
+  .min(10, { message: "Numéro invalide. Vérifiez le format: eg: +33XXXXXXXXXX" }),
+    whatsapp: z
+    .string()
+    .min(10, { message: "Numéro invalide. Vérifiez le format: eg: +33XXXXXXXXXX" }),
   specialite: z.string().min(1, { message: "Sélectionnez votre spécialité." }),
   commentaire: z.string().min(1, { message: "Veuillez entrer la langue de traduction ou la zone de livraison." }),
   url: z.array(z.string()).optional(),

@@ -392,7 +392,7 @@ export default function RejoignezNous() {
                           <FormMessage />
                         </FormItem>
                       )}
-                    />
+                    /><div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <FormField
                       control={form.control}
                       name="telephoneSociete"
@@ -410,7 +410,26 @@ export default function RejoignezNous() {
                           <FormMessage />
                         </FormItem>
                       )}
-                    />
+                      />
+                    <FormField
+                      control={form.control}
+                      name="whatsapp"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Téléphone Mobile de la société(Whatsapp, Imo,etc...)*</FormLabel>
+                          <FormControl>
+                            <Input
+                              {...field}
+                              placeholder="Téléphone Mobile de la société(Whatsapp, Imo,etc..."
+                              className={inputStyle}
+                              disabled={isLoading}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                      />
+                      </div>
                   </div>
 
                   <FormField
