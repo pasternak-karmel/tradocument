@@ -99,7 +99,7 @@ export default function RejoignezNous() {
 
   async function onSubmit(data: RejoindreFormValues) {
     if (fileStates.length === 0)
-      return showError("Veuillez sélectionner le fichier à traduire");
+      return showError("Veuillez sélectionner un fichier valide");
     setIsLoading(true);
 
     const imageUrls = await Promise.all(
