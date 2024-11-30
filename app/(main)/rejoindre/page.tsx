@@ -188,7 +188,7 @@ export default function RejoignezNous() {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}
         >
-          Si vous êtes un professionnel ou une entreprise de traduction ou de livraison, rejoignez notre réseau et mettez vos compétences au service de projets variés.
+          Si vous êtes traducteur ou traductrice avec un bureau en activité, ou si vous êtes un coursier motorisé ou véhiculé, nous recherchons activement pour renforcer notre réseau. Rejoignez-nous et mettez vos compétences au service d'une clientèle variée..
         </motion.p>
 
         <motion.div
