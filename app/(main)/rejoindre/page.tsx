@@ -62,34 +62,25 @@ export default function RejoignezNous() {
     {
       icon: <Users className="h-6 w-6 text-blue-500" />,
       title: "Équipe Dynamique",
-      description: "Rejoignez une équipe passionnée et collaborative.",
+      description: "Rejoignez une équipe passionnée.",
     },
     {
       icon: <Briefcase className="h-6 w-6 text-green-500" />,
       title: "Projets Variés",
-      description: "Travaillez sur une diversité de projets stimulants.",
+      description: "Participez à des projets stimulants.",
     },
     {
-      icon: <GraduationCap className="h-6 w-6 text-purple-500" />,
-      title: "Traduction de qualité",
-      description: "Bénéficiez d'une traduction optimale",
-    },
-    {
-      icon: <Globe className="h-6 w-6 text-blue-500" />,
-      title: "Impact Global",
-      description: "Contribuez à des projets d'envergure internationale.",
-    },
-    {
-      icon: <BookOpen className="h-6 w-6 text-green-500" />,
-      title: "Traducteurs/traductrices professionnels",
-      description: "Des traducteurs professionnels spécialisés dans divers domaines, ayant une expérience confirmée en traduction de documents, et disponibles pour des missions ponctuelles ou régulières.",
+      icon: <BookOpen className="h-6 w-6 text-purple-500" />,
+      title: "Partenaires en Traduction",
+      description: "Mettez votre expertise au service de nos missions.",
     },
     {
       icon: <Truck className="h-6 w-6 text-pink-500" />,
-      title: "Coursiers véhiculés ou motorisés",
-      description: "Vous disposez d'un moyen de transport, d'un registre de commerce valide et être en mesure d'effectuer des livraisons rapides et sécurisées.",
+      title: "Coursiers Véhiculés ou Motorisés",
+      description:"Mettez les services de votre entreprise à notre disposition pour des livraisons fiables.",
     },
   ];
+  
 
   const specialties = ["Traducteur/Traductrice agréé(e)", "Transport Coursier"];
 
@@ -198,7 +189,7 @@ export default function RejoignezNous() {
           transition={{ duration: 0.5, delay: 0.2 }}
         >
           Si vous êtes traducteur ou traductrice avec un bureau en activité, ou
-          si vous êtes un coursier motorisé ou véhiculé, nous recrutons
+          si vous êtes un coursier motorisé ou véhiculé, nous recherchons
           activement pour renforcer notre réseau. Rejoignez-nous et mettez vos
           compétences au service d&apos;une clientèle variée.
         </motion.p>
@@ -493,7 +484,7 @@ export default function RejoignezNous() {
                           <textarea
                             {...field}
                             rows={4}
-                            placeholder="Avez-vous un commentaire ?"
+                            placeholder="Langues de traduction (si traducteur) ou zones de livraison (si coursier)."
                             className={`${inputStyle} resize-none`}
                             disabled={isLoading}
                           />
