@@ -416,7 +416,7 @@ export default function RejoignezNous() {
                       name="whatsapp"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Téléphone Mobile de la société(Whatsapp, Imo,etc...)*</FormLabel>
+                          <FormLabel>Téléphone Mobile(Whatsapp, Imo,Télégram, etc...)*</FormLabel>
                           <FormControl>
                             <Input
                               {...field}

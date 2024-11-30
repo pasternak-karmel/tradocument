@@ -23,7 +23,7 @@ export default function RejoindreAdminEmailTemplate(
       </div>
 
       {/* Title Section */}
-      <h1 style={styles.title}>Nouvelle Candidature</h1>
+      <h1 style={styles.title}>Nouvelle Candidature: {data.specialite}</h1>
 
       {/* Personal Information */}
       <div style={styles.section}>

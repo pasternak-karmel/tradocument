@@ -90,6 +90,7 @@ CREATE TABLE IF NOT EXISTS "rejoindreEquipe" (
 	"nomSociete" text NOT NULL,
 	"adresseSociete" text NOT NULL,
 	"telephoneSociete" text NOT NULL,
+	"whatsapp" text NOT NULL,
 	"prenom" text NOT NULL,
 	"email" text NOT NULL,
 	"pays" text NOT NULL,

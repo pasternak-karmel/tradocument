@@ -1,5 +1,5 @@
 {
-  "id": "45163e32-76ae-4354-b201-dcf0420994d0",
+  "id": "765fd83b-c4cc-45a9-8f51-b83d95063042",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -613,6 +613,12 @@
         },
         "telephoneSociete": {
           "name": "telephoneSociete",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "whatsapp": {
+          "name": "whatsapp",
           "type": "text",
           "primaryKey": false,
           "notNull": true
