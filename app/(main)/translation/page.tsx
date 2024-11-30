@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/accordion"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { FileText, Briefcase, Scale, GraduationCap, CreditCard, Truck, FileSignature, Link } from "lucide-react"
-import { link } from "fs"
 import { useRouter } from "next/navigation"
 
 const translationCategories = [
@@ -36,14 +35,16 @@ const translationCategories = [
   },
   {
     title: "Affaires et Business",
-    icon: <Briefcase className="h-6 w-6 text-green-500" />,
-    color: "bg-green-100",
+    icon: <Briefcase className="h-6 w-6 text-blue-500" />,
+    // color: "bg-green-100",
+    color: "bg-blue-100",
     items: ["Bilan", "Contrat", "Convention"]
   },
   {
     title: "Juridique",
-    icon: <Scale className="h-6 w-6 text-red-500" />,
-    color: "bg-red-100",
+    icon: <Scale className="h-6 w-6 text-blue-500" />,
+    // color: "bg-red-100",
+    color: "bg-blue-100",
     items: [
       "Acte de divorce", 
       "Acte notarié", 
@@ -56,8 +57,9 @@ const translationCategories = [
   },
   {
     title: "Diplômes et Bulletins",
-    icon: <GraduationCap className="h-6 w-6 text-yellow-500" />,
-    color: "bg-yellow-100",
+    icon: <GraduationCap className="h-6 w-6 text-blue-500" />,
+    // color: "bg-yellow-100",
+    color: "bg-blue-100",
     items: [
       "Attestation de scolarité",
       "Attestation de stage",
@@ -68,8 +70,9 @@ const translationCategories = [
   },
   {
     title: "Finance et Commercial",
-    icon: <CreditCard className="h-6 w-6 text-purple-500" />,
-    color: "bg-purple-100",
+    icon: <CreditCard className="h-6 w-6 text-blue-500" />,
+    // color: "bg-purple-100",
+    color: "bg-blue-100",
     items: [
       "Attestation de retraite/ Sécurité sociale",
       "Avis d'imposition", 
@@ -80,8 +83,9 @@ const translationCategories = [
   },
   {
     title: "Technique",
-    icon: <Truck className="h-6 w-6 text-indigo-500" />,
-    color: "bg-indigo-100",
+    icon: <Truck className="h-6 w-6 text-blue-500" />,
+    // color: "bg-indigo-100",
+    color: "bg-blue-100",
     items: [
       "Appels d'offre",
       "Brevets",
@@ -98,8 +102,10 @@ const translationCategories = [
   },
   {
     title: "Autres",
-    icon: <FileSignature className="h-6 w-6 text-pink-500" />,
-    color: "bg-pink-100",
+    icon: <FileSignature className="h-6 w-6 text-blue-500" />,
+    // icon: <FileSignature className="h-6 w-6 text-pink-500" />,
+    // color: "bg-pink-100",
+    color: "bg-blue-100",
     items: ["Autres"]
   }
 ];

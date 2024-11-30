@@ -27,7 +27,7 @@ import { RejoindreFormValues, RejoindreSchema } from "@/schemas";
 import { acceptedFileTypes } from "@/type";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
-import { Briefcase, Globe, GraduationCap, Send, Users } from "lucide-react";
+import { BookOpen, Briefcase, Globe, GraduationCap, Send, Truck, Users } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -48,14 +48,13 @@ export default function RejoignezNous() {
       email: "",
       nomSociete: "",
       adresseSociete: "",
-      telephoneSociete:"",
+      telephoneSociete: "",
       adresse: "",
       ville: "",
       pays: "",
       commentaire: "",
       specialite: "",
       url: [],
-
     },
   });
 
@@ -76,9 +75,19 @@ export default function RejoignezNous() {
       description: "Bénéficiez d'une traduction optimale",
     },
     {
-      icon: <Globe className="h-6 w-6 text-pink-500" />,
+      icon: <Globe className="h-6 w-6 text-blue-500" />,
       title: "Impact Global",
       description: "Contribuez à des projets d'envergure internationale.",
+    },
+    {
+      icon: <BookOpen className="h-6 w-6 text-green-500" />,
+      title: "Traducteurs/traductrices professionnels",
+      description: "Des traducteurs professionnels spécialisés dans divers domaines, ayant une expérience confirmée en traduction de documents, et disponibles pour des missions ponctuelles ou régulières.",
+    },
+    {
+      icon: <Truck className="h-6 w-6 text-pink-500" />,
+      title: "Coursiers véhiculés ou motorisés",
+      description: "Vous disposez d'un moyen de transport, d'un registre de commerce valide et être en mesure d'effectuer des livraisons rapides et sécurisées.",
     },
   ];
 
@@ -157,7 +166,7 @@ export default function RejoignezNous() {
     setUrls([]);
 
     await RegisterAdmin(data);
-    
+
     return toast("Succès", {
       description: "Votre demande a été envoyée avec succès",
       action: {
@@ -179,7 +188,7 @@ export default function RejoignezNous() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          Rejoignez Notre Équipe
+          Rejoignez notre équipe de professionnels !
         </motion.h1>
 
         <motion.p
@@ -188,8 +197,10 @@ export default function RejoignezNous() {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}
         >
-          Vous êtes passionné par les langues et la communication
-          interculturelle ? Nous recherchons des talents comme vous !
+          Si vous êtes traducteur ou traductrice avec un bureau en activité, ou
+          si vous êtes un coursier motorisé ou véhiculé, nous recrutons
+          activement pour renforcer notre réseau. Rejoignez-nous et mettez vos
+          compétences au service d&apos;une clientèle variée.
         </motion.p>
 
         <motion.div
