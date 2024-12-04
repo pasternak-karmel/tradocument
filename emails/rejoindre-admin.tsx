@@ -2,9 +2,6 @@ import { RejoindreSchema } from "@/schemas";
 import React from "react";
 import { z } from "zod";
 
-interface ApplicationEmailTemplateProps {
-  data: z.infer<typeof RejoindreSchema>;
-}
 
 export default function RejoindreAdminEmailTemplate(
   data: z.infer<typeof RejoindreSchema>

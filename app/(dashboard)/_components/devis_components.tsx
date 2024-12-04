@@ -1,7 +1,5 @@
 "use client";
 
-import { cn } from "@/lib/utils";
-import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 import { useEffect, useState } from "react";
 import z from "zod";
 
@@ -64,8 +62,10 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { showError } from "@/function/notification-toast";
 import { devisSent, devisSentAdmin } from "@/lib/mail";
+import { cn } from "@/lib/utils";
 import { acceptedFileTypes, languages } from "@/type";
-import { Mail, User } from "lucide-react";
+import { CaretSortIcon } from "@radix-ui/react-icons";
+import { CheckIcon, Mail, User } from "lucide-react";
 import { BeatLoader } from "react-spinners";
 import { toast } from "sonner";
 
@@ -82,7 +82,7 @@ const DevisForm = () => {
     []
   );
   const [montant, setMontant] = useState<number | null>(null);
-  const [distance, setDistance] = useState<number | null>(null);
+  // const [distance, setDistance] = useState<number | null>(null);
   const [totalAmount, setTotalAmount] = useState<number | null>(null);
 
   const form = useForm<z.infer<typeof demandeDevis>>({
@@ -104,6 +104,8 @@ const DevisForm = () => {
       },
     },
   });
+
+  const watchDocumentType = form.watch("documentType");
 
   useEffect(() => {
     if (montant !== null && montant !== 0) {
@@ -132,6 +134,7 @@ const DevisForm = () => {
       phone: "",
       country: undefined,
       documentType: undefined,
+      customDocumentType: "",
       sourceLanguage: undefined,
       targetLanguage: undefined,
       additionalInfo: "",
@@ -140,13 +143,6 @@ const DevisForm = () => {
         departureAddress: "",
       },
     });
-    // const selects = document.querySelectorAll('button[role="combobox"]');
-    // selects.forEach((select: any) => {
-    //   if (select.firstChild) {
-    //     select.firstChild.textContent =
-    //       select.getAttribute("data-placeholder") || "Sélectionnez...";
-    //   }
-    // });
     setResetKey((prev) => prev + 1);
     setMontant(null);
     setFileStates([]);
@@ -225,8 +221,6 @@ const DevisForm = () => {
 
   const validate = async (values: z.infer<typeof demandeDevis>) => {
     const formValues = form.getValues();
-
-    console.log(formValues);
 
     try {
       const response = await fetch("/api/demande_devis", {
@@ -409,7 +403,6 @@ const DevisForm = () => {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Pays: </FormLabel>
-                        {/* <ComboboxDemo /> */}
                         <Popover>
                           <PopoverTrigger asChild>
                             <FormControl>
@@ -485,6 +478,70 @@ const DevisForm = () => {
                         <Select
                           key={`documentType-${resetKey}`}
                           disabled={montant !== null || loading}
+                          onValueChange={(value) => {
+                            field.onChange(value);
+                            if (value !== "Autre") {
+                              form.setValue("customDocumentType", "");
+                            }
+                          }}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Sélectionnez un document" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="Actes d'état civil">
+                              Actes d'état civil
+                            </SelectItem>
+                            <SelectItem value="Affaires & Business">
+                              Affaires & Business
+                            </SelectItem>
+                            <SelectItem value="Diplômes & Bulletins">
+                              Diplômes & Bulletins
+                            </SelectItem>
+                            <SelectItem value="Finance & Commerciale">
+                              Finance & Commerciale
+                            </SelectItem>
+                            <SelectItem value="juridique">Juridique</SelectItem>
+                            <SelectItem value="Permis de Conduire">
+                              Permis de Conduire
+                            </SelectItem>
+                            <SelectItem value="Technique">Technique</SelectItem>
+                            <SelectItem value="Autre">Autre</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  {watchDocumentType === "Autre" && (
+                    <FormField
+                      control={form.control}
+                      name="customDocumentType"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Précisez le type de document</FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="Entrez le type de document"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  )}
+
+                  {/* <FormField
+                    control={form.control}
+                    name="documentType"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Type de document</FormLabel>
+                        <Select
+                          key={`documentType-${resetKey}`}
+                          disabled={montant !== null || loading}
                           onValueChange={field.onChange}
                         >
                           <SelectTrigger>
@@ -514,7 +571,7 @@ const DevisForm = () => {
                         <FormMessage />
                       </FormItem>
                     )}
-                  />
+                  /> */}
 
                   <FormField
                     control={form.control}

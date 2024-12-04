@@ -12,7 +12,7 @@ import {
 import { createInsertSchema } from "drizzle-zod";
 import type { AdapterAccountType } from "next-auth/adapters";
 
-export const UserRoleEnum = { 
+export const UserRoleEnum = {
   ADMIN: "admin",
   USER: "user",
   TRADUCTEUR: "traducteur",
@@ -263,4 +263,19 @@ export const procurations = pgTable("procurations", {
   dateDebut: text("dateDebut"),
   dateFin: text("dateFin"),
   piece: text("piece").array().notNull(),
+  signature: text("signature").array().notNull(),
+  lieuSignature: text("lieuSignature").notNull(),
+  lieuResidant: text("lieuResidant").notNull(),
 });
+
+export const codeVerification = pgTable("codeVerification", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  email: text("email").notNull(),
+  code: text("code").notNull(),
+  created_at: timestamp("createdAT", { mode: "date" }).notNull().defaultNow(),
+  type: text("type").notNull(),
+});
+
+// export type TRADUCTIONS = typeof traductions.$inferSelect;

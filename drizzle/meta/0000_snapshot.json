@@ -1,5 +1,5 @@
 {
-  "id": "765fd83b-c4cc-45a9-8f51-b83d95063042",
+  "id": "fc3b9d27-0328-4d08-8e05-b37fa3058b7c",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -374,6 +374,48 @@
       },
       "checkConstraints": {}
     },
+    "public.codeVerification": {
+      "name": "codeVerification",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "code": {
+          "name": "code",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAT": {
+          "name": "createdAT",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "type": {
+          "name": "type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
     "public.contact": {
       "name": "contact",
       "schema": "",
@@ -553,6 +595,24 @@
         "piece": {
           "name": "piece",
           "type": "text[]",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "signature": {
+          "name": "signature",
+          "type": "text[]",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "lieuSignature": {
+          "name": "lieuSignature",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "lieuResidant": {
+          "name": "lieuResidant",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         }

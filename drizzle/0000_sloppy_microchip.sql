@@ -52,6 +52,14 @@ CREATE TABLE IF NOT EXISTS "authenticator" (
 	CONSTRAINT "authenticator_credentialID_unique" UNIQUE("credentialID")
 );
 --> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "codeVerification" (
+	"id" text PRIMARY KEY NOT NULL,
+	"email" text NOT NULL,
+	"code" text NOT NULL,
+	"createdAT" timestamp DEFAULT now() NOT NULL,
+	"type" text NOT NULL
+);
+--> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "contact" (
 	"id" text PRIMARY KEY NOT NULL,
 	"nom" text NOT NULL,
@@ -80,7 +88,10 @@ CREATE TABLE IF NOT EXISTS "procurations" (
 	"adresseMandant" text NOT NULL,
 	"dateDebut" text,
 	"dateFin" text,
-	"piece" text[] NOT NULL
+	"piece" text[] NOT NULL,
+	"signature" text[] NOT NULL,
+	"lieuSignature" text NOT NULL,
+	"lieuResidant" text NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "rejoindreEquipe" (

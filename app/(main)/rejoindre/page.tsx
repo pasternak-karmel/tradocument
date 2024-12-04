@@ -1,7 +1,8 @@
+
 "use client";
 
-import { UserRejoindre } from "@/actions/rejoindre";
 import { FileState, MultiFileDropzone } from "@/components/multi-file";
+import { ShowError, ShowSuccess } from "@/components/sonner-component";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -27,12 +28,16 @@ import { RejoindreFormValues, RejoindreSchema } from "@/schemas";
 import { acceptedFileTypes } from "@/type";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
-import { BookOpen, Briefcase, Globe, GraduationCap, Send, Truck, Users } from "lucide-react";
+import { BookOpen, Briefcase, Send, Truck, Users } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { submitRejoindreForm, verifyCode } from "./rejoindre-form-actions";
 
 export default function RejoignezNous() {
+  const [step, setStep] = useState<"form" | "verification">("form");
+  const [verificationData, setVerificationData] =
+    useState<RejoindreFormValues | null>(null);
   const [fileStates, setFileStates] = useState<FileState[]>([]);
   const [, setUrls] = useState<{ url: string; thumbnailUrl: string | null }[]>(
     []
@@ -77,10 +82,10 @@ export default function RejoignezNous() {
     {
       icon: <Truck className="h-6 w-6 text-pink-500" />,
       title: "Coursiers Véhiculés ou Motorisés",
-      description:"Mettez les services de votre entreprise à notre disposition pour des livraisons fiables.",
+      description:
+        "Mettez les services de votre entreprise à notre disposition pour des livraisons fiables.",
     },
   ];
-  
 
   const specialties = ["Traducteur/Traductrice agréé(e)", "Transport Coursier"];
 
@@ -134,37 +139,65 @@ export default function RejoignezNous() {
     );
 
     data.url = validImageUrls.map((urlObj) => urlObj.url);
-    const result = await UserRejoindre(data);
-    setIsLoading(false);
-    if (result.error) {
-      for (const url of data.url) {
-        await edgestore.document.delete({ url });
+
+    if (step === "form") {
+      const result = await submitRejoindreForm(data);
+      if (result.success) {
+        ShowSuccess(result.message);
+        setVerificationData({
+          ...data,
+        });
+        setStep("verification");
+      } else {
+        ShowError(result.message);
       }
+      setIsLoading(false);
+    } else {
+      const code = form.getValues("verificationCode");
+      if (!code) {
+        ShowError("Veuillez entrer un code de vérification");
+        return;
+      }
+      setIsLoading(true);
+      const result = await verifyCode(verificationData!, code);
+      if (result.success) {
+        for (const url of data.url) {
+          await edgestore.document.confirmUpload({ url });
+        }
 
-      return toast("Erreur!!!", {
-        description: result.error,
-        action: {
-          label: "Fermer",
-          onClick: () => console.log("Toast fermé"),
-        },
-      });
+        await RegisterAdmin(verificationData!);
+        toast("Succès", {
+          description: "Votre demande a été envoyée avec succès",
+          action: {
+            label: "Fermer",
+            onClick: () => console.log("Toast fermé"),
+          },
+        });
+        form.reset();
+        setFileStates([]);
+        setUrls([]);
+        setStep("form");
+        setIsLoading(false);
+      } else {
+        for (const url of data.url) {
+          await edgestore.document.delete({ url });
+        }
+        
+        form.reset();
+        setFileStates([]);
+        setUrls([]);
+        setStep("form");
+        setIsLoading(false);
+
+        return toast("Erreur!!!", {
+          description: result.message,
+          action: {
+            label: "Fermer",
+            onClick: () => console.log("Toast fermé"),
+          },
+        });
+      }
     }
-    for (const url of data.url) {
-      await edgestore.document.confirmUpload({ url });
-    }
-    form.reset();
-    setFileStates([]);
-    setUrls([]);
-
-    await RegisterAdmin(data);
-
-    return toast("Succès", {
-      description: "Votre demande a été envoyée avec succès",
-      action: {
-        label: "Fermer",
-        onClick: () => console.log("Toast fermé"),
-      },
-    });
   }
 
   const inputStyle =
@@ -188,7 +221,10 @@ export default function RejoignezNous() {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}
         >
-          Si vous êtes traducteur ou traductrice avec un bureau en activité, ou si vous êtes un coursier motorisé ou véhiculé, nous recherchons activement pour renforcer notre réseau. Rejoignez-nous et mettez vos compétences au service d'une clientèle variée.
+          Si vous êtes traducteur ou traductrice avec un bureau en activité, ou
+          si vous êtes un coursier motorisé ou véhiculé, nous recherchons
+          activement pour renforcer notre réseau. Rejoignez-nous et mettez vos
+          compétences au service d'une clientèle variée.
         </motion.p>
 
         <motion.div
@@ -234,292 +270,326 @@ export default function RejoignezNous() {
                   onSubmit={form.handleSubmit(onSubmit)}
                   className="space-y-6"
                 >
-                  <div className="space-y-4">
-                    <h3 className="text-lg font-semibold">
-                      Informations personnelles
-                    </h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <FormField
-                        control={form.control}
-                        name="nom"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Nom*</FormLabel>
-                            <FormControl>
-                              <Input
-                                {...field}
-                                placeholder="Nom"
-                                className={inputStyle}
-                                disabled={isLoading}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="prenom"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Prénom*</FormLabel>
-                            <FormControl>
-                              <Input
-                                {...field}
-                                placeholder="Prénom"
-                                className={inputStyle}
-                                disabled={isLoading}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-                    <FormField
-                      control={form.control}
-                      name="email"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Email*</FormLabel>
-                          <FormControl>
-                            <Input
-                              {...field}
-                              placeholder="Email"
-                              type="email"
-                              className={inputStyle}
-                              disabled={isLoading}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <FormField
-                        control={form.control}
-                        name="pays"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Pays*</FormLabel>
-                            <FormControl>
-                              <Input
-                                {...field}
-                                placeholder="Pays"
-                                className={inputStyle}
-                                disabled={isLoading}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="ville"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Ville*</FormLabel>
-                            <FormControl>
-                              <Input
-                                {...field}
-                                placeholder="Ville"
-                                className={inputStyle}
-                                disabled={isLoading}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-                    <FormField
-                      control={form.control}
-                      name="adresse"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Adresse*</FormLabel>
-                          <FormControl>
-                            <Input
-                              {...field}
-                              placeholder="Adresse"
-                              className={inputStyle}
-                              disabled={isLoading}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-
-                  <div className="space-y-4">
-                    <h3 className="text-lg font-semibold">
-                      Informations de l'entreprise
-                    </h3>
-                    <FormField
-                      control={form.control}
-                      name="nomSociete"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Nom de la société*</FormLabel>
-                          <FormControl>
-                            <Input
-                              {...field}
-                              placeholder="Nom de la société"
-                              className={inputStyle}
-                              disabled={isLoading}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="adresseSociete"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Adresse complète de la société*</FormLabel>
-                          <FormControl>
-                            <Input
-                              {...field}
-                              placeholder="Adresse de la société"
-                              className={inputStyle}
-                              disabled={isLoading}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    /><div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <FormField
-                      control={form.control}
-                      name="telephoneSociete"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Téléphone de la société*</FormLabel>
-                          <FormControl>
-                            <Input
-                              {...field}
-                              placeholder="Téléphone de la société"
-                              className={inputStyle}
-                              disabled={isLoading}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                      />
-                    <FormField
-                      control={form.control}
-                      name="whatsapp"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Téléphone Mobile(Whatsapp, Imo,Télégram, etc...)*</FormLabel>
-                          <FormControl>
-                            <Input
-                              {...field}
-                              placeholder="Téléphone Mobile de la société(Whatsapp, Imo,etc..."
-                              className={inputStyle}
-                              disabled={isLoading}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                      />
-                      </div>
-                  </div>
-
-                  <FormField
-                    control={form.control}
-                    name="specialite"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Spécialité*</FormLabel>
-                        <Select
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                          disabled={isLoading}
-                        >
-                          <FormControl>
-                            <SelectTrigger className={inputStyle}>
-                              <SelectValue placeholder="Choisissez votre spécialité" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {specialties.map((specialty, index) => (
-                              <SelectItem
-                                key={index}
-                                value={specialty
-                                  .toLowerCase()
-                                  .replace(/ /g, "-")}
-                              >
-                                {specialty}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <div className="space-y-4">
-                    <FormLabel>
-                      Justificatif légal ou administratif de l'entreprise*
-                    </FormLabel>
-                    <p className="text-sm text-gray-500">
-                      Veuillez joindre un fichier prouvant l'existence ou
-                      l'activité de votre société (exemple : extrait Kbis,
-                      certificat de création, facture récente, etc.).
-                    </p>
-                    <MultiFileDropzone
-                      disabled={isLoading}
-                      value={fileStates}
-                      dropzoneOptions={{
-                        maxFiles: 5,
-                        accept: acceptedFileTypes,
-                      }}
-                      onChange={(files) => {
-                        setFileStates(files);
-                      }}
-                      onFilesAdded={async (addedFiles) => {
-                        const updatedFiles = [...fileStates, ...addedFiles];
-                        setFileStates(updatedFiles);
-                      }}
-                    />
-                  </div>
-                  <FormField
-                    control={form.control}
-                    name="commentaire"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Commentaires</FormLabel>
-                        <FormControl>
-                          <textarea
-                            {...field}
-                            rows={4}
-                            placeholder="Langues de traduction (si traducteur) ou zones de livraison (si coursier)."
-                            className={`${inputStyle} resize-none`}
-                            disabled={isLoading}
+                  {step === "form" ? (
+                    <>
+                      <div className="space-y-4">
+                        <h3 className="text-lg font-semibold">
+                          Informations personnelles
+                        </h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <FormField
+                            control={form.control}
+                            name="nom"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Nom*</FormLabel>
+                                <FormControl>
+                                  <Input
+                                    {...field}
+                                    placeholder="Nom"
+                                    className={inputStyle}
+                                    disabled={isLoading}
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
                           />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
+                          <FormField
+                            control={form.control}
+                            name="prenom"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Prénom*</FormLabel>
+                                <FormControl>
+                                  <Input
+                                    {...field}
+                                    placeholder="Prénom"
+                                    className={inputStyle}
+                                    disabled={isLoading}
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+                        <FormField
+                          control={form.control}
+                          name="email"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Email*</FormLabel>
+                              <FormControl>
+                                <Input
+                                  {...field}
+                                  placeholder="Email"
+                                  type="email"
+                                  className={inputStyle}
+                                  disabled={isLoading}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <FormField
+                            control={form.control}
+                            name="pays"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Pays*</FormLabel>
+                                <FormControl>
+                                  <Input
+                                    {...field}
+                                    placeholder="Pays"
+                                    className={inputStyle}
+                                    disabled={isLoading}
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={form.control}
+                            name="ville"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Ville*</FormLabel>
+                                <FormControl>
+                                  <Input
+                                    {...field}
+                                    placeholder="Ville"
+                                    className={inputStyle}
+                                    disabled={isLoading}
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+                        <FormField
+                          control={form.control}
+                          name="adresse"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Adresse*</FormLabel>
+                              <FormControl>
+                                <Input
+                                  {...field}
+                                  placeholder="Adresse"
+                                  className={inputStyle}
+                                  disabled={isLoading}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+
+                      <div className="space-y-4">
+                        <h3 className="text-lg font-semibold">
+                          Informations de l'entreprise
+                        </h3>
+                        <FormField
+                          control={form.control}
+                          name="nomSociete"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Nom de la société*</FormLabel>
+                              <FormControl>
+                                <Input
+                                  {...field}
+                                  placeholder="Nom de la société"
+                                  className={inputStyle}
+                                  disabled={isLoading}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="adresseSociete"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>
+                                Adresse complète de la société*
+                              </FormLabel>
+                              <FormControl>
+                                <Input
+                                  {...field}
+                                  placeholder="Adresse de la société"
+                                  className={inputStyle}
+                                  disabled={isLoading}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <FormField
+                            control={form.control}
+                            name="telephoneSociete"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Téléphone de la société*</FormLabel>
+                                <FormControl>
+                                  <Input
+                                    {...field}
+                                    placeholder="Téléphone de la société"
+                                    className={inputStyle}
+                                    disabled={isLoading}
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={form.control}
+                            name="whatsapp"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>
+                                  Téléphone Mobile(Whatsapp, Imo,Télégram,
+                                  etc...)*
+                                </FormLabel>
+                                <FormControl>
+                                  <Input
+                                    {...field}
+                                    placeholder="Téléphone Mobile de la société(Whatsapp, Imo,etc..."
+                                    className={inputStyle}
+                                    disabled={isLoading}
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+                      </div>
+
+                      <FormField
+                        control={form.control}
+                        name="specialite"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Spécialité*</FormLabel>
+                            <Select
+                              onValueChange={field.onChange}
+                              defaultValue={field.value}
+                              disabled={isLoading}
+                            >
+                              <FormControl>
+                                <SelectTrigger className={inputStyle}>
+                                  <SelectValue placeholder="Choisissez votre spécialité" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {specialties.map((specialty, index) => (
+                                  <SelectItem
+                                    key={index}
+                                    value={specialty
+                                      .toLowerCase()
+                                      .replace(/ /g, "-")}
+                                  >
+                                    {specialty}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <div className="space-y-4">
+                        <FormLabel>
+                          Justificatif légal ou administratif de l'entreprise*
+                        </FormLabel>
+                        <p className="text-sm text-gray-500">
+                          Veuillez joindre un fichier prouvant l'existence ou
+                          l'activité de votre société (exemple : extrait Kbis,
+                          certificat de création, facture récente, etc.).
+                        </p>
+                        <MultiFileDropzone
+                          disabled={isLoading}
+                          value={fileStates}
+                          dropzoneOptions={{
+                            maxFiles: 5,
+                            accept: acceptedFileTypes,
+                          }}
+                          onChange={(files) => {
+                            setFileStates(files);
+                          }}
+                          onFilesAdded={async (addedFiles) => {
+                            const updatedFiles = [...fileStates, ...addedFiles];
+                            setFileStates(updatedFiles);
+                          }}
+                        />
+                      </div>
+                      <FormField
+                        control={form.control}
+                        name="commentaire"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Commentaires</FormLabel>
+                            <FormControl>
+                              <textarea
+                                {...field}
+                                rows={4}
+                                placeholder="Langues de traduction (si traducteur) ou zones de livraison (si coursier)."
+                                className={`${inputStyle} resize-none`}
+                                disabled={isLoading}
+                              />
+                            </FormControl>
+                          </FormItem>
+                        )}
+                      />
+                    </>
+                  ) : (
+                    <FormField
+                      control={form.control}
+                      name="verificationCode"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>
+                            Code de vérification envoyé à votre adresse
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="Entrez le code reçu par SMS"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  )}
 
                   <Button
                     type="submit"
                     className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-2 rounded-full"
                     disabled={isLoading}
                   >
+                    {step === "form" ? "Soumettre" : "Vérifier"}
                     {isLoading ? (
                       <div className="w-5 h-5 border-4 border-t-transparent border-white rounded-full animate-spin"></div>
                     ) : (
                       <Send className="mr-2 h-4 w-4" />
                     )}
-                    {isLoading ? "Envoi en cours..." : "Envoyer ma candidature"}
+                    {isLoading && step === "form"
+                      ? "Envoi en cours..."
+                      : isLoading && step === "verification"
+                      ? "Vérification en cours..."
+                      : "Envoyer ma candidature"}
                   </Button>
                 </form>
               </Form>

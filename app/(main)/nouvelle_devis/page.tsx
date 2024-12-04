@@ -88,6 +88,7 @@ const DevisAccueil = () => {
       email: "",
       phone: "",
       country: undefined,
+      customDocumentType: "",
       // documentType: "",
       // sourceLanguage: "",
       // targetLanguage: "",
@@ -98,6 +99,7 @@ const DevisAccueil = () => {
       // },
     },
   });
+  const watchDocumentType = form.watch("documentType");
 
   useEffect(() => {
     if (distance !== null) {
@@ -189,6 +191,7 @@ const DevisAccueil = () => {
       lastName: "",
       email: "",
       phone: "",
+      customDocumentType: "",
       country: undefined,
       documentType: undefined,
       sourceLanguage: undefined,
@@ -199,13 +202,6 @@ const DevisAccueil = () => {
         departureAddress: "",
       },
     });
-    // const selects = document.querySelectorAll('button[role="combobox"]');
-    // selects.forEach((select: any) => {
-    //   if (select.firstChild) {
-    //     select.firstChild.textContent =
-    //       select.getAttribute("data-placeholder") || "Sélectionnez...";
-    //   }
-    // });
     setResetKey((prev) => prev + 1);
     setDistance(null);
   };
@@ -418,7 +414,12 @@ const DevisAccueil = () => {
                           disabled={
                             distance !== null || distance !== null || loading
                           }
-                          onValueChange={field.onChange}
+                          onValueChange={(value) => {
+                            field.onChange(value);
+                            if (value !== "Autre") {
+                              form.setValue("customDocumentType", "");
+                            }
+                          }}
                         >
                           <SelectTrigger>
                             <SelectValue placeholder="Sélectionnez un document" />
@@ -448,6 +449,25 @@ const DevisAccueil = () => {
                       </FormItem>
                     )}
                   />
+
+                  {watchDocumentType === "Autre" && (
+                    <FormField
+                      control={form.control}
+                      name="customDocumentType"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Précisez le type de document</FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="Entrez le type de document"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  )}
 
                   <FormField
                     control={form.control}

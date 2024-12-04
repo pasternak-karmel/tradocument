@@ -66,6 +66,12 @@ export default function DemandeDevisEmailAdmin(
                   label="Type de document"
                   value={values.documentType}
                 />
+                {values.customDocumentType && (
+                  <DetailRow
+                    label="Document type spécifique"
+                    value={values.customDocumentType}
+                  />
+                )}
                 <DetailRow
                   label="Langue source"
                   value={values.sourceLanguage}

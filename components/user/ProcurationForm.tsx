@@ -1,103 +1,51 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { format } from "date-fns";
-import { fr } from "date-fns/locale";
-import { AnimatePresence, motion } from "framer-motion";
-import { Check, ChevronLeft, ChevronRight, RefreshCw } from "lucide-react";
-import { useRef, useState, useTransition } from "react";
-import { Controller, useForm } from "react-hook-form";
-import SignaturePad from "react-signature-canvas";
-
 import { CreateProcuration } from "@/actions/users";
 import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
-import { FileState, MultiFileDropzone } from "@/components/multi-file";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
-import { showError } from "@/function/notification-toast";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { useEdgeStore } from "@/lib/edgestore";
 import { ProcurationUser } from "@/lib/mail";
 import { ProcurationFormData, ProcurationFormSchema } from "@/schemas";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/navigation";
-import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
-import { toast } from "sonner";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+// import { generatePDF } from "./generatePDF";
+import { FileState } from "../multi-file";
+import { FormStep1 } from "./procuration/FormStep1";
+import { FormStep2 } from "./procuration/FormStep2";
+import { FormStep3 } from "./procuration/FormStep3";
+import { PreviewCard } from "./procuration/PreviewCard";
+import { StepNavigation } from "./procuration/StepNavigation";
 
 export default function ProcurationForm() {
-    const user = useCurrentUser();
-    const router = useRouter()
   const [step, setStep] = useState(1);
-  const [preview, setPreview] = useState(false);
-  const signaturePadRef = useRef<SignaturePad>(null);
-  const today = format(new Date(), "dd/MM/yyyy");
-  const { edgestore } = useEdgeStore();
   const [loading, setLoading] = useState(false);
-  const [fileStates, setFileStates] = useState<FileState[]>([]);
-  const [, setUrls] = useState<{ url: string; thumbnailUrl: string | null }[]>(
-    []
-  );
-  const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
+  const [fileStates, setFileStates] = useState<FileState[]>([]);
+  const [fileSignature, setFileSignature] = useState<FileState[]>([]);
+  const { edgestore } = useEdgeStore();
+  const user = useCurrentUser();
+  const router = useRouter();
 
-  const {
-    register,
-    handleSubmit,
-    control,
-    watch,
-    formState: { errors },
-    trigger,
-    setValue,
-    reset,
-  } = useForm<ProcurationFormData>({
+  const form = useForm<ProcurationFormData>({
     resolver: zodResolver(ProcurationFormSchema),
+    defaultValues: {
+      typeProcuration: "",
+      customDocumentType: "",
+    },
     mode: "onSubmit",
   });
 
-  const formData = watch();
+  const onSubmit = async (data: ProcurationFormData) => {
+    if (!user) return router.push(`/ma-procuration`);
 
-  const clearSignature = () => {
-    if (signaturePadRef.current) {
-      signaturePadRef.current.clear();
-    }
-  };
-
-  function updateFileProgress(key: string, progress: FileState["progress"]) {
-    setFileStates((fileStates) => {
-      const newFileStates = structuredClone(fileStates);
-      const fileState = newFileStates.find(
-        (fileState) => fileState.key === key
-      );
-      if (fileState) {
-        fileState.progress = progress;
-      }
-      return newFileStates;
-    });
-  }
-
-    const onSubmit = async (data: ProcurationFormData) => {
-      if(!user) return router.push(`/ma-procuration`);
-
-    if (!signaturePadRef.current?.isEmpty()) {
-      const signatureData = signaturePadRef.current?.toDataURL();
-      // data.signature = signatureData;
-    } else {
-      showError("Veuillez signer le document");
-      return;
-    }
-
-    if (fileStates.length === 0) {
-      showError("Veuillez importer votre pièce d'identité");
+    if (fileStates.length === 0 || fileSignature.length === 0) {
+      setError("Veuillez importer votre pièce d'identité et votre signature");
       return;
     }
 
@@ -106,67 +54,18 @@ export default function ProcurationForm() {
     setSuccess(undefined);
 
     try {
-      const imageUrls = await Promise.all(
-        fileStates.map(async (fileState) => {
-          if (fileState.file instanceof File) {
-            try {
-              const res = await edgestore.document.upload({
-                options: { temporary: true },
-                file: fileState.file,
-                input: { type: "post" },
-                onProgressChange: (progress) => {
-                  updateFileProgress(fileState.key, progress);
-                },
-              });
-              return {
-                url: res.url,
-              };
-            } catch (err) {
-              toast.error(`Une erreur s'est produite`, {
-                description: `Erreur de connexion`,
-              });
-              return null;
-            }
-          } else {
-            return null;
-          }
-        })
-      );
+      const imageUrls = await uploadFiles(fileStates, "document");
+      const signatureUrls = await uploadFiles(fileSignature, "signature");
 
-      const validImageUrls = imageUrls.filter(
-        (res): res is { url: string; thumbnailUrl: string | null } =>
-          res !== null
-      );
-
-      data.piece = validImageUrls.map((urlObj) => urlObj.url);
+      // data.piece = imageUrls.map((urlObj) => urlObj?.url);
+      // data.signature = signatureUrls.map((urlObj) => urlObj?.url);
 
       const result = await CreateProcuration(data);
 
       if (result?.error) {
-        if (!data.piece) return showError("Une erreur est survenue");
-        for (const url of data.piece) {
-          await edgestore.document.delete({ url });
-        }
-        reset();
-        setStep(1);
-        setFileStates([]);
-        setUrls([]);
-        clearSignature();
-        setError(result.error);
+        handleError(result.error, data.piece!);
       } else if (result?.success) {
-        if (!data.piece) return showError("Une erreur est survenue");
-
-        for (const url of data.piece) {
-          await edgestore.document.confirmUpload({ url });
-        }
-        await ProcurationUser(data);
-        await generatePDF();
-        setSuccess(result.message);
-        reset();
-        setStep(1);
-        setFileStates([]);
-        setUrls([]);
-        clearSignature();
+        await handleSuccess(result.message, data);
       } else if (result?.maj) {
         setSuccess(result.message);
       }
@@ -177,538 +76,87 @@ export default function ProcurationForm() {
     }
   };
 
-  const nextStep = async () => {
-    const fieldsToValidate =
-      step === 1
-        ? [
-            "nomMandant",
-            "prenomMandant",
-            "dateNaissanceMandant",
-            "lieuNaissanceMandant",
-            "nationaliteMandant",
-            "adresseMandant",
-          ]
-        : step === 2
-        ? ["typeProcuration"]
-        : [];
+  const uploadFiles = async (files: FileState[], type: string) => {
+    return Promise.all(
+      files.map(async (fileState) => {
+        if (fileState.file instanceof File) {
+          try {
+            return await edgestore.document.upload({
+              options: { temporary: true },
+              file: fileState.file,
+              input: { type: "post" },
+              onProgressChange: (progress) => {
+                updateFileProgress(fileState.key, progress);
+              },
+            });
+          } catch (err) {
+            console.error(`Erreur lors de l'upload du ${type}:`, err);
+            return null;
+          }
+        }
+        return null;
+      })
+    );
 
-    const isStepValid = await trigger(fieldsToValidate as any);
-    if (isStepValid) {
-      setStep(step + 1);
-    } else {
-      showError("Veuillez remplir tous les champs obligatoires");
-    }
+    //return results.filter((res): res is { url: string; thumbnailUrl: string | null } => res !== null);
   };
 
-  const prevStep = () => setStep(step - 1);
+  const handleError = async (errorMessage: string, urls: string[]) => {
+    for (const url of urls) {
+      await edgestore.document.delete({ url });
+    }
+    resetForm();
+    setError(errorMessage);
+  };
+
+  const handleSuccess = async (message: string, data: ProcurationFormData) => {
+    for (const url of data.piece!) {
+      await edgestore.document.confirmUpload({ url });
+    }
+    await ProcurationUser(data);
+    // await generatePDF(data, fileSignature[0]?.file);
+    setSuccess(message);
+    resetForm();
+  };
+
+  const resetForm = () => {
+    form.reset();
+    setStep(1);
+    setFileStates([]);
+    setFileSignature([]);
+  };
+
+  const updateFileProgress = (key: string, progress: FileState["progress"]) => {
+    setFileStates((prevStates) => {
+      const newStates = [...prevStates];
+      const fileState = newStates.find((state) => state.key === key);
+      if (fileState) {
+        fileState.progress = progress;
+      }
+      return newStates;
+    });
+  };
 
   const renderStep = () => {
     switch (step) {
       case 1:
-        return (
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -50 }}
-            className="space-y-4"
-          >
-            <h2 className="text-2xl font-bold mb-4">
-              Informations personnelles
-            </h2>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="nomMandant">Nom</Label>
-                <Input
-                  id="nomMandant"
-                  {...register("nomMandant")}
-                  disabled={loading}
-                />
-                {errors.nomMandant && (
-                  <p className="text-red-500 text-sm">
-                    {errors.nomMandant.message}
-                  </p>
-                )}
-              </div>
-              <div>
-                <Label htmlFor="prenomMandant">Prénom</Label>
-                <Input
-                  id="prenomMandant"
-                  {...register("prenomMandant")}
-                  disabled={loading}
-                />
-                {errors.prenomMandant && (
-                  <p className="text-red-500 text-sm">
-                    {errors.prenomMandant.message}
-                  </p>
-                )}
-              </div>
-            </div>
-            <div>
-              <Label htmlFor="dateNaissanceMandant">Date de naissance</Label>
-              <Input
-                type="date"
-                id="dateNaissanceMandant"
-                {...register("dateNaissanceMandant")}
-                disabled={loading}
-              />
-              {errors.dateNaissanceMandant && (
-                <p className="text-red-500 text-sm">
-                  {errors.dateNaissanceMandant.message}
-                </p>
-              )}
-            </div>
-            <div>
-              <Label htmlFor="lieuNaissanceMandant">Lieu de naissance</Label>
-              <Input
-                id="lieuNaissanceMandant"
-                {...register("lieuNaissanceMandant")}
-                disabled={loading}
-              />
-              {errors.lieuNaissanceMandant && (
-                <p className="text-red-500 text-sm">
-                  {errors.lieuNaissanceMandant.message}
-                </p>
-              )}
-            </div>
-            <div>
-              <Label htmlFor="nationaliteMandant">Nationalité</Label>
-              <Input
-                id="nationaliteMandant"
-                {...register("nationaliteMandant")}
-                disabled={loading}
-              />
-              {errors.nationaliteMandant && (
-                <p className="text-red-500 text-sm">
-                  {errors.nationaliteMandant.message}
-                </p>
-              )}
-            </div>
-            <div>
-              <Label htmlFor="adresseMandant">Adresse</Label>
-              <Input
-                id="adresseMandant"
-                {...register("adresseMandant")}
-                disabled={loading}
-              />
-              {errors.adresseMandant && (
-                <p className="text-red-500 text-sm">
-                  {errors.adresseMandant.message}
-                </p>
-              )}
-            </div>
-          </motion.div>
-        );
+        return <FormStep1 form={form} loading={loading} />;
       case 2:
-        return (
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -50 }}
-            className="space-y-4"
-          >
-            <h2 className="text-2xl font-bold mb-4">
-              Détails de la procuration
-            </h2>
-            <div>
-              <Label htmlFor="typeProcuration">Type de procuration</Label>
-              <Controller
-                name="typeProcuration"
-                control={control}
-                render={({ field }) => (
-                  <Select
-                    onValueChange={field.onChange}
-                    value={field.value}
-                    disabled={loading}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Sélectionnez le type du document" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {/* Documents courants */}
-                      <SelectItem value="Carte d'identité">
-                        Carte d'identité
-                      </SelectItem>
-                      <SelectItem value="Passeport">Passeport</SelectItem>
-                      <SelectItem value="Acte de naissance">
-                        Acte de naissance
-                      </SelectItem>
-                      <SelectItem value="Acte de mariage">
-                        Acte de mariage
-                      </SelectItem>
-                      <SelectItem value="Permis de conduire">
-                        Permis de conduire
-                      </SelectItem>
-                      <SelectItem value="Document notarié">
-                        Document notarié
-                      </SelectItem>
-
-                      {/* Types de procuration */}
-                      <SelectItem value="Procuration bancaire">
-                        Procuration bancaire
-                      </SelectItem>
-                      <SelectItem value="Procuration administrative">
-                        Procuration administrative
-                      </SelectItem>
-                      <SelectItem value="Procuration médicale">
-                        Procuration médicale
-                      </SelectItem>
-                      <SelectItem value="Procuration immobilière">
-                        Procuration immobilière
-                      </SelectItem>
-                      <SelectItem value="Procuration pour actes juridiques">
-                        Procuration pour actes juridiques
-                      </SelectItem>
-
-                      {/* Option générique */}
-                      <SelectItem value="Autre">Autre</SelectItem>
-                    </SelectContent>
-                  </Select>
-                )}
-              />
-              {errors.typeProcuration && (
-                <p className="text-red-500 text-sm">
-                  {errors.typeProcuration.message}
-                </p>
-              )}
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="dateDebut">Date de début (optionnel)</Label>
-                <Input
-                  type="date"
-                  id="dateDebut"
-                  {...register("dateDebut")}
-                  disabled={loading}
-                />
-                {errors.dateDebut && (
-                  <p className="text-red-500 text-sm">
-                    {errors.dateDebut.message}
-                  </p>
-                )}
-              </div>
-              <div>
-                <Label htmlFor="dateFin">Date de fin (optionnel)</Label>
-                <Input
-                  type="date"
-                  id="dateFin"
-                  {...register("dateFin")}
-                  disabled={loading}
-                />
-                {errors.dateFin && (
-                  <p className="text-red-500 text-sm">
-                    {errors.dateFin.message}
-                  </p>
-                )}
-              </div>
-            </div>
-          </motion.div>
-        );
+        return <FormStep2 form={form} loading={loading} />;
       case 3:
         return (
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -50 }}
-            className="space-y-4"
-          >
-            <h2 className="text-2xl font-bold mb-4">
-              Pièce d'identité et signature
-            </h2>
-            <div className="space-y-4">
-              <Label>Télécharger votre pièce d'identité</Label>
-              <MultiFileDropzone
-                disabled={loading}
-                value={fileStates}
-                dropzoneOptions={{
-                  maxFiles: 2,
-                  accept: {
-                    "image/*": [".png", ".jpg", ".jpeg", ".gif"],
-                    "application/pdf": [".pdf"],
-                  },
-                }}
-                onChange={(files) => {
-                  setFileStates(files);
-                }}
-                onFilesAdded={async (addedFiles) => {
-                  setFileStates([...fileStates, ...addedFiles]);
-                }}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label>Votre signature</Label>
-              <div className="border rounded-lg p-2 bg-white">
-                <SignaturePad
-                  ref={signaturePadRef}
-                  canvasProps={{
-                    className: "w-full h-40 border rounded",
-                  }}
-                />
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={clearSignature}
-                  className="mt-2"
-                  disabled={loading}
-                >
-                  <RefreshCw className="w-4 h-4 mr-2" />
-                  Effacer la signature
-                </Button>
-              </div>
-            </div>
-          </motion.div>
+          <FormStep3
+            form={form}
+            loading={loading}
+            fileStates={fileStates}
+            setFileStates={setFileStates}
+            fileSignature={fileSignature}
+            setFileSignature={setFileSignature}
+          />
         );
       default:
         return null;
     }
-  };
-
-  const generatePDF = async () => {
-    const pdfDoc = await PDFDocument.create();
-    const page = pdfDoc.addPage([595, 842]); // A4 size
-    const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
-    const helveticaBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
-
-    // Helper function for centered text
-    const drawCenteredText = (
-      text: string,
-      y: number,
-      font = helveticaFont,
-      size = 12
-    ) => {
-      const textWidth = font.widthOfTextAtSize(text, size);
-      page.drawText(text, {
-        x: (page.getWidth() - textWidth) / 2,
-        y,
-        size,
-        font,
-      });
-    };
-
-    // Draw header
-    drawCenteredText("Objet : Procuration", 800, helveticaBold, 14);
-
-    // Draw main content
-    const startY = 750;
-    const lineHeight = 20;
-    let currentY = startY;
-
-    // Format dates
-    const birthDate = formData.dateNaissanceMandant
-      ? format(new Date(formData.dateNaissanceMandant), "dd/MM/yyyy", {
-          locale: fr,
-        })
-      : "___/___/____";
-
-    const today = format(new Date(), "dd/MM/yyyy", { locale: fr });
-
-    // First paragraph
-    page.drawText(
-      `Je, soussigné(e) ${formData.prenomMandant} ${formData.nomMandant},`,
-      {
-        x: 50,
-        y: currentY,
-        size: 12,
-        font: helveticaFont,
-      }
-    );
-
-    currentY -= lineHeight;
-    page.drawText(`né(e) le ${birthDate} à ${formData.lieuNaissanceMandant},`, {
-      x: 50,
-      y: currentY,
-      size: 12,
-      font: helveticaFont,
-    });
-
-    currentY -= lineHeight;
-    page.drawText(`de nationalité ${formData.nationaliteMandant},`, {
-      x: 50,
-      y: currentY,
-      size: 12,
-      font: helveticaFont,
-    });
-
-    currentY -= lineHeight;
-    page.drawText(`demeurant à ${formData.adresseMandant},`, {
-      x: 50,
-      y: currentY,
-      size: 12,
-      font: helveticaFont,
-    });
-
-    currentY -= lineHeight * 2;
-    page.drawText(`donne par la présente pouvoir à l'entité Tradocument,`, {
-      x: 50,
-      y: currentY,
-      size: 12,
-      font: helveticaFont,
-    });
-
-    // Draw horizontal line
-    currentY -= lineHeight;
-    page.drawLine({
-      start: { x: 50, y: currentY },
-      end: { x: 545, y: currentY },
-      thickness: 1,
-      color: rgb(0, 0, 0),
-    });
-
-    currentY -= lineHeight * 2;
-    page.drawText(
-      `afin qu'elle puisse récupérer le document suivant en mon nom :`,
-      {
-        x: 50,
-        y: currentY,
-        size: 12,
-        font: helveticaFont,
-      }
-    );
-
-    currentY -= lineHeight;
-    page.drawText(`${formData.typeProcuration}`, {
-      x: 70,
-      y: currentY,
-      size: 12,
-      font: helveticaFont,
-    });
-
-    // Draw another horizontal line
-    currentY -= lineHeight;
-    page.drawLine({
-      start: { x: 50, y: currentY },
-      end: { x: 545, y: currentY },
-      thickness: 1,
-      color: rgb(0, 0, 0),
-    });
-
-    // Duration text
-    currentY -= lineHeight * 2;
-    const durationText = formData.dateFin
-      ? `Cette procuration est confiée à Tradocument pour une durée du ${formData.dateDebut} au ${formData.dateFin}.`
-      : `Cette procuration est confiée à Tradocument pour une durée indéterminée.`;
-
-    page.drawText(durationText, {
-      x: 50,
-      y: currentY,
-      size: 12,
-      font: helveticaFont,
-    });
-
-    currentY -= lineHeight;
-    page.drawText(
-      `Je me réserve la possibilité d'y mettre fin à tout moment.`,
-      {
-        x: 50,
-        y: currentY,
-        size: 12,
-        font: helveticaFont,
-      }
-    );
-
-    // Draw another horizontal line
-    currentY -= lineHeight;
-    page.drawLine({
-      start: { x: 50, y: currentY },
-      end: { x: 545, y: currentY },
-      thickness: 1,
-      color: rgb(0, 0, 0),
-    });
-
-    // Responsibility text
-    currentY -= lineHeight * 2;
-    page.drawText(
-      `Je conserve la responsabilité de toutes les actions effectuées par le mandataire`,
-      {
-        x: 50,
-        y: currentY,
-        size: 12,
-        font: helveticaFont,
-      }
-    );
-
-    currentY -= lineHeight;
-    page.drawText(`en vertu de la présente procuration.`, {
-      x: 50,
-      y: currentY,
-      size: 12,
-      font: helveticaFont,
-    });
-
-    // Date and signature section
-    currentY -= lineHeight * 3;
-    page.drawText(`Fait le ${today}, en 2 (deux) exemplaires originaux,`, {
-      x: 50,
-      y: currentY,
-      size: 12,
-      font: helveticaFont,
-    });
-
-    // Signature sections
-    currentY -= lineHeight * 3;
-    drawCenteredText("SIGNATURE DU MANDANT", currentY, helveticaBold, 12);
-
-    // Add signature if available
-    if (signaturePadRef.current) {
-      const signatureData = signaturePadRef.current.toDataURL();
-      const signatureImage = await pdfDoc.embedPng(signatureData);
-      page.drawImage(signatureImage, {
-        x: 197.5,
-        y: currentY - 100,
-        width: 200,
-        height: 100,
-      });
-    }
-
-    // Mandataire signature section
-    currentY -= lineHeight * 8;
-    drawCenteredText("SIGNATURE DU MANDATAIRE", currentY, helveticaBold, 12);
-
-    // Ajouter une image de signature pour le mandataire
-    try {
-      // Charger l'image de signature
-      const mandataireSignatureUrl = "/signature-mandataire.png"; // Remplacez par le chemin correct
-      const mandataireSignatureResponse = await fetch(mandataireSignatureUrl);
-      const mandataireSignatureData =
-        await mandataireSignatureResponse.arrayBuffer();
-      const mandataireSignatureImage = await pdfDoc.embedPng(
-        mandataireSignatureData
-      );
-
-      // Dessiner l'image de la signature sur le PDF
-      page.drawImage(mandataireSignatureImage, {
-        x: (page.getWidth() - 200) / 2, // Centré horizontalement
-        y: currentY - 50, // Ajuster selon la position souhaitée
-        width: 200, // Largeur de l'image
-        height: 30, // Hauteur de l'image
-      });
-    } catch (error) {
-      console.error(
-        "Erreur lors du chargement de la signature du mandataire :",
-        error
-      );
-    }
-
-    // Footer text for attached document
-    currentY -= lineHeight * 10;
-    page.drawText(`Pièce jointe : Copie de la pièce d'identité.`, {
-      x: 50,
-      y: 30, // Bas de la page
-      size: 10,
-      font: helveticaFont,
-    });
-
-    // Save and download the PDF
-    const pdfBytes = await pdfDoc.save();
-    const blob = new Blob([pdfBytes], { type: "application/pdf" });
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.setAttribute("download", `procuration-${formData.nomMandant}.pdf`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    window.URL.revokeObjectURL(url);
   };
 
   return (
@@ -727,156 +175,20 @@ export default function ProcurationForm() {
             <CardTitle>Formulaire de Procuration</CardTitle>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <AnimatePresence mode="wait">{renderStep()}</AnimatePresence>
-              <div className="flex justify-between mt-6">
-                {step > 1 && (
-                  <Button
-                    type="button"
-                    onClick={prevStep}
-                    variant="outline"
-                    disabled={loading}
-                  >
-                    <ChevronLeft className="w-4 h-4 mr-2" />
-                    Précédent
-                  </Button>
-                )}
-                {step < 3 ? (
-                  <Button
-                    type="button"
-                    onClick={nextStep}
-                    className="ml-auto"
-                    disabled={loading}
-                  >
-                    Suivant
-                    <ChevronRight className="w-4 h-4 ml-2" />
-                  </Button>
-                ) : (
-                  <Button type="submit" className="ml-auto" disabled={loading}>
-                    {loading ? (
-                      <>
-                        <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
-                        Traitement...
-                      </>
-                    ) : (
-                      <>
-                        <Check className="w-4 h-4 mr-2" />
-                        Soumettre
-                      </>
-                    )}
-                  </Button>
-                )}
-              </div>
+              <StepNavigation
+                step={step}
+                setStep={setStep}
+                loading={loading}
+                form={form}
+              />
             </form>
             <FormError message={error || ""} />
             <FormSuccess message={success} />
           </CardContent>
         </Card>
-
-        <Card className="p-6 shadow-lg bg-white">
-          <CardHeader>
-            <CardTitle className="flex justify-between items-center">
-              <span>Aperçu</span>
-              <Button
-                type="button"
-                onClick={() => setPreview(!preview)}
-                variant="outline"
-                size="sm"
-              >
-                {preview ? "Masquer" : "Afficher"}
-              </Button>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <AnimatePresence>
-              {preview && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="space-y-6 text-gray-700 bg-white p-8 rounded-lg overflow-hidden"
-                >
-                  <div className="text-center mb-8">
-                    <h2 className="font-bold">Objet : Procuration</h2>
-                  </div>
-                  <div className="space-y-6 text-justify">
-                    <p>
-                      Je, soussigné(e) {formData.prenomMandant || "___"}{" "}
-                      {formData.nomMandant || "___"}, né(e) le{" "}
-                      {formData.dateNaissanceMandant
-                        ? format(
-                            new Date(formData.dateNaissanceMandant),
-                            "dd/MM/yyyy",
-                            { locale: fr }
-                          )
-                        : "___"}{" "}
-                      à {formData.lieuNaissanceMandant || "___"}, donne par la
-                      présente pouvoir à l'entité{" "}
-                      <span className="font-semibold">Tradocument</span>,
-                    </p>
-                    <p>
-                      afin qu'elle puisse récupérer le document suivant en mon
-                      nom:
-                    </p>
-                    <li>{formData.typeProcuration || "___"}</li>
-                    <p>
-                      Cette procuration est confiée à{" "}
-                      <span className="font-semibold">Tradocument</span> pour
-                      une durée
-                      {formData.dateDebut && formData.dateFin
-                        ? ` du ${format(
-                            new Date(formData.dateDebut),
-                            "dd/MM/yyyy",
-                            { locale: fr }
-                          )} au ${format(
-                            new Date(formData.dateFin),
-                            "dd/MM/yyyy",
-                            { locale: fr }
-                          )}`
-                        : " indéterminée"}
-                      . Je me réserve la possibilité d'y mettre fin à tout
-                      moment.
-                    </p>
-                    <p>
-                      Je conserve la responsabilité de toutes les actions
-                      effectuées par le mandataire en vertu de la présente
-                      procuration.
-                    </p>
-                    <div className="mt-12">
-                      <p>Fait le {today}, en 2 (deux) exemplaires originaux,</p>
-                    </div>
-                    <div className="space-y-8 mt-16">
-                      <div>
-                        <p className="text-center font-bold mb-16">
-                          SIGNATURE DU MANDANT
-                        </p>
-                        <div className="w-full text-center">
-                          <div className="border-b border-black w-48 mx-auto"></div>
-                          <div className="border-b border-black w-48 mx-auto mt-2"></div>
-                        </div>
-                      </div>
-                      <div>
-                        <p className="text-center font-bold mb-16">
-                          SIGNATURE DU MANDATAIRE
-                        </p>
-                        <div className="w-full text-center">
-                          <div className="border-b border-black w-48 mx-auto"></div>
-                          <div className="border-b border-black w-48 mx-auto mt-2"></div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="mt-12">
-                      <p>
-                        Pièce jointe: Copie de la pièce d'identité du mandant
-                      </p>
-                    </div>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </CardContent>
-        </Card>
+        <PreviewCard formData={form.watch()} />
       </div>
     </div>
   );

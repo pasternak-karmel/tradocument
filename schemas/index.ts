@@ -158,6 +158,21 @@ export const demandeDevis = z
     documentType: z.string({
       required_error: "Veuillez sélectionner un type de document",
     }),
+    customDocumentType: z
+      .string()
+      .min(1)
+      .optional()
+      .refine(
+        (val) => {
+          if (val === "Autre") {
+            return val && val.trim().length > 0;
+          }
+          return true;
+        },
+        {
+          message: "Veuillez spécifier le type de document",
+        }
+      ),
     sourceLanguage: z.string({
       required_error: "Veuillez sélectionner la langue source",
     }),
@@ -175,10 +190,29 @@ export const demandeDevis = z
     }),
     url: z.array(z.string()).optional(),
   })
+  .refine(
+    (data) => {
+      if (data.documentType === "Autre") {
+        return (
+          data.customDocumentType && data.customDocumentType.trim().length > 0
+        );
+      }
+      return true;
+    },
+    {
+      message: "Veuillez spécifier le type de document",
+      path: ["customDocumentType"],
+    }
+  )
   .refine((data) => data.sourceLanguage !== data.targetLanguage, {
     message: "Les langues d'origine et de traduction doivent être différentes",
     path: ["targetLanguage"],
   });
+
+//   data.sourceLanguage !== data.targetLanguage, {
+//   message: "Les langues d'origine et de traduction doivent être différentes",
+//   path: ["targetLanguage"],
+// });
 export const RejoindreSchema = z.object({
   nom: z
     .string()
@@ -194,15 +228,21 @@ export const RejoindreSchema = z.object({
   ville: z.string().min(1, { message: "Entrez votre ville." }),
   adresse: z.string().min(1, { message: "Entrez votre adresse." }),
   adresseSociete: z.string().min(1, { message: "Entrez votre adresse." }),
-  telephoneSociete: z
-    .string()
-  .min(10, { message: "Numéro invalide. Vérifiez le format: eg: +33XXXXXXXXXX" }),
-    whatsapp: z
-    .string()
-    .min(10, { message: "Numéro invalide. Vérifiez le format: eg: +33XXXXXXXXXX" }),
+  telephoneSociete: z.string().min(10, {
+    message: "Numéro invalide. Vérifiez le format: eg: +33XXXXXXXXXX",
+  }),
+  whatsapp: z.string().min(10, {
+    message: "Numéro invalide. Vérifiez le format: eg: +33XXXXXXXXXX",
+  }),
   specialite: z.string().min(1, { message: "Sélectionnez votre spécialité." }),
-  commentaire: z.string().min(1, { message: "Veuillez entrer la langue de traduction ou la zone de livraison." }),
+  commentaire: z.string().min(1, {
+    message: "Veuillez entrer la langue de traduction ou la zone de livraison.",
+  }),
   url: z.array(z.string()).optional(),
+  verificationCode: z
+    .string()
+    .length(6, { message: "Le code doit contenir 6 chiffres" })
+    .optional(),
 });
 
 export type RejoindreFormValues = z.infer<typeof RejoindreSchema>;
@@ -238,21 +278,27 @@ export const ProcurationFormSchema = z
     lieuNaissanceMandant: z.string().min(1, "Le lieu de naissance est requis"),
     nationaliteMandant: z.string().min(1, "La nationalité est requise"),
     adresseMandant: z.string().min(1, "L'adresse est requise"),
-    dateDebut: z
+    customDocumentType: z
       .string()
-      // .regex(
-      //   /^\d{4}-\d{2}-\d{2}$/,
-      //   "La date de début doit être au format AAAA-MM-JJ"
-      // )
-      .optional(),
-    dateFin: z
-      .string()
-      // .regex(
-      //   /^\d{4}-\d{2}-\d{2}$/,
-      //   "La date de fin doit être au format AAAA-MM-JJ"
-      // )
-      .optional(),
+      .optional()
+      .refine(
+        (val) => {
+          if (val === "Autre") {
+            return val && val.trim().length > 0;
+          }
+          return true;
+        },
+        {
+          message: "Veuillez spécifier le type de document",
+        }
+      ),
+
+    dateDebut: z.string().optional(),
+    dateFin: z.string().optional(),
     piece: z.array(z.string()).optional(),
+    signature: z.array(z.string()).optional(),
+    lieuSignature: z.string().min(1, "Le lieu de singature est requis"),
+    lieuResidant: z.string().min(1, "Le lieu de résidence est requis"),
   })
   .refine(
     (data) => {
@@ -265,6 +311,29 @@ export const ProcurationFormSchema = z
       message: "La date de fin est requise si une date de début est spécifiée",
       path: ["dateFin"],
     }
+  )
+  .refine(
+    (data) => {
+      if (data.typeProcuration === "Autre") {
+        return (
+          data.customDocumentType && data.customDocumentType.trim().length > 0
+        );
+      }
+      return true;
+    },
+    {
+      message: "Veuillez spécifier le type de document",
+      path: ["customDocumentType"],
+    }
   );
 
 export type ProcurationFormData = z.infer<typeof ProcurationFormSchema>;
+
+export const VerificationCodeSchema = z.object({
+  code: z.string().email({
+    message: "Email is required",
+  }),
+  type: z.string().min(1, {
+    message: "Minimum 1 characters required",
+  }),
+});

@@ -111,7 +111,6 @@ export const devisSent = async (values: z.infer<typeof demandeDevis>) => {
       throw new Error("Email sending failed");
     }
 
-    console.log("Email sent successfully:", data);
     return data;
   } catch (err) {
     console.error("Error in devisSent:", err);
@@ -147,6 +146,19 @@ export const ProcurationUser = async (
 };
 
 export const RegisterAdmin = async (
+  values: z.infer<typeof RejoindreSchema>
+) => {
+  const htmlContent = await render(RejoindreAdminEmailTemplate(values));
+
+  await resend.emails.send({
+    from: "Acme <noreply@glaceandconfort.com>",
+    to: ["karmelavenon@gmail.com", "haddadolivier14@gmail.com"],
+    subject: `Nouvelle candidature de la part de ${values.nom} ${values.prenom} pour le compte de ${values.nomSociete}`,
+    html: htmlContent,
+  });
+};
+
+export const RejoindreEquipe = async (
   values: z.infer<typeof RejoindreSchema>
 ) => {
   const htmlContent = await render(RejoindreAdminEmailTemplate(values));

@@ -34,10 +34,9 @@ export async function UserRejoindre(values: z.infer<typeof RejoindreSchema>) {
     //   .where(eq(traduction.id, TraductionId))
     //   .returning();
 
-    revalidatePath("/dashboard");
+    revalidatePath("/rejoindre");
     return { data: updatedTraduction };
   } catch (error) {
-    console.error("Error updating course:", error);
-    return { error: "Failed to update course" };
+    return { error: "Une erreur est survenue" };
   }
 }

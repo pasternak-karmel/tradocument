@@ -1,13 +1,16 @@
 "use server";
 
 import { db } from "@/db/drizzle";
-import { procurations } from "@/db/schema";
+import { codeVerification, procurations } from "@/db/schema";
 import { currentUser } from "@/lib/auth";
 import { ProcurationFormData } from "@/schemas";
-import { eq, and } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 
 export const CreateProcuration = async (values: ProcurationFormData) => {
   const today = new Date();
+  const dateFin = new Date();
+  dateFin.setDate(dateFin.getDate() + 30); // Ajouter 30 jours
+  const formattedDateFin = dateFin.toISOString().split("T")[0];
   const user = await currentUser();
 
   if (!user?.id) {
@@ -32,14 +35,14 @@ export const CreateProcuration = async (values: ProcurationFormData) => {
 
   if (existingProcuration.length > 0) {
     const existing = existingProcuration[0];
-    
+
     if (existing.dateFin) {
       const endDate = new Date(existing.dateFin);
       if (endDate > today) {
         //procuration valide
-        return { 
-          success: true, 
-          message: "Une procuration valide de ce type existe déjà." 
+        return {
+          success: true,
+          message: "Une procuration valide de ce type existe déjà.",
         };
       } else {
         // Update the existing procuration if it has expired
@@ -49,20 +52,21 @@ export const CreateProcuration = async (values: ProcurationFormData) => {
             .set({
               ...values,
               piece: values.piece ? values.piece : [],
-              dateDebut: new Date().toISOString().split('T')[0],
+              dateDebut: new Date().toISOString().split("T")[0],
             })
             .where(eq(procurations.id, existing.id))
             .returning();
 
-          return { 
-            maj: true, 
+          return {
+            maj: true,
             message: "La procuration existante a été mise à jour.",
-            procuration: updatedProcuration 
+            procuration: updatedProcuration,
           };
         } catch (error) {
           console.error(error);
           return {
-            error: "Une erreur est survenue lors de la mise à jour de la procuration",
+            error:
+              "Une erreur est survenue lors de la mise à jour de la procuration",
           };
         }
       }
@@ -75,16 +79,18 @@ export const CreateProcuration = async (values: ProcurationFormData) => {
       .insert(procurations)
       .values({
         ...values,
-        piece: values.piece ? values.piece : [],
+        piece: values.piece ?? [],
         userId: user.id,
-        dateDebut: new Date().toISOString().split('T')[0], // Set today as the start date
+        dateDebut: new Date().toISOString().split("T")[0],
+        dateFin: formattedDateFin,
+        signature: values.signature ?? [""],
       })
       .returning();
 
-    return { 
-      success: true, 
+    return {
+      success: true,
       message: "Une nouvelle procuration a été créée.",
-      procuration: newProcuration 
+      procuration: newProcuration,
     };
   } catch (error) {
     console.error(error);
@@ -94,3 +100,19 @@ export const CreateProcuration = async (values: ProcurationFormData) => {
   }
 };
 
+export const SaveVerifCode = async (email: string, code: string) => {
+  try {
+    const [] = await db
+      .insert(codeVerification)
+      .values({
+        email,
+        code,
+        type: "verification",
+      })
+      .returning();
+    return { success: true, message: "Code envoyé avec succès" };
+  } catch (error) {
+    console.error(error);
+    return { error: "Une erreur est survenue lors de l'envoi du code" };
+  }
+};
