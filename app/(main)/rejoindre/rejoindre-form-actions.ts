@@ -15,7 +15,7 @@ export async function submitRejoindreForm(data: RejoindreFormValues) {
   await SaveVerifCode(data.email, verificationCode);
   return {
     success: true,
-    message: "Verification code sent",
+    message: "Un code de vérification a été envoyé à votre adresse email",
   };
 }
 

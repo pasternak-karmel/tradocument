@@ -1,4 +1,3 @@
-
 "use client";
 
 import { FileState, MultiFileDropzone } from "@/components/multi-file";
@@ -29,7 +28,7 @@ import { acceptedFileTypes } from "@/type";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
 import { BookOpen, Briefcase, Send, Truck, Users } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { submitRejoindreForm, verifyCode } from "./rejoindre-form-actions";
@@ -43,6 +42,8 @@ export default function RejoignezNous() {
     []
   );
   const { edgestore } = useEdgeStore();
+
+  const formRef = useRef<HTMLFormElement>(null);
 
   const [isLoading, setIsLoading] = useState(false);
   const form = useForm<RejoindreFormValues>({
@@ -88,6 +89,15 @@ export default function RejoignezNous() {
   ];
 
   const specialties = ["Traducteur/Traductrice agréé(e)", "Transport Coursier"];
+
+  useEffect(() => {
+    if (step === "verification" && formRef.current) {
+      const yOffset = -220;
+      const y =
+        formRef.current.getBoundingClientRect().top + window.scrollY + yOffset;
+      window.scrollTo({ top: y, behavior: "smooth" });
+    }
+  }, [step]);
 
   function updateFileProgress(key: string, progress: FileState["progress"]) {
     setFileStates((fileStates) => {
@@ -182,7 +192,7 @@ export default function RejoignezNous() {
         for (const url of data.url) {
           await edgestore.document.delete({ url });
         }
-        
+
         form.reset();
         setFileStates([]);
         setUrls([]);
@@ -267,6 +277,7 @@ export default function RejoignezNous() {
             <CardContent>
               <Form {...form}>
                 <form
+                  ref={formRef}
                   onSubmit={form.handleSubmit(onSubmit)}
                   className="space-y-6"
                 >
@@ -564,7 +575,7 @@ export default function RejoignezNous() {
                           </FormLabel>
                           <FormControl>
                             <Input
-                              placeholder="Entrez le code reçu par SMS"
+                              placeholder="Entrez le code reçu par email"
                               {...field}
                             />
                           </FormControl>
@@ -576,20 +587,28 @@ export default function RejoignezNous() {
 
                   <Button
                     type="submit"
-                    className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-2 rounded-full"
+                    className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-2 rounded-full flex items-center justify-center space-x-2"
                     disabled={isLoading}
                   >
-                    {step === "form" ? "Soumettre" : "Vérifier"}
                     {isLoading ? (
-                      <div className="w-5 h-5 border-4 border-t-transparent border-white rounded-full animate-spin"></div>
+                      <>
+                        <div className="w-5 h-5 border-4 border-t-transparent border-white rounded-full animate-spin"></div>
+                        <span>
+                          {step === "form"
+                            ? "Envoi en cours..."
+                            : step === "verification"
+                            ? "Vérification en cours..."
+                            : "Chargement..."}
+                        </span>
+                      </>
                     ) : (
-                      <Send className="mr-2 h-4 w-4" />
+                      <>
+                        <Send className="mr-2 h-4 w-4" />
+                        <span>
+                          {step === "form" ? "Soumettre" : "Vérifier"}
+                        </span>
+                      </>
                     )}
-                    {isLoading && step === "form"
-                      ? "Envoi en cours..."
-                      : isLoading && step === "verification"
-                      ? "Vérification en cours..."
-                      : "Envoyer ma candidature"}
                   </Button>
                 </form>
               </Form>

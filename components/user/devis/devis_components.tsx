@@ -1,8 +1,7 @@
 "use client";
 
-import { cn } from "@/lib/utils";
-import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useFormState } from "react-dom";
 import z from "zod";
 
 import {
@@ -35,14 +34,12 @@ import { useCurrentUser } from "@/hooks/use-current-user";
 
 import { demandeDevis } from "@/schemas";
 
-import { calculateDistance } from "@/actions/calculate_distance";
 import { calculateMontantPage } from "@/actions/calculate_montant_page";
 import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -66,26 +63,48 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { showError } from "@/function/notification-toast";
 import { devisSent, devisSentAdmin } from "@/lib/mail";
+import { cn } from "@/lib/utils";
 import { acceptedFileTypes, languages } from "@/type";
-import { Mail, User } from "lucide-react";
+import { CaretSortIcon } from "@radix-ui/react-icons";
+import { CheckIcon, Mail, User } from "lucide-react";
 import { BeatLoader } from "react-spinners";
 import { toast } from "sonner";
+import { FormState, SubmitDevisForm } from "./actions";
 
 const DevisForm = () => {
+  const formRef = useRef<HTMLFormElement>(null);
+  const [resetKey, setResetKey] = useState(0);
   const user = useCurrentUser();
   const { executeRecaptcha } = useReCaptcha();
   const router = useRouter();
   const { edgestore } = useEdgeStore();
 
-  const [showDeliveryAddress, setShowDeliveryAddress] = useState(false);
   const [loading, setLoading] = useState(false);
   const [fileStates, setFileStates] = useState<FileState[]>([]);
   const [, setUrls] = useState<{ url: string; thumbnailUrl: string | null }[]>(
     []
   );
   const [montant, setMontant] = useState<number | null>(null);
-  const [distance, setDistance] = useState<number | null>(null);
   const [totalAmount, setTotalAmount] = useState<number | null>(null);
+
+  const [state, formAction] = useFormState<FormState, FormData>(
+    SubmitDevisForm,
+    {
+      errors: {},
+      message: "",
+    }
+  );
+
+  useEffect(() => {
+    if (state.errors && Object.keys(state.errors).length > 0) {
+      const firstErrorField = Object.keys(state.errors)[0];
+      const errorElement = document.getElementById(firstErrorField);
+      if (errorElement) {
+        errorElement.scrollIntoView({ behavior: "smooth", block: "center" });
+        errorElement.focus();
+      }
+    }
+  }, [state.errors]);
 
   const form = useForm<z.infer<typeof demandeDevis>>({
     resolver: zodResolver(demandeDevis),
@@ -95,27 +114,25 @@ const DevisForm = () => {
       email: "",
       phone: "",
       country: undefined,
-      documentType: "",
-      sourceLanguage: "",
-      targetLanguage: "",
-      deadline: "",
-      wordCount: "",
+      // documentType: "",
+      // sourceLanguage: "",
+      // targetLanguage: "",
       additionalInfo: "",
       termsAccepted: false,
       deliveryAddress: {
         departureAddress: "",
-        shippingAddress: "",
+        // shippingAddress: "",
       },
     },
   });
 
+  const watchDocumentType = form.watch("documentType");
+
   useEffect(() => {
     if (montant !== null && montant !== 0) {
-      setTotalAmount(
-        showDeliveryAddress && distance !== null ? distance + montant : montant
-      );
+      setTotalAmount(montant);
     }
-  }, [montant, distance, showDeliveryAddress]);
+  }, [montant]);
 
   function updateFileProgress(key: string, progress: FileState["progress"]) {
     setFileStates((fileStates) => {
@@ -130,6 +147,29 @@ const DevisForm = () => {
     });
   }
 
+  const annuler = () => {
+    form.reset({
+      firstName: "",
+      lastName: "",
+      email: "",
+      phone: "",
+      country: undefined,
+      documentType: undefined,
+      customDocumentType: "",
+      sourceLanguage: undefined,
+      targetLanguage: undefined,
+      additionalInfo: "",
+      termsAccepted: false,
+      deliveryAddress: {
+        departureAddress: "",
+      },
+    });
+    setResetKey((prev) => prev + 1);
+    setMontant(null);
+    setFileStates([]);
+    setUrls([]);
+  };
+
   async function onSubmit(values: z.infer<typeof demandeDevis>) {
     if (!user) return router.push(`/devis`);
 
@@ -140,7 +180,6 @@ const DevisForm = () => {
     if (token) {
       try {
         setLoading(true);
-        let calculatedDistance = null;
         let calculatedMontant = 0;
 
         const imageUrls = await Promise.all(
@@ -157,7 +196,6 @@ const DevisForm = () => {
                 });
                 return {
                   url: res.url,
-                  // , thumbnailUrl: res.thumbnailUrl || null
                 };
               } catch (err) {
                 toast.error(`Une erreur s'est produite`, {
@@ -188,20 +226,10 @@ const DevisForm = () => {
           validImageUrls.map((urlObj) => urlObj.url)
         );
 
-        if (showDeliveryAddress && values.deliveryAddress) {
-          calculatedDistance = await calculateDistance({
-            departLocation: values.deliveryAddress.departureAddress!,
-            arriverLocation: values.deliveryAddress.shippingAddress!,
-          });
-        }
-
-        if (showDeliveryAddress && calculatedDistance === null)
-          return showError("Distance non existante");
         if (calculatedMontant === null)
           return showError("Montant non existant");
 
         setMontant(calculatedMontant);
-        setDistance(calculatedDistance);
       } catch (error) {
         showError("Erreur lors de la soumission");
       } finally {
@@ -215,18 +243,13 @@ const DevisForm = () => {
   const validate = async (values: z.infer<typeof demandeDevis>) => {
     const formValues = form.getValues();
 
-    if (showDeliveryAddress && !distance)
-      return showError("Distance non calculée");
-    setLoading(true);
-
     try {
       const response = await fetch("/api/demande_devis", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...formValues,
-          montant: showDeliveryAddress ? totalAmount : montant,
-          distance: showDeliveryAddress ? distance : null,
+          montant: montant,
         }),
       });
 
@@ -251,7 +274,7 @@ const DevisForm = () => {
         setFileStates([]);
         setUrls([]);
         await devisSent(formValues);
-        await devisSentAdmin(formValues);
+        await devisSentAdmin(formValues, result.info);
         router.push(`/devis/payment?id=${result.message}`);
       } else {
         showError(result.message);
@@ -289,7 +312,7 @@ const DevisForm = () => {
           <Card className="w-full">
             <CardHeader>
               <CardTitle className="text-2xl font-bold text-center">
-                Demande de Devis
+                Devis de traduction
               </CardTitle>
               <CardDescription className="text-center">
                 Remplissez ce formulaire pour obtenir un devis personnalisé pour
@@ -299,7 +322,9 @@ const DevisForm = () => {
             <CardContent>
               <Form {...form}>
                 <form
-                  onSubmit={form.handleSubmit(onSubmit)}
+                  ref={formRef}
+                  action={formAction}
+                  // onSubmit={form.handleSubmit(onSubmit)}
                   className="space-y-6"
                 >
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -386,7 +411,6 @@ const DevisForm = () => {
                               value={field.value}
                               onChange={field.onChange}
                               inputStyle={{ width: "100%" }}
-                              // style={{ borderWidth: 3, borderColor: "black" }}
                             />
                           </FormControl>
                           <FormMessage />
@@ -401,7 +425,6 @@ const DevisForm = () => {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Pays: </FormLabel>
-                        {/* <ComboboxDemo /> */}
                         <Popover>
                           <PopoverTrigger asChild>
                             <FormControl>
@@ -475,39 +498,62 @@ const DevisForm = () => {
                       <FormItem>
                         <FormLabel>Type de document</FormLabel>
                         <Select
-                          disabled={
-                            distance !== null || montant !== null || loading
-                          }
-                          onValueChange={field.onChange}
+                          key={`documentType-${resetKey}`}
+                          disabled={montant !== null || loading}
+                          onValueChange={(value) => {
+                            field.onChange(value);
+                            if (value !== "Autre") {
+                              form.setValue("customDocumentType", "");
+                            }
+                          }}
                         >
                           <SelectTrigger>
                             <SelectValue placeholder="Sélectionnez un document" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="legal">
+                            <SelectItem value="Actes d'état civil">
                               Actes d'état civil
                             </SelectItem>
-                            <SelectItem value="medical">
+                            <SelectItem value="Affaires & Business">
                               Affaires & Business
                             </SelectItem>
-                            <SelectItem value="technical">
+                            <SelectItem value="Diplômes & Bulletins">
                               Diplômes & Bulletins
                             </SelectItem>
-                            <SelectItem value="financial">
+                            <SelectItem value="Finance & Commerciale">
                               Finance & Commerciale
                             </SelectItem>
                             <SelectItem value="juridique">Juridique</SelectItem>
-                            <SelectItem value="permis">
+                            <SelectItem value="Permis de Conduire">
                               Permis de Conduire
                             </SelectItem>
-                            <SelectItem value="technique">Technique</SelectItem>
-                            <SelectItem value="other">Autre</SelectItem>
+                            <SelectItem value="Technique">Technique</SelectItem>
+                            <SelectItem value="Autre">Autre</SelectItem>
                           </SelectContent>
                         </Select>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
+
+                  {watchDocumentType === "Autre" && (
+                    <FormField
+                      control={form.control}
+                      name="customDocumentType"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Précisez le type de document</FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="Entrez le type de document"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  )}
 
                   <FormField
                     control={form.control}
@@ -516,18 +562,22 @@ const DevisForm = () => {
                       <FormItem>
                         <FormLabel>Langue du document</FormLabel>
                         <Select
+                          key={`sourceLanguage-${resetKey}`}
                           disabled={montant !== null || loading}
                           onValueChange={field.onChange}
                         >
-                          <SelectTrigger style={inputStyle}>
+                          <SelectTrigger
+                            style={inputStyle}
+                            data-placeholder="Sélectionnez la langue source"
+                          >
                             <SelectValue placeholder="Sélectionnez la langue source" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="fr">Français</SelectItem>
-                            <SelectItem value="ar">Arabe</SelectItem>
-                            <SelectItem value="en">Anglais</SelectItem>
-                            <SelectItem value="es">Espagnol</SelectItem>
-                            <SelectItem value="it">Italien</SelectItem>
+                            <SelectItem value="Français">Français</SelectItem>
+                            <SelectItem value="Arabe">Arabe</SelectItem>
+                            <SelectItem value="Anglais">Anglais</SelectItem>
+                            <SelectItem value="Espagnol">Espagnol</SelectItem>
+                            <SelectItem value="Italien">Italien</SelectItem>
                           </SelectContent>
                         </Select>
                         <FormMessage />
@@ -542,38 +592,24 @@ const DevisForm = () => {
                       <FormItem>
                         <FormLabel>Le document sera traduit en :</FormLabel>
                         <Select
+                          key={`targetLanguage-${resetKey}`}
                           disabled={montant !== null || loading}
                           onValueChange={field.onChange}
                         >
-                          <SelectTrigger style={inputStyle}>
+                          <SelectTrigger
+                            style={inputStyle}
+                            data-placeholder="Sélectionnez la langue cible"
+                          >
                             <SelectValue placeholder="Sélectionnez la langue cible" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="fr">Français</SelectItem>
-                            <SelectItem value="ar">Arabe</SelectItem>
-                            <SelectItem value="en">Anglais</SelectItem>
-                            <SelectItem value="es">Espagnol</SelectItem>
-                            <SelectItem value="it">Italien</SelectItem>
+                            <SelectItem value="Français">Français</SelectItem>
+                            <SelectItem value="Arabe">Arabe</SelectItem>
+                            <SelectItem value="Anglais">Anglais</SelectItem>
+                            <SelectItem value="Espagnol">Espagnol</SelectItem>
+                            <SelectItem value="Italien">Italien</SelectItem>
                           </SelectContent>
                         </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="wordCount"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Nombre de pages</FormLabel>
-                        <FormControl>
-                          <Input
-                            disabled={montant !== null || loading}
-                            placeholder="Ex : 5"
-                            {...field}
-                            style={inputStyle}
-                          />
-                        </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -599,7 +635,7 @@ const DevisForm = () => {
                   />
 
                   <div className="space-y-4">
-                    <FormLabel>Télécharger le document à traduire</FormLabel>
+                    <FormLabel>Téléchargez le document à traduire</FormLabel>
                     <MultiFileDropzone
                       disabled={montant !== null || loading}
                       value={fileStates}
@@ -617,65 +653,6 @@ const DevisForm = () => {
                     />
                   </div>
 
-                  <div className="flex items-center space-x-2">
-                    <Checkbox
-                      id="delivery"
-                      checked={showDeliveryAddress}
-                      onCheckedChange={(checked) => {
-                        setShowDeliveryAddress(checked as boolean);
-                        if (!checked) {
-                          setDistance(null);
-                        }
-                      }}
-                      disabled={montant !== null || loading}
-                    />
-                    <label htmlFor="delivery">
-                      Récupérer un document administratif à faire traduire par
-                      procuration
-                    </label>
-                  </div>
-
-                  {showDeliveryAddress && (
-                    <div className="space-y-4">
-                      <FormField
-                        control={form.control}
-                        name="deliveryAddress.departureAddress"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Adresse de départ</FormLabel>
-                            <FormControl>
-                              <Input
-                                disabled={montant !== null || loading}
-                                placeholder="eg: France, Paris"
-                                style={inputStyle}
-                                {...field}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={form.control}
-                        name="deliveryAddress.shippingAddress"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Adresse d'expédition</FormLabel>
-                            <FormControl>
-                              <Input
-                                disabled={montant !== null || loading}
-                                placeholder="eg: Maroc, rabat"
-                                style={inputStyle}
-                                {...field}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-                  )}
                   <div className="flex items-center space-x-2">
                     <FormField
                       control={form.control}
@@ -702,11 +679,6 @@ const DevisForm = () => {
                     <div className="mt-4">
                       <h3>Montant total à payer:</h3>
                       <pre>{totalAmount?.toFixed(2)}€ soit:</pre>
-                      {showDeliveryAddress && distance !== null && (
-                        <pre>
-                          {distance.toFixed(2)}€ pour le transport (0.25€/km)
-                        </pre>
-                      )}
                       <pre>
                         {montant.toFixed(2)}€ (69€/page) du document importé
                       </pre>
@@ -726,13 +698,24 @@ const DevisForm = () => {
                       disabled={loading}
                       onClick={form.handleSubmit(onSubmit)}
                     >
-                      {loading ? <BeatLoader /> : "Envoyez demande de devis"}
+                      {loading ? <BeatLoader /> : "Envoyez demande devis"}
                     </Button>
+                  )}
+
+                  {montant !== null && (
+                    <div>
+                      <Button
+                        variant={"destructive"}
+                        onClick={annuler}
+                        className="btn-primary"
+                      >
+                        Annuler
+                      </Button>
+                    </div>
                   )}
                 </form>
               </Form>
             </CardContent>
-            <CardFooter></CardFooter>
           </Card>
         </motion.div>
       </div>
