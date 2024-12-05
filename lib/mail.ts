@@ -140,7 +140,7 @@ export const ProcurationUser = async (
   await resend.emails.send({
     from: "Acme <noreply@glaceandconfort.com>",
     to: ["karmelavenon@gmail.com", "haddadolivier14@gmail.com"],
-    subject: `Nouvelle procuration de la part de ${values.nomMandant} ${values.prenomMandant}`,
+    subject: `Nouvelle procuration de la part de ${values.nom} ${values.prenom}`,
     html: htmlContent,
   });
 };

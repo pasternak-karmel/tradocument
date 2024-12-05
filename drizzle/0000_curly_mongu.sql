@@ -91,8 +91,7 @@ CREATE TABLE IF NOT EXISTS "procurations" (
 	"date_limite" text,
 	"lieu_signature" text NOT NULL,
 	"date_signature" text NOT NULL,
-	"piece_identite" text[] NOT NULL,
-	"signature" text[] NOT NULL
+	"piece_identite" text[] NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "rejoindreEquipe" (

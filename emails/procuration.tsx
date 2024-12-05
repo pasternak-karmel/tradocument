@@ -54,19 +54,20 @@ export default function ProcurationEmail(values: ProcurationFormData) {
                   label="Lieu de naissance"
                   value={values.lieuNaissance}
                 />
-                <DetailRow
-                  label="Nationalité"
-                  value={values.nationalite}
-                />
-                
+                <DetailRow label="Nationalité" value={values.nationalite} />
+
                 <DetailRow
                   label="Date Limite"
-                  value={values.dateLimite ?? ''} />
+                  value={values.dateLimite ?? ""}
+                />
                 <DetailRow
                   label="Lieu de récupération"
-                  value={values.institution} />
-                
-                <p>Signé le : {values.dateSignature} à {values.lieuSignature}</p>
+                  value={values.institution}
+                />
+
+                <p>
+                  Signé le : {values.dateSignature} à {values.lieuSignature}
+                </p>
               </tbody>
             </table>
           </Section>

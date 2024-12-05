@@ -1,5 +1,5 @@
 {
-  "id": "9fde2935-3d55-4e0e-8b57-2272a8d939a0",
+  "id": "90f08741-66f9-4245-8948-f2f8491740dd",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -612,12 +612,6 @@
         },
         "piece_identite": {
           "name": "piece_identite",
-          "type": "text[]",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "signature": {
-          "name": "signature",
           "type": "text[]",
           "primaryKey": false,
           "notNull": true
