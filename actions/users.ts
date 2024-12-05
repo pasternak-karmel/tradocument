@@ -49,7 +49,7 @@ export const CreateProcuration = async (values: ProcurationFormData) => {
             .set({
               ...values,
               pieceIdentite: values.pieceIdentite ?? [],
-              signature: values.signature ?? [],
+            
             })
             .where(eq(procurations.id, existing.id))
             .returning();
@@ -79,7 +79,6 @@ export const CreateProcuration = async (values: ProcurationFormData) => {
         userId: user.id,
         dateLimite: values.dateLimite || null,
         pieceIdentite: values.pieceIdentite || [],
-        signature: values.signature || [],
       })
       .returning();
 
