@@ -60,10 +60,6 @@ export default function ProcurationForm() {
         .filter(Boolean)
         .map((urlObj) => urlObj!.url);
 
-      data.signature = signatureUrls
-        .filter(Boolean)
-        .map((urlObj) => urlObj!.url);
-
       const result = await CreateProcuration(data);
 
       if (result?.error) {
