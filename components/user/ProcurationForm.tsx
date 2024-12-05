@@ -8,12 +8,12 @@ import { useCurrentUser } from "@/hooks/use-current-user";
 import { useEdgeStore } from "@/lib/edgestore";
 import { ProcurationUser } from "@/lib/mail";
 import { ProcurationFormData, ProcurationFormSchema } from "@/schemas";
+import { generatePDF } from "@/utils/generate-pdf";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-// import { generatePDF } from "./generatePDF";
 import { FileState } from "../multi-file";
 import { FormStep1 } from "./procuration/FormStep1";
 import { FormStep2 } from "./procuration/FormStep2";
@@ -35,8 +35,7 @@ export default function ProcurationForm() {
   const form = useForm<ProcurationFormData>({
     resolver: zodResolver(ProcurationFormSchema),
     defaultValues: {
-      typeProcuration: "",
-      customDocumentType: "",
+      // documents: [],
     },
     mode: "onSubmit",
   });
@@ -57,13 +56,18 @@ export default function ProcurationForm() {
       const imageUrls = await uploadFiles(fileStates, "document");
       const signatureUrls = await uploadFiles(fileSignature, "signature");
 
-      // data.piece = imageUrls.map((urlObj) => urlObj?.url);
-      // data.signature = signatureUrls.map((urlObj) => urlObj?.url);
+      data.pieceIdentite = imageUrls
+        .filter(Boolean)
+        .map((urlObj) => urlObj!.url);
+
+      data.signature = signatureUrls
+        .filter(Boolean)
+        .map((urlObj) => urlObj!.url);
 
       const result = await CreateProcuration(data);
 
       if (result?.error) {
-        handleError(result.error, data.piece!);
+        handleError(result.error, data.pieceIdentite);
       } else if (result?.success) {
         await handleSuccess(result.message, data);
       } else if (result?.maj) {
@@ -97,8 +101,6 @@ export default function ProcurationForm() {
         return null;
       })
     );
-
-    //return results.filter((res): res is { url: string; thumbnailUrl: string | null } => res !== null);
   };
 
   const handleError = async (errorMessage: string, urls: string[]) => {
@@ -110,11 +112,11 @@ export default function ProcurationForm() {
   };
 
   const handleSuccess = async (message: string, data: ProcurationFormData) => {
-    for (const url of data.piece!) {
+    for (const url of data.pieceIdentite!) {
       await edgestore.document.confirmUpload({ url });
     }
     await ProcurationUser(data);
-    // await generatePDF(data, fileSignature[0]?.file);
+    await generatePDF(data, fileSignature[0]?.file);
     setSuccess(message);
     resetForm();
   };
@@ -152,6 +154,7 @@ export default function ProcurationForm() {
             setFileStates={setFileStates}
             fileSignature={fileSignature}
             setFileSignature={setFileSignature}
+            onSubmit={form.handleSubmit(onSubmit)}
           />
         );
       default:
@@ -177,12 +180,15 @@ export default function ProcurationForm() {
           <CardContent>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <AnimatePresence mode="wait">{renderStep()}</AnimatePresence>
-              <StepNavigation
-                step={step}
-                setStep={setStep}
-                loading={loading}
-                form={form}
-              />
+              {step < 3 && (
+                <StepNavigation
+                  step={step}
+                  setStep={setStep}
+                  loading={loading}
+                  form={form}
+                  onSubmit={form.handleSubmit(onSubmit)}
+                />
+              )}
             </form>
             <FormError message={error || ""} />
             <FormSuccess message={success} />

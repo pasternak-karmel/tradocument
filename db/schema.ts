@@ -1,3 +1,4 @@
+import { InferModel } from "drizzle-orm";
 import {
   boolean,
   integer,
@@ -6,7 +7,6 @@ import {
   text,
   timestamp,
   uniqueIndex,
-  varchar,
 } from "drizzle-orm/pg-core";
 
 import { createInsertSchema } from "drizzle-zod";
@@ -246,6 +246,7 @@ export const contact = pgTable("contact", {
 });
 
 export const procurations = pgTable("procurations", {
+  //identifiant unique
   id: text("id")
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
@@ -253,20 +254,29 @@ export const procurations = pgTable("procurations", {
     .notNull()
     .references(() => users.id),
   created_at: timestamp("createdAT", { mode: "date" }).notNull().defaultNow(),
-  typeProcuration: text("typeProcuration").notNull(),
-  nomMandant: varchar("nomMandant", { length: 255 }).notNull(),
-  prenomMandant: varchar("prenomMandant", { length: 255 }).notNull(),
-  dateNaissanceMandant: text("dateNaissanceMandant"),
-  lieuNaissanceMandant: text("lieuNaissanceMandant").notNull(),
-  nationaliteMandant: text("nationaliteMandant").notNull(),
-  adresseMandant: text("adresseMandant").notNull(),
-  dateDebut: text("dateDebut"),
-  dateFin: text("dateFin"),
-  piece: text("piece").array().notNull(),
-  signature: text("signature").array().notNull(),
-  lieuSignature: text("lieuSignature").notNull(),
-  lieuResidant: text("lieuResidant").notNull(),
+  // Mandator's information
+  nom: text("nom").notNull(),
+  prenom: text("prenom").notNull(),
+  dateNaissance: text("date_naissance").notNull(), // Utiliser `date()` si le champ est une date
+  lieuNaissance: text("lieu_naissance").notNull(),
+  nationalite: text("nationalite").notNull(),
+  adresse: text("adresse").notNull(),
+  numeroIdentite: text("numero_identite").notNull(),
+
+  // Purpose and validity
+  institution: text("institution").notNull(),
+  documents: text("documents").array().notNull(),
+  dateLimite: text("date_limite"),
+
+  // Signature information
+  lieuSignature: text("lieu_signature").notNull(),
+  dateSignature: text("date_signature").notNull(),
+
+  // File uploads
+  pieceIdentite: text("piece_identite").array().notNull(),
 });
+export type ProcurationType = typeof procurations.$inferSelect;
+
 
 export const codeVerification = pgTable("codeVerification", {
   id: text("id")

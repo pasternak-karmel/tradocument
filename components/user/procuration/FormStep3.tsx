@@ -1,8 +1,10 @@
 import { FileState, MultiFileDropzone } from "@/components/multi-file";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ProcurationFormData } from "@/schemas";
 import { motion } from "framer-motion";
+import { Check, RefreshCw } from "lucide-react";
 import { UseFormReturn } from "react-hook-form";
 
 interface FormStep3Props {
@@ -12,6 +14,7 @@ interface FormStep3Props {
   setFileStates: React.Dispatch<React.SetStateAction<FileState[]>>;
   fileSignature: FileState[];
   setFileSignature: React.Dispatch<React.SetStateAction<FileState[]>>;
+  onSubmit: () => Promise<void>;
 }
 
 export const FormStep3: React.FC<FormStep3Props> = ({
@@ -21,6 +24,7 @@ export const FormStep3: React.FC<FormStep3Props> = ({
   setFileStates,
   fileSignature,
   setFileSignature,
+  onSubmit,
 }) => {
   const {
     register,
@@ -34,9 +38,43 @@ export const FormStep3: React.FC<FormStep3Props> = ({
       exit={{ opacity: 0, x: -50 }}
       className="space-y-4"
     >
-      <h2 className="text-2xl font-bold mb-4">Pièce d'identité et signature</h2>
+      <h2 className="text-2xl font-bold mb-4">Objet et validité</h2>
+
+      <div>
+        <Label htmlFor="dateLimite">Date limite de validité</Label>
+        <Input
+          type="date"
+          id="dateLimite"
+          {...register("dateLimite")}
+          disabled={loading}
+        />
+      </div>
+      <div>
+        <Label htmlFor="lieuSignature">Lieu de signature</Label>
+        <Input
+          id="lieuSignature"
+          {...register("lieuSignature")}
+          disabled={loading}
+        />
+        {errors.lieuSignature && (
+          <p className="text-red-500 text-sm">{errors.lieuSignature.message}</p>
+        )}
+      </div>
+      <div>
+        <Label htmlFor="dateSignature">Date de signature</Label>
+        <Input
+          type="date"
+          id="dateSignature"
+          {...register("dateSignature")}
+          disabled={loading}
+        />
+        {errors.dateSignature && (
+          <p className="text-red-500 text-sm">{errors.dateSignature.message}</p>
+        )}
+      </div>
+
       <div className="space-y-4">
-        <Label>Télécharger votre pièce d'identité</Label>
+        <Label>Pièce d'identité</Label>
         <MultiFileDropzone
           disabled={loading}
           value={fileStates}
@@ -53,37 +91,20 @@ export const FormStep3: React.FC<FormStep3Props> = ({
           }
         />
       </div>
-      <div className="space-y-2">
-        <Label>Uploader Votre signature</Label>
-        <div className="border rounded-lg p-2 bg-white">
-          <MultiFileDropzone
-            disabled={loading}
-            value={fileSignature}
-            dropzoneOptions={{
-              maxFiles: 1,
-              accept: {
-                "image/*": [".png", ".jpg", ".jpeg", ".gif"],
-                "application/pdf": [".pdf"],
-              },
-            }}
-            onChange={setFileSignature}
-            onFilesAdded={(addedFiles) =>
-              setFileSignature([...fileSignature, ...addedFiles])
-            }
-          />
-        </div>
-      </div>
-      <div>
-        <Label htmlFor="lieuSignature">Lieu de la signature</Label>
-        <Input
-          id="lieuSignature"
-          {...register("lieuSignature")}
-          disabled={loading}
-        />
-        {errors.lieuSignature && (
-          <p className="text-red-500 text-sm">{errors.lieuSignature.message}</p>
+
+      <Button onClick={onSubmit} className="w-full" disabled={loading}>
+        {loading ? (
+          <>
+            <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+            Traitement...
+          </>
+        ) : (
+          <>
+            <Check className="w-4 h-4 mr-2" />
+            Soumettre
+          </>
         )}
-      </div>
+      </Button>
     </motion.div>
   );
 };

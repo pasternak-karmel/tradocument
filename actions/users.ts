@@ -8,9 +8,6 @@ import { and, eq } from "drizzle-orm";
 
 export const CreateProcuration = async (values: ProcurationFormData) => {
   const today = new Date();
-  const dateFin = new Date();
-  dateFin.setDate(dateFin.getDate() + 30); // Ajouter 30 jours
-  const formattedDateFin = dateFin.toISOString().split("T")[0];
   const user = await currentUser();
 
   if (!user?.id) {
@@ -21,14 +18,14 @@ export const CreateProcuration = async (values: ProcurationFormData) => {
     return { error: "Vous n'avez pas les droits pour créer une procuration" };
   }
 
-  // Check for existing procuration of the same type
+  // Vérification de l'existence d'une procuration similaire
   const existingProcuration = await db
     .select()
     .from(procurations)
     .where(
       and(
         eq(procurations.userId, user.id),
-        eq(procurations.typeProcuration, values.typeProcuration)
+        eq(procurations.institution, values.institution)
       )
     )
     .limit(1);
@@ -36,23 +33,23 @@ export const CreateProcuration = async (values: ProcurationFormData) => {
   if (existingProcuration.length > 0) {
     const existing = existingProcuration[0];
 
-    if (existing.dateFin) {
-      const endDate = new Date(existing.dateFin);
+    if (existing.dateLimite) {
+      const endDate = new Date(existing.dateLimite);
       if (endDate > today) {
-        //procuration valide
+        // Une procuration valide existe déjà
         return {
           success: true,
-          message: "Une procuration valide de ce type existe déjà.",
+          message: "Une procuration valide pour cette institution existe déjà.",
         };
       } else {
-        // Update the existing procuration if it has expired
+        // Mettre à jour une procuration expirée
         try {
           const [updatedProcuration] = await db
             .update(procurations)
             .set({
               ...values,
-              piece: values.piece ? values.piece : [],
-              dateDebut: new Date().toISOString().split("T")[0],
+              pieceIdentite: values.pieceIdentite ?? [],
+              signature: values.signature ?? [],
             })
             .where(eq(procurations.id, existing.id))
             .returning();
@@ -66,24 +63,23 @@ export const CreateProcuration = async (values: ProcurationFormData) => {
           console.error(error);
           return {
             error:
-              "Une erreur est survenue lors de la mise à jour de la procuration",
+              "Une erreur est survenue lors de la mise à jour de la procuration.",
           };
         }
       }
     }
   }
 
-  // Create a new procuration if it doesn't exist or is of a different type
+  // Créer une nouvelle procuration si elle n'existe pas
   try {
     const [newProcuration] = await db
       .insert(procurations)
       .values({
         ...values,
-        piece: values.piece ?? [],
         userId: user.id,
-        dateDebut: new Date().toISOString().split("T")[0],
-        dateFin: formattedDateFin,
-        signature: values.signature ?? [""],
+        dateLimite: values.dateLimite || null,
+        pieceIdentite: values.pieceIdentite || [],
+        signature: values.signature || [],
       })
       .returning();
 
@@ -95,7 +91,7 @@ export const CreateProcuration = async (values: ProcurationFormData) => {
   } catch (error) {
     console.error(error);
     return {
-      error: "Une erreur est survenue lors de la création de la procuration",
+      error: "Une erreur est survenue lors de la création de la procuration.",
     };
   }
 };

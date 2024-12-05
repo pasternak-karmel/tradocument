@@ -1,13 +1,15 @@
-import { UseFormReturn } from "react-hook-form";
+import { ShowError } from "@/components/sonner-component";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, Check, RefreshCw } from 'lucide-react';
 import { ProcurationFormData } from "@/schemas";
+import { Check, ChevronLeft, ChevronRight, RefreshCw } from "lucide-react";
+import { UseFormReturn } from "react-hook-form";
 
 interface StepNavigationProps {
   step: number;
   setStep: React.Dispatch<React.SetStateAction<number>>;
   loading: boolean;
   form: UseFormReturn<ProcurationFormData>;
+  onSubmit: () => void;
 }
 
 export const StepNavigation: React.FC<StepNavigationProps> = ({
@@ -15,6 +17,7 @@ export const StepNavigation: React.FC<StepNavigationProps> = ({
   setStep,
   loading,
   form,
+  onSubmit,
 }) => {
   const { trigger } = form;
 
@@ -22,23 +25,21 @@ export const StepNavigation: React.FC<StepNavigationProps> = ({
     const fieldsToValidate =
       step === 1
         ? [
-            "nomMandant",
-            "prenomMandant",
-            "dateNaissanceMandant",
-            "lieuNaissanceMandant",
-            "nationaliteMandant",
-            "adresseMandant",
-            "lieuResidant",
+            "nom",
+            "prenom",
+            "dateNaissance",
+            "lieuNaissance",
+            "nationalite",
+            "adresse",
+            "numeroIdentite",
           ]
-        : step === 2
-        ? ["typeProcuration"]
-        : ["lieuSignature"];
+        : ["documents", "institution"];
 
     const isStepValid = await trigger(fieldsToValidate as any);
     if (isStepValid) {
       setStep(step + 1);
     } else {
-      // Show error message
+      ShowError("Veuillez vérifier les champs invalides");
     }
   };
 
@@ -68,7 +69,12 @@ export const StepNavigation: React.FC<StepNavigationProps> = ({
           <ChevronRight className="w-4 h-4 ml-2" />
         </Button>
       ) : (
-        <Button type="submit" className="ml-auto" disabled={loading}>
+        <Button
+          type="button"
+          className="ml-auto"
+          disabled={loading}
+          onClick={onSubmit}
+        >
           {loading ? (
             <>
               <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
@@ -85,4 +91,3 @@ export const StepNavigation: React.FC<StepNavigationProps> = ({
     </div>
   );
 };
-

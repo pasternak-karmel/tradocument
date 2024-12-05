@@ -31,7 +31,7 @@ export default function ProcurationEmail(values: ProcurationFormData) {
           <Text style={subheading}>
             Bonjour{" "}
             <strong style={strongText}>
-              {values.nomMandant} {values.prenomMandant}
+              {values.nom} {values.prenom}
             </strong>
             ,
           </Text>
@@ -43,28 +43,30 @@ export default function ProcurationEmail(values: ProcurationFormData) {
             <table style={table}>
               <tbody>
                 <DetailRow
-                  label="Type de procuration"
-                  value={values.typeProcuration}
+                  label="Type de document"
+                  value={values.documents.join(", ")}
                 />
                 <DetailRow
                   label="Date de naissance"
-                  value={values.dateNaissanceMandant}
+                  value={values.dateNaissance}
                 />
                 <DetailRow
                   label="Lieu de naissance"
-                  value={values.lieuNaissanceMandant}
+                  value={values.lieuNaissance}
                 />
                 <DetailRow
                   label="Nationalité"
-                  value={values.nationaliteMandant}
+                  value={values.nationalite}
                 />
-                <DetailRow label="Adresse" value={values.adresseMandant} />
-                {values.dateDebut && (
-                  <DetailRow label="Date de début" value={values.dateDebut} />
-                )}
-                {values.dateFin && (
-                  <DetailRow label="Date de fin" value={values.dateFin} />
-                )}
+                
+                <DetailRow
+                  label="Date Limite"
+                  value={values.dateLimite ?? ''} />
+                <DetailRow
+                  label="Lieu de récupération"
+                  value={values.institution} />
+                
+                <p>Signé le : {values.dateSignature} à {values.lieuSignature}</p>
               </tbody>
             </table>
           </Section>

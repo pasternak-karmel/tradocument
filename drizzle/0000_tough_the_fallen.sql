@@ -79,19 +79,20 @@ CREATE TABLE IF NOT EXISTS "procurations" (
 	"id" text PRIMARY KEY NOT NULL,
 	"userId" text NOT NULL,
 	"createdAT" timestamp DEFAULT now() NOT NULL,
-	"typeProcuration" text NOT NULL,
-	"nomMandant" varchar(255) NOT NULL,
-	"prenomMandant" varchar(255) NOT NULL,
-	"dateNaissanceMandant" text,
-	"lieuNaissanceMandant" text NOT NULL,
-	"nationaliteMandant" text NOT NULL,
-	"adresseMandant" text NOT NULL,
-	"dateDebut" text,
-	"dateFin" text,
-	"piece" text[] NOT NULL,
-	"signature" text[] NOT NULL,
-	"lieuSignature" text NOT NULL,
-	"lieuResidant" text NOT NULL
+	"nom" text NOT NULL,
+	"prenom" text NOT NULL,
+	"date_naissance" text NOT NULL,
+	"lieu_naissance" text NOT NULL,
+	"nationalite" text NOT NULL,
+	"adresse" text NOT NULL,
+	"numero_identite" text NOT NULL,
+	"institution" text NOT NULL,
+	"documents" text[] NOT NULL,
+	"date_limite" text,
+	"lieu_signature" text NOT NULL,
+	"date_signature" text NOT NULL,
+	"piece_identite" text[] NOT NULL,
+	"signature" text[] NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "rejoindreEquipe" (

@@ -262,70 +262,109 @@ const validateDate = (date: string) => {
   return isValidDate && day <= 31 && month <= 12 && year > 1900;
 };
 
-export const ProcurationFormSchema = z
-  .object({
-    typeProcuration: z.string().min(1, "Le type de procuration est requis"),
-    nomMandant: z.string().min(1, "Le nom du mandant est requis"),
-    prenomMandant: z.string().min(1, "Le prénom du mandant est requis"),
-    // phone: z.string().min(10, { message: "Numéro de téléphone invalide" }),
-    dateNaissanceMandant: z
-      .string()
-      .min(1, "La date de naissance est requise")
-      .regex(
-        /^\d{4}-\d{2}-\d{2}$/,
-        "La date de naissance doit être au format AAAA-MM-JJ"
-      ),
-    lieuNaissanceMandant: z.string().min(1, "Le lieu de naissance est requis"),
-    nationaliteMandant: z.string().min(1, "La nationalité est requise"),
-    adresseMandant: z.string().min(1, "L'adresse est requise"),
-    customDocumentType: z
-      .string()
-      .optional()
-      .refine(
-        (val) => {
-          if (val === "Autre") {
-            return val && val.trim().length > 0;
-          }
-          return true;
-        },
-        {
-          message: "Veuillez spécifier le type de document",
-        }
-      ),
+// export const ProcurationFormSchema = z
+//   .object({
+//     typeProcuration: z.string().min(1, "Le type de procuration est requis"),
+//     nomMandant: z.string().min(1, "Le nom du mandant est requis"),
+//     prenomMandant: z.string().min(1, "Le prénom du mandant est requis"),
+//     dateNaissanceMandant: z
+//       .string()
+//       .min(1, "La date de naissance est requise")
+//       .regex(
+//         /^\d{4}-\d{2}-\d{2}$/,
+//         "La date de naissance doit être au format AAAA-MM-JJ"
+//       ),
+//     lieuNaissanceMandant: z.string().min(1, "Le lieu de naissance est requis"),
+//     nationaliteMandant: z.string().min(1, "La nationalité est requise"),
+//     adresseMandant: z.string().min(1, "L'adresse est requise"),
+//     customDocumentType: z
+//       .string()
+//       .optional()
+//       .refine(
+//         (val) => {
+//           if (val === "Autre") {
+//             return val && val.trim().length > 0;
+//           }
+//           return true;
+//         },
+//         {
+//           message: "Veuillez spécifier le type de document",
+//         }
+//       ),
 
-    dateDebut: z.string().optional(),
-    dateFin: z.string().optional(),
-    piece: z.array(z.string()).optional(),
-    signature: z.array(z.string()).optional(),
-    lieuSignature: z.string().min(1, "Le lieu de singature est requis"),
-    lieuResidant: z.string().min(1, "Le lieu de résidence est requis"),
-  })
-  .refine(
-    (data) => {
-      if (data.dateDebut && !data.dateFin) {
-        return false;
-      }
-      return true;
-    },
-    {
-      message: "La date de fin est requise si une date de début est spécifiée",
-      path: ["dateFin"],
-    }
-  )
-  .refine(
-    (data) => {
-      if (data.typeProcuration === "Autre") {
-        return (
-          data.customDocumentType && data.customDocumentType.trim().length > 0
-        );
-      }
-      return true;
-    },
-    {
-      message: "Veuillez spécifier le type de document",
-      path: ["customDocumentType"],
-    }
-  );
+//     dateDebut: z.string().optional(),
+//     dateFin: z.string().optional(),
+//     piece: z.array(z.string()).optional(),
+//     signature: z.array(z.string()).optional(),
+//     lieuSignature: z.string().min(1, "Le lieu de singature est requis"),
+//     lieuResidant: z.string().min(1, "Le lieu de résidence est requis"),
+//   })
+//   .refine(
+//     (data) => {
+//       if (data.dateDebut && !data.dateFin) {
+//         return false;
+//       }
+//       return true;
+//     },
+//     {
+//       message: "La date de fin est requise si une date de début est spécifiée",
+//       path: ["dateFin"],
+//     }
+//   )
+//   .refine(
+//     (data) => {
+//       if (data.typeProcuration === "Autre") {
+//         return (
+//           data.customDocumentType && data.customDocumentType.trim().length > 0
+//         );
+//       }
+//       return true;
+//     },
+//     {
+//       message: "Veuillez spécifier le type de document",
+//       path: ["customDocumentType"],
+//     }
+//   );
+
+// export type ProcurationFormData = z.infer<typeof ProcurationFormSchema>;
+
+export const ProcurationFormSchema = z.object({
+  // Mandator's information
+  nom: z.string().min(1, { message: "Le nom est requis" }),
+  prenom: z.string().min(1, { message: "Le prénom est requis" }),
+  dateNaissance: z
+    .string()
+    .min(1, { message: "La date de naissance est requise" }),
+  lieuNaissance: z
+    .string()
+    .min(1, { message: "Le lieu de naissance est requis" }),
+  nationalite: z.string().min(1, { message: "La nationalité est requise" }),
+  adresse: z.string().min(1, { message: "L'adresse est requise" }),
+  numeroIdentite: z
+    .string()
+    .min(1, { message: "Le numéro d'identité est requis" }),
+
+  // Purpose and validity
+  institution: z.string().min(1, { message: "L'institution est requise" }),
+  documents: z
+    .array(z.string())
+    .min(1, { message: "Au moins un document doit être spécifié" }),
+  dateLimite: z.string().optional(),
+
+  // Signature information
+  lieuSignature: z
+    .string()
+    .min(1, { message: "Le lieu de signature est requis" }),
+  dateSignature: z
+    .string()
+    .min(1, { message: "La date de signature est requise" }),
+
+  // File uploads
+  pieceIdentite: z
+    .array(z.string())
+    .min(1, { message: "La pièce d'identité est requise" })
+    .optional(),
+});
 
 export type ProcurationFormData = z.infer<typeof ProcurationFormSchema>;
 

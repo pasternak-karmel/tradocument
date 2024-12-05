@@ -22,98 +22,80 @@ export const FormStep1: React.FC<FormStep1Props> = ({ form, loading }) => {
       exit={{ opacity: 0, x: -50 }}
       className="space-y-4"
     >
-      <h2 className="text-2xl font-bold mb-4">Informations personnelles</h2>
+      <h2 className="text-2xl font-bold mb-4">Informations du mandant</h2>
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <Label htmlFor="nomMandant">Nom</Label>
-          <Input
-            id="nomMandant"
-            {...register("nomMandant")}
-            disabled={loading}
-          />
-          {errors.nomMandant && (
-            <p className="text-red-500 text-sm">{errors.nomMandant.message}</p>
+          <Label htmlFor="nom">Nom</Label>
+          <Input id="nom" {...register("nom")} disabled={loading} />
+          {errors.nom && (
+            <p className="text-red-500 text-sm">{errors.nom.message}</p>
           )}
         </div>
         <div>
-          <Label htmlFor="prenomMandant">Prénom</Label>
-          <Input
-            id="prenomMandant"
-            {...register("prenomMandant")}
-            disabled={loading}
-          />
-          {errors.prenomMandant && (
-            <p className="text-red-500 text-sm">
-              {errors.prenomMandant.message}
-            </p>
+          <Label htmlFor="prenom">Prénom</Label>
+          <Input id="prenom" {...register("prenom")} disabled={loading} />
+          {errors.prenom && (
+            <p className="text-red-500 text-sm">{errors.prenom.message}</p>
           )}
         </div>
       </div>
-      {/* Add other fields from step 1 here */}
       <div>
-        <Label htmlFor="dateNaissanceMandant">Date de naissance</Label>
+        <Label htmlFor="dateNaissance">Date de naissance</Label>
         <Input
           type="date"
-          id="dateNaissanceMandant"
-          {...register("dateNaissanceMandant")}
+          id="dateNaissance"
+          {...register("dateNaissance")}
           disabled={loading}
         />
-        {errors.dateNaissanceMandant && (
-          <p className="text-red-500 text-sm">
-            {errors.dateNaissanceMandant.message}
-          </p>
+        {errors.dateNaissance && (
+          <p className="text-red-500 text-sm">{errors.dateNaissance.message}</p>
         )}
       </div>
       <div>
-        <Label htmlFor="lieuNaissanceMandant">Lieu de naissance</Label>
+        <Label htmlFor="lieuNaissance">Lieu de naissance</Label>
         <Input
-          id="lieuNaissanceMandant"
-          {...register("lieuNaissanceMandant")}
+          id="lieuNaissance"
+          {...register("lieuNaissance")}
           disabled={loading}
         />
-        {errors.lieuNaissanceMandant && (
-          <p className="text-red-500 text-sm">
-            {errors.lieuNaissanceMandant.message}
-          </p>
+        {errors.lieuNaissance && (
+          <p className="text-red-500 text-sm">{errors.lieuNaissance.message}</p>
         )}
       </div>
       <div>
-        <Label htmlFor="lieuResidant">Lieu de résidence</Label>
+        <Label htmlFor="nationalite">Nationalité</Label>
         <Input
-          id="lieuResidance"
-          {...register("lieuResidant")}
+          id="nationalite"
+          {...register("nationalite")}
           disabled={loading}
         />
-        {errors.lieuResidant && (
-          <p className="text-red-500 text-sm">{errors.lieuResidant.message}</p>
+        {errors.nationalite && (
+          <p className="text-red-500 text-sm">{errors.nationalite.message}</p>
         )}
       </div>
       <div>
-        <Label htmlFor="nationaliteMandant">Nationalité</Label>
-        <Input
-          id="nationaliteMandant"
-          {...register("nationaliteMandant")}
-          disabled={loading}
-        />
-        {errors.nationaliteMandant && (
-          <p className="text-red-500 text-sm">
-            {errors.nationaliteMandant.message}
-          </p>
+        <Label htmlFor="adresse">Adresse</Label>
+        <Input id="adresse" {...register("adresse")} disabled={loading} />
+        {errors.adresse && (
+          <p className="text-red-500 text-sm">{errors.adresse.message}</p>
         )}
       </div>
       <div>
-        <Label htmlFor="adresseMandant">Adresse</Label>
+        <Label htmlFor="numeroIdentite">
+          Numéro d'identité ou de passeport
+        </Label>
         <Input
-          id="adresseMandant"
-          {...register("adresseMandant")}
+          id="numeroIdentite"
+          {...register("numeroIdentite")}
           disabled={loading}
         />
-        {errors.adresseMandant && (
+        {errors.numeroIdentite && (
           <p className="text-red-500 text-sm">
-            {errors.adresseMandant.message}
+            {errors.numeroIdentite.message}
           </p>
         )}
       </div>
     </motion.div>
   );
 };
+

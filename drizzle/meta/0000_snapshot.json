@@ -1,5 +1,5 @@
 {
-  "id": "fc3b9d27-0328-4d08-8e05-b37fa3058b7c",
+  "id": "9fde2935-3d55-4e0e-8b57-2272a8d939a0",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -538,62 +538,80 @@
           "notNull": true,
           "default": "now()"
         },
-        "typeProcuration": {
-          "name": "typeProcuration",
+        "nom": {
+          "name": "nom",
           "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "nomMandant": {
-          "name": "nomMandant",
-          "type": "varchar(255)",
+        "prenom": {
+          "name": "prenom",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "prenomMandant": {
-          "name": "prenomMandant",
-          "type": "varchar(255)",
+        "date_naissance": {
+          "name": "date_naissance",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "dateNaissanceMandant": {
-          "name": "dateNaissanceMandant",
+        "lieu_naissance": {
+          "name": "lieu_naissance",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "nationalite": {
+          "name": "nationalite",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "adresse": {
+          "name": "adresse",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "numero_identite": {
+          "name": "numero_identite",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "institution": {
+          "name": "institution",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "documents": {
+          "name": "documents",
+          "type": "text[]",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "date_limite": {
+          "name": "date_limite",
           "type": "text",
           "primaryKey": false,
           "notNull": false
         },
-        "lieuNaissanceMandant": {
-          "name": "lieuNaissanceMandant",
+        "lieu_signature": {
+          "name": "lieu_signature",
           "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "nationaliteMandant": {
-          "name": "nationaliteMandant",
+        "date_signature": {
+          "name": "date_signature",
           "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "adresseMandant": {
-          "name": "adresseMandant",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "dateDebut": {
-          "name": "dateDebut",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "dateFin": {
-          "name": "dateFin",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "piece": {
-          "name": "piece",
+        "piece_identite": {
+          "name": "piece_identite",
           "type": "text[]",
           "primaryKey": false,
           "notNull": true
@@ -601,18 +619,6 @@
         "signature": {
           "name": "signature",
           "type": "text[]",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "lieuSignature": {
-          "name": "lieuSignature",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "lieuResidant": {
-          "name": "lieuResidant",
-          "type": "text",
           "primaryKey": false,
           "notNull": true
         }
