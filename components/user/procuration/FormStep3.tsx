@@ -12,8 +12,6 @@ interface FormStep3Props {
   loading: boolean;
   fileStates: FileState[];
   setFileStates: React.Dispatch<React.SetStateAction<FileState[]>>;
-  fileSignature: FileState[];
-  setFileSignature: React.Dispatch<React.SetStateAction<FileState[]>>;
   onSubmit: () => Promise<void>;
 }
 
@@ -22,8 +20,6 @@ export const FormStep3: React.FC<FormStep3Props> = ({
   loading,
   fileStates,
   setFileStates,
-  fileSignature,
-  setFileSignature,
   onSubmit,
 }) => {
   const {
@@ -74,7 +70,7 @@ export const FormStep3: React.FC<FormStep3Props> = ({
       </div>
 
       <div className="space-y-4">
-        <Label>Pièce d'identité</Label>
+        <Label>Pièce d'identité ou passport</Label>
         <MultiFileDropzone
           disabled={loading}
           value={fileStates}

@@ -8,7 +8,6 @@ import { useCurrentUser } from "@/hooks/use-current-user";
 import { useEdgeStore } from "@/lib/edgestore";
 import { ProcurationUser } from "@/lib/mail";
 import { ProcurationFormData, ProcurationFormSchema } from "@/schemas";
-import { generatePDF } from "@/utils/generate-pdf";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/navigation";
@@ -27,7 +26,7 @@ export default function ProcurationForm() {
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
   const [fileStates, setFileStates] = useState<FileState[]>([]);
-  const [fileSignature, setFileSignature] = useState<FileState[]>([]);
+
   const { edgestore } = useEdgeStore();
   const user = useCurrentUser();
   const router = useRouter();
@@ -43,8 +42,8 @@ export default function ProcurationForm() {
   const onSubmit = async (data: ProcurationFormData) => {
     if (!user) return router.push(`/ma-procuration`);
 
-    if (fileStates.length === 0 || fileSignature.length === 0) {
-      setError("Veuillez importer votre pièce d'identité et votre signature");
+    if (fileStates.length === 0) {
+      setError("Veuillez importer votre pièce d'identité ou votre passeport");
       return;
     }
 
@@ -54,7 +53,6 @@ export default function ProcurationForm() {
 
     try {
       const imageUrls = await uploadFiles(fileStates, "document");
-      const signatureUrls = await uploadFiles(fileSignature, "signature");
 
       data.pieceIdentite = imageUrls
         .filter(Boolean)
@@ -112,7 +110,9 @@ export default function ProcurationForm() {
       await edgestore.document.confirmUpload({ url });
     }
     await ProcurationUser(data);
-    await generatePDF(data, fileSignature[0]?.file);
+    // if (data.pieceIdentite?.[0]) {
+    //   await generatePDF(data, data.pieceIdentite?.[0] ?? undefined);
+    // }
     setSuccess(message);
     resetForm();
   };
@@ -121,7 +121,6 @@ export default function ProcurationForm() {
     form.reset();
     setStep(1);
     setFileStates([]);
-    setFileSignature([]);
   };
 
   const updateFileProgress = (key: string, progress: FileState["progress"]) => {
@@ -148,8 +147,6 @@ export default function ProcurationForm() {
             loading={loading}
             fileStates={fileStates}
             setFileStates={setFileStates}
-            fileSignature={fileSignature}
-            setFileSignature={setFileSignature}
             onSubmit={form.handleSubmit(onSubmit)}
           />
         );

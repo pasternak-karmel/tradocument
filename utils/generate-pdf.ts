@@ -5,7 +5,7 @@ import { PDFDocument, StandardFonts } from "pdf-lib";
 
 export async function generatePDF(
   data: ProcurationFormData,
-  signatureFile?: File
+  // signatureFile?: string
 ) {
   const pdfDoc = await PDFDocument.create();
   const page = pdfDoc.addPage([595, 842]); // A4 size
@@ -100,18 +100,22 @@ export async function generatePDF(
   });
   currentY -= lineHeight;
 
-  page.drawText(
-    `Nom- Prénom : DJOSSOU Carmel`,
-    { x: 50, y: currentY, size: 12, font: helveticaFont }
-  );
+  page.drawText(`Nom- Prénom : DJOSSOU Carmel`, {
+    x: 50,
+    y: currentY,
+    size: 12,
+    font: helveticaFont,
+  });
   currentY -= lineHeight;
 
   // Continue with all other fields...
-   // Informations supplémentaires sur le mandataire
-   page.drawText(
-    `Né(e) le : 01/01/1970`,
-    { x: 50, y: currentY, size: 12, font: helveticaFont }
-  );
+  // Informations supplémentaires sur le mandataire
+  page.drawText(`Né(e) le : 01/01/1970`, {
+    x: 50,
+    y: currentY,
+    size: 12,
+    font: helveticaFont,
+  });
   currentY -= lineHeight;
 
   page.drawText(`À : La mairie de Paris`, {
@@ -138,10 +142,12 @@ export async function generatePDF(
   });
   currentY -= lineHeight;
 
-  page.drawText(
-    `Numéro d'identité ou de passeport 2019521111`,
-    { x: 50, y: currentY, size: 12, font: helveticaFont }
-  );
+  page.drawText(`Numéro d'identité ou de passeport 2019521111`, {
+    x: 50,
+    y: currentY,
+    size: 12,
+    font: helveticaFont,
+  });
   currentY -= lineHeight * 2;
 
   // Objet et institution
@@ -169,7 +175,6 @@ export async function generatePDF(
   });
   currentY -= lineHeight * 2;
 
-
   // Signature
   page.drawText("SIGNATURE :", {
     x: 50,
@@ -188,34 +193,48 @@ export async function generatePDF(
   currentY -= lineHeight;
 
   page.drawText(
-    `Date : ${format(new Date(data.dateSignature), "dd/MM/yyyy", { locale: fr })}`,
+    `Date : ${format(new Date(data.dateSignature), "dd/MM/yyyy", {
+      locale: fr,
+    })}`,
     { x: 50, y: currentY, size: 12, font: helveticaFont }
   );
   currentY -= lineHeight * 2;
 
-  if (signatureFile) {
-    const signatureBytes = await signatureFile.arrayBuffer();
-    const signatureImage = await pdfDoc.embedPng(signatureBytes);
-    const signatureDims = signatureImage.scale(0.5);
+  // if (signatureFile) {
+  //   const response = await fetch(signatureFile);
 
-    page.drawImage(signatureImage, {
-      x: 50,
-      y: currentY - signatureDims.height,
-      width: signatureDims.width,
-      height: signatureDims.height,
-    });
-    currentY -= signatureDims.height + lineHeight;
-  } else {
-    page.drawText("Signature manquante.", {
-      x: 50,
-      y: currentY,
-      size: 12,
-      font: helveticaFont,
-    });
-    currentY -= lineHeight;
-  }
+  //   if (!response.ok) {
+  //     throw new Error(
+  //       `Failed to fetch the signature file: ${response.statusText}`
+  //     );
+  //   }
+
+  //   const signatureBlob = await response.blob();
+  //   const signatureBytes = await signatureBlob.arrayBuffer();
+
+  //   const signatureImage = await pdfDoc.embedPng(signatureBytes);
+  //   const signatureDims = signatureImage.scale(0.5);
+
+  //   page.drawImage(signatureImage, {
+  //     x: 50,
+  //     y: currentY - signatureDims.height,
+  //     width: signatureDims.width,
+  //     height: signatureDims.height,
+  //   });
+
+  //   currentY -= signatureDims.height + lineHeight;
+  // } else {
+  //   page.drawText("Signature manquante.", {
+  //     x: 50,
+  //     y: currentY,
+  //     size: 12,
+  //     font: helveticaFont,
+  //   });
+  //   currentY -= lineHeight;
+  // }
 
   // Finalisation
+
   page.drawText("Fait pour servir et valoir ce que de droit.", {
     x: 50,
     y: currentY,

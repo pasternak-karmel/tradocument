@@ -33,7 +33,9 @@ export const StepNavigation: React.FC<StepNavigationProps> = ({
             "adresse",
             "numeroIdentite",
           ]
-        : ["documents", "institution"];
+        : step === 2
+        ? ["documents", "institution"]
+        : ["dateSignature", "lieuSignature"];
 
     const isStepValid = await trigger(fieldsToValidate as any);
     if (isStepValid) {

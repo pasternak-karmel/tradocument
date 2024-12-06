@@ -92,7 +92,7 @@ export default function RejoignezNous() {
 
   useEffect(() => {
     if (step === "verification" && formRef.current) {
-      const yOffset = -220;
+      const yOffset = -180;
       const y =
         formRef.current.getBoundingClientRect().top + window.scrollY + yOffset;
       window.scrollTo({ top: y, behavior: "smooth" });
