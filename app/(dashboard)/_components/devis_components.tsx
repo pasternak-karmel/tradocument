@@ -31,7 +31,7 @@ import { useReCaptcha } from "next-recaptcha-v3";
 
 import { useCurrentUser } from "@/hooks/use-current-user";
 
-import { demandeDevis } from "@/schemas";
+import { demandeDevis, DemandeDevisFormData } from "@/schemas";
 
 import { calculateMontantPage } from "@/actions/calculate_montant_page";
 import { Button } from "@/components/ui/button";
@@ -84,7 +84,7 @@ const DevisForm = () => {
   const [montant, setMontant] = useState<number | null>(null);
   const [totalAmount, setTotalAmount] = useState<number | null>(null);
 
-  const form = useForm<z.infer<typeof demandeDevis>>({
+  const form = useForm<DemandeDevisFormData>({
     resolver: zodResolver(demandeDevis),
     defaultValues: {
       firstName: "",
@@ -92,19 +92,17 @@ const DevisForm = () => {
       email: "",
       phone: "",
       country: undefined,
-      // documentType: "",
-      // sourceLanguage: "",
-      // targetLanguage: "",
+      documentType: undefined,
+      customDocumentType: "",
+      sourceLanguage: undefined,
+      targetLanguage: undefined,
       additionalInfo: "",
       termsAccepted: false,
       deliveryAddress: {
         departureAddress: "",
-        // shippingAddress: "",
       },
     },
   });
-
-  const watchDocumentType = form.watch("documentType");
 
   useEffect(() => {
     if (montant !== null && montant !== 0) {
@@ -474,7 +472,6 @@ const DevisForm = () => {
                       <FormItem>
                         <FormLabel>Type de document</FormLabel>
                         <Select
-                          key={`documentType-${resetKey}`}
                           disabled={montant !== null || loading}
                           onValueChange={(value) => {
                             field.onChange(value);
@@ -512,7 +509,7 @@ const DevisForm = () => {
                     )}
                   />
 
-                  {watchDocumentType === "Autre" && (
+                  {form.watch("documentType") === "Autre" && (
                     <FormField
                       control={form.control}
                       name="customDocumentType"

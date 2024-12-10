@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   CitySelect,
   CountrySelect,
@@ -22,7 +22,7 @@ export function CountrySelector({ onChange, disabled, resetKey }) {
     setSelectedAddress({
       country: "",
       state: "",
-      city: ""
+      city: "",
     });
     onChange("");
   }, [resetKey]);
@@ -34,6 +34,8 @@ export function CountrySelector({ onChange, disabled, resetKey }) {
     const fullAddress = [updated.country, updated.city]
       .filter(Boolean)
       .join(", ");
+    console.log(fullAddress);
+
     onChange(fullAddress);
   };
   return (

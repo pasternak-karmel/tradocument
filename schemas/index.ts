@@ -158,21 +158,7 @@ export const demandeDevis = z
     documentType: z.string({
       required_error: "Veuillez sélectionner un type de document",
     }),
-    customDocumentType: z
-      .string()
-      .min(1)
-      .optional()
-      .refine(
-        (val) => {
-          if (val === "Autre") {
-            return val && val.trim().length > 0;
-          }
-          return true;
-        },
-        {
-          message: "Veuillez spécifier le type de document",
-        }
-      ),
+    customDocumentType: z.string().optional(),
     sourceLanguage: z.string({
       required_error: "Veuillez sélectionner la langue source",
     }),
@@ -208,11 +194,8 @@ export const demandeDevis = z
     message: "Les langues d'origine et de traduction doivent être différentes",
     path: ["targetLanguage"],
   });
+export type DemandeDevisFormData = z.infer<typeof demandeDevis>;
 
-//   data.sourceLanguage !== data.targetLanguage, {
-//   message: "Les langues d'origine et de traduction doivent être différentes",
-//   path: ["targetLanguage"],
-// });
 export const RejoindreSchema = z.object({
   nom: z
     .string()
