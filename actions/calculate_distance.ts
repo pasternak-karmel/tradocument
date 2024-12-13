@@ -1,4 +1,5 @@
 "use server";
+import "server-only";
 
 import levenshtein from "js-levenshtein";
 
@@ -21,7 +22,9 @@ const normalizeCountryName = async (
   country: string
 ): Promise<{ normalizedName: string; capital: string }> => {
   try {
-    const response = await fetch("https://restcountries.com/v3.1/all");
+    const response = await fetch(
+      "https://restcountries.com/v3.1/all?fields=name,capital"
+    );
     if (!response.ok) throw new Error("Failed to fetch countries data");
     const countries: Country[] = await response.json();
 

@@ -154,6 +154,7 @@ const DevisAccueil = () => {
     setLoading(true);
 
     try {
+      setLoading(true);
       const response = await fetch("/api/demande_devis", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -168,9 +169,9 @@ const DevisAccueil = () => {
         return showError(result.message || `Internal Server Error`);
 
       if (result.success) {
-        form.reset();
-        await devisSent(result.info as z.infer<typeof demandeDevis>);
+        await devisSent(values as z.infer<typeof demandeDevis>);
         await devisSentAdmin(values, result.info);
+        form.reset();
         router.push(`/devis/payment?id=${result.message}`);
       } else {
         showError(result.message);

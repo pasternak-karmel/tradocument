@@ -220,6 +220,7 @@ const DevisForm = () => {
     const formValues = form.getValues();
 
     try {
+      setLoading(true);
       const response = await fetch("/api/demande_devis", {
         method: "POST",
         headers: { "Content-Type": "application/json" },

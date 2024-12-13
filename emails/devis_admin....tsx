@@ -1,4 +1,3 @@
-
 import { Info } from "@/lib/mail";
 import { demandeDevis } from "@/schemas";
 import {
@@ -100,18 +99,20 @@ export default function DemandeDevisEmailAdmin(
                   label="Montant total"
                   value={`${info.montant.toFixed(2)} €`}
                 />
-                {info.fichier.length > 0 && (
+                {info.fichier && info.fichier.length > 0 && (
                   <DetailRow
                     label="Fichiers"
                     value={info.fichier
                       .map(
                         (fileUrl, index) =>
-                          `<a href="${fileUrl}" target="_blank" style="color: blue; text-decoration: underline;">Fichier ${index + 1}</a>`
+                          `<a href="${fileUrl}" target="_blank" style="color: blue; text-decoration: underline;">Fichier ${
+                            index + 1
+                          }</a>`
                       )
                       .join(", ")}
                   />
                 )}
-                 <DetailRow
+                <DetailRow
                   label="Envoyé le"
                   value={`${formattedDate} à ${formattedTime}`}
                 />
@@ -119,8 +120,8 @@ export default function DemandeDevisEmailAdmin(
             </table>
           </Section>
           <Text style={paragraph}>
-            Merci de prendre en charge cette demande de devis dans les plus brefs
-            délais.
+            Merci de prendre en charge cette demande de devis dans les plus
+            brefs délais.
           </Text>
           <Hr style={hr} />
 
@@ -222,7 +223,6 @@ const footer = {
   textAlign: "center" as const,
   marginTop: "20px",
 };
-
 
 const strongText = {
   color: "#2d3748",

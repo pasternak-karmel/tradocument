@@ -47,29 +47,31 @@ export const PreviewCard: React.FC<PreviewCardProps> = ({ formData }) => {
                 <p className="font-semibold text-lg">Je soussigné(e)</p>
                 <p>
                   <span className="font-medium">Nom et prénom:</span>{" "}
-                  {formData.nom} {formData.prenom}
+                  {formData.nom || "___"} {formData.prenom || "___"}
                 </p>
                 <p>
                   <span className="font-medium">Né(e) le :</span>{" "}
-                  {formatDate(formData.dateNaissance)}
+                  {formData.dateNaissance
+                    ? formatDate(formData.dateNaissance)
+                    : "___"}
                 </p>
                 <p>
                   <span className="font-medium">À :</span>{" "}
-                  {formData.lieuNaissance}
+                  {formData.lieuNaissance || "___"}
                 </p>
                 <p>
                   <span className="font-medium">Nationalité:</span>{" "}
-                  {formData.nationalite}
+                  {formData.nationalite || "___"}
                 </p>
                 <p>
                   <span className="font-medium">Domicilié(e) à :</span>{" "}
-                  {formData.adresse}
+                  {formData.adresse || "___"}
                 </p>
                 <p>
                   <span className="font-medium">
                     Numéro d'identité ou de passeport:
                   </span>{" "}
-                  {formData.numeroIdentite}
+                  {formData.numeroIdentite || "___"}
                 </p>
               </div>
 
@@ -97,7 +99,7 @@ export const PreviewCard: React.FC<PreviewCardProps> = ({ formData }) => {
                 <h3 className="font-semibold text-lg">Signature</h3>
                 <p>
                   <span className="font-medium">Fait à:</span>{" "}
-                  {formData.lieuSignature}
+                  {formData.lieuSignature || "___"}
                 </p>
                 <p>
                   <span className="font-medium">Le:</span>{" "}

@@ -15,6 +15,7 @@ import {
 import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
 import * as React from "react";
 
+import SelectTraducteur from "@/app/(dashboard)/_components/admin/setTraducteur";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -36,7 +37,6 @@ import {
 } from "@/components/ui/table";
 import { DEMANDEDEVIS } from "@/db/schema";
 import { useCurrentRole } from "@/hooks/use-current-role";
-import SelectTraducteur from "@/app/(dashboard)/_components/admin/setTraducteur";
 
 const ActionsCell = ({ row }: { row: any }) => {
   const role = useCurrentRole();
@@ -44,6 +44,13 @@ const ActionsCell = ({ row }: { row: any }) => {
   if (role !== "admin") return null;
 
   return <ActionColonne row={row} />;
+};
+const TraducteurCell = ({ row }: { row: any }) => {
+  const role = useCurrentRole();
+
+  if (role !== "admin") return null;
+
+  return <SelectTraducteur traduction={row.original.id!} />;
 };
 
 const ActionColonne = ({ row }: { row: any }) => {
@@ -140,16 +147,20 @@ const columns: ColumnDef<DEMANDEDEVIS>[] = [
     header: "Payé",
     cell: ({ row }) => <div>{row.getValue("payer") ? "Oui" : "Non"}</div>,
   },
-
+  // {
+  //   accessorKey: "traducteur",
+  //   header: "Traducteur",
+  //   cell: ({ row }) =>
+  //     row.original.traducteur ? (
+  //       <p>{row.original.traducteur}</p>
+  //     ) : (
+  //       <SelectTraducteur traduction={row.original.id!} />
+  //     ),
+  // },
   {
     accessorKey: "traducteur",
     header: "Traducteur",
-    cell: ({ row }) =>
-      row.original.traducteur ? (
-        <p>{row.original.traducteur}</p>
-      ) : (
-        <SelectTraducteur traduction={row.original.id!} />
-      ),
+    cell: ({ row }) => <TraducteurCell row={row} />,
   },
 
   {
