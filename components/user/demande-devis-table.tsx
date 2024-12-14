@@ -45,11 +45,8 @@ const ActionsCell = ({ row }: { row: any }) => {
 
   return <ActionColonne row={row} />;
 };
+
 const TraducteurCell = ({ row }: { row: any }) => {
-  const role = useCurrentRole();
-
-  if (role !== "admin") return null;
-
   return <SelectTraducteur traduction={row.original.id!} />;
 };
 
@@ -79,96 +76,89 @@ const ActionColonne = ({ row }: { row: any }) => {
   );
 };
 
-const columns: ColumnDef<DEMANDEDEVIS>[] = [
-  // {
-  //   accessorKey: "id",
-  //   header: "ID",
-  //   cell: ({ row }) => <div className="w-[80px]">{row.getValue("id")}</div>,
-  // },
-  {
-    accessorKey: "nom",
-    header: "Nom",
-    cell: ({ row }) => <div>{row.getValue("nom")}</div>,
-  },
-  {
-    accessorKey: "prenom",
-    header: "Prénom",
-    cell: ({ row }) => <div>{row.getValue("prenom")}</div>,
-  },
-  {
-    accessorKey: "email",
-    header: "Email",
-    cell: ({ row }) => <div>{row.getValue("email")}</div>,
-  },
-  {
-    accessorKey: "pays",
-    header: "Pays",
-    cell: ({ row }) => <div>{row.getValue("pays")}</div>,
-  },
-  {
-    accessorKey: "typeDocument",
-    header: "Type de Document",
-    cell: ({ row }) => <div>{row.getValue("typeDocument")}</div>,
-  },
-  {
-    accessorKey: "langueSource",
-    header: "Langue Source",
-    cell: ({ row }) => <div>{row.getValue("langueSource")}</div>,
-  },
-  {
-    accessorKey: "langueTraduit",
-    header: "Langue Traduite",
-    cell: ({ row }) => <div>{row.getValue("langueTraduit")}</div>,
-  },
-  {
-    accessorKey: "montant",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Montant
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
+const getColumns = (isAdmin: boolean): ColumnDef<DEMANDEDEVIS>[] => {
+  const baseColumns: ColumnDef<DEMANDEDEVIS>[] = [
+    {
+      accessorKey: "nom",
+      header: "Nom",
+      cell: ({ row }) => <div>{row.getValue("nom")}</div>,
     },
-    cell: ({ row }) => <div>{row.getValue("montant")} €</div>,
-  },
-  {
-    accessorKey: "status",
-    header: "Statut",
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("status")}</div>
-    ),
-  },
-  {
-    accessorKey: "payer",
-    header: "Payé",
-    cell: ({ row }) => <div>{row.getValue("payer") ? "Oui" : "Non"}</div>,
-  },
-  // {
-  //   accessorKey: "traducteur",
-  //   header: "Traducteur",
-  //   cell: ({ row }) =>
-  //     row.original.traducteur ? (
-  //       <p>{row.original.traducteur}</p>
-  //     ) : (
-  //       <SelectTraducteur traduction={row.original.id!} />
-  //     ),
-  // },
-  {
-    accessorKey: "traducteur",
-    header: "Traducteur",
-    cell: ({ row }) => <TraducteurCell row={row} />,
-  },
+    {
+      accessorKey: "prenom",
+      header: "Prénom",
+      cell: ({ row }) => <div>{row.getValue("prenom")}</div>,
+    },
+    {
+      accessorKey: "email",
+      header: "Email",
+      cell: ({ row }) => <div>{row.getValue("email")}</div>,
+    },
+    {
+      accessorKey: "pays",
+      header: "Pays",
+      cell: ({ row }) => <div>{row.getValue("pays")}</div>,
+    },
+    {
+      accessorKey: "typeDocument",
+      header: "Type de Document",
+      cell: ({ row }) => <div>{row.getValue("typeDocument")}</div>,
+    },
+    {
+      accessorKey: "langueSource",
+      header: "Langue Source",
+      cell: ({ row }) => <div>{row.getValue("langueSource")}</div>,
+    },
+    {
+      accessorKey: "langueTraduit",
+      header: "Langue Traduite",
+      cell: ({ row }) => <div>{row.getValue("langueTraduit")}</div>,
+    },
+    {
+      accessorKey: "montant",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Montant
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
+      cell: ({ row }) => <div>{row.getValue("montant")} €</div>,
+    },
+    {
+      accessorKey: "status",
+      header: "Statut",
+      cell: ({ row }) => (
+        <div className="capitalize">{row.getValue("status")}</div>
+      ),
+    },
+  ];
 
-  {
-    id: "actions",
-    enableHiding: false,
-    cell: ({ row }) => <ActionsCell row={row} />,
-  },
-];
+  if (isAdmin) {
+    baseColumns.push(
+      {
+        accessorKey: "payer",
+        header: "Payé",
+        cell: ({ row }) => <div>{row.getValue("payer") ? "Oui" : "Non"}</div>,
+      },
+      {
+        accessorKey: "traducteur",
+        header: "Traducteur",
+        cell: ({ row }) => <TraducteurCell row={row} />,
+      },
+      {
+        id: "actions",
+        enableHiding: false,
+        cell: ({ row }) => <ActionsCell row={row} />,
+      }
+    );
+  }
+
+  return baseColumns;
+};
 
 export function DemandeDevisTable({ data }: { data: DEMANDEDEVIS[] }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -178,6 +168,10 @@ export function DemandeDevisTable({ data }: { data: DEMANDEDEVIS[] }) {
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
+
+  const role = useCurrentRole();
+  const isAdmin = role === "admin";
+  const columns = React.useMemo(() => getColumns(isAdmin), [isAdmin]);
 
   const table = useReactTable({
     data,
