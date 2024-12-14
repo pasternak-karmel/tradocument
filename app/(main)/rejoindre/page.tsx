@@ -31,10 +31,17 @@ import { BookOpen, Briefcase, Send, Truck, Users } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { submitRejoindreForm, verifyCode } from "./rejoindre-form-actions";
+import {useRouter} from "next/navigation";
+import {
+  deleteCode,
+  submitRejoindreForm,
+  verifyCode,
+} from "./rejoindre-form-actions";
+import SuccessPage from "./success";
 
 export default function RejoignezNous() {
   const [step, setStep] = useState<"form" | "verification">("form");
+  const router = useRouter();
   const [verificationData, setVerificationData] =
     useState<RejoindreFormValues | null>(null);
   const [fileStates, setFileStates] = useState<FileState[]>([]);
@@ -188,16 +195,19 @@ export default function RejoignezNous() {
         setUrls([]);
         setStep("form");
         setIsLoading(false);
+        // <SuccessPage />;
+        router.push("/rejoindresuccess");
       } else {
         for (const url of data.url) {
           await edgestore.document.delete({ url });
         }
-
+        deleteCode(data.email);
         form.reset();
         setFileStates([]);
         setUrls([]);
         setStep("form");
         setIsLoading(false);
+        router.push("/rejoindreFailure");
 
         return toast("Erreur!!!", {
           description: result.message,
