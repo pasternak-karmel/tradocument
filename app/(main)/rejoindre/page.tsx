@@ -207,16 +207,18 @@ export default function RejoignezNous() {
         setUrls([]);
         setStep("form");
         setIsLoading(false);
-        router.push("/rejoindreFailure");
-
-        return toast("Erreur!!!", {
-          description: result.message,
-          action: {
-            label: "Fermer",
-            onClick: () => console.log("Toast fermé"),
-          },
-        });
+        router.push(
+          `/rejoindreFailure?message=${encodeURIComponent(result.message)}`
+        );
+        // toast("Erreur!!!", {
+        //   description: result.message,
+        //   action: {
+        //     label: "Fermer",
+        //     onClick: () => console.log("Toast fermé"),
+        //   },
+        // });
       }
+      return;
     }
   }
 
@@ -580,7 +582,7 @@ export default function RejoignezNous() {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>
-                            Code de vérification envoyé à votre adresse
+                            Code de vérification envoyé à votre adresse email
                           </FormLabel>
                           <FormControl>
                             <Input
