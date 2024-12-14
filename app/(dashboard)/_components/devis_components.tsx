@@ -61,6 +61,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { showError } from "@/function/notification-toast";
+import { amountPerPage } from "@/lib/constant";
 import { devisSent, devisSentAdmin } from "@/lib/mail";
 import { cn } from "@/lib/utils";
 import { acceptedFileTypes, languages } from "@/type";
@@ -83,6 +84,7 @@ const DevisForm = () => {
   );
   const [montant, setMontant] = useState<number | null>(null);
   const [totalAmount, setTotalAmount] = useState<number | null>(null);
+  const numberOfPages = montant ? Math.floor(totalAmount! / amountPerPage) : 0;
 
   const form = useForm<DemandeDevisFormData>({
     resolver: zodResolver(demandeDevis),
@@ -651,10 +653,11 @@ const DevisForm = () => {
                   </div>
                   {montant !== null && (
                     <div className="mt-4">
-                      <h3>Montant total à payer:</h3>
-                      <pre>{totalAmount?.toFixed(2)}€ soit:</pre>
+                      <h3>Montant total à payer: {totalAmount?.toFixed(2)}€</h3>
+                      <pre>soit:</pre>
                       <pre>
-                        {montant.toFixed(2)}€ (69€/page) du document importé
+                        {amountPerPage.toFixed(2)}€ * {numberOfPages} (nombre total de page du document importé )
+                        {numberOfPages > 1 ? "s" : ""}
                       </pre>
                     </div>
                   )}

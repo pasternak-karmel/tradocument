@@ -1,11 +1,12 @@
 "use server";
 
-import axios from "axios";
-import { PDFDocument } from "pdf-lib";
-import mammoth from "mammoth";
-import ExcelJS from "exceljs";
 import { auth } from "@/auth";
 import { showError } from "@/function/notification-toast";
+import { amountPerPage } from "@/lib/constant";
+import axios from "axios";
+import ExcelJS from "exceljs";
+import mammoth from "mammoth";
+import { PDFDocument } from "pdf-lib";
 
 // Function to get the page count for PDF files
 export async function getPDFPageCount(fileUrl: string): Promise<number | null> {
@@ -21,7 +22,7 @@ export async function getPDFPageCount(fileUrl: string): Promise<number | null> {
     const pdfDoc = await PDFDocument.load(response.data);
     const pageCount = pdfDoc.getPageCount();
 
-    return pageCount * 69;
+    return pageCount * amountPerPage;
   } catch (error) {
     console.error(
       "Erreur lors du téléchargement ou de l'analyse du fichier:",
@@ -60,7 +61,7 @@ async function getDocxPageCount(fileUrl: string): Promise<number | null> {
     const wordsPerPage = 300;
     const pageCount = Math.ceil(wordCount / wordsPerPage);
 
-    return pageCount * 69;
+    return pageCount * amountPerPage;
   } catch (error) {
     console.error("Error processing DOCX file:", error);
     showError("Error processing DOCX file:");
@@ -88,7 +89,7 @@ export async function getExcelPageCount(
     const pagesPerSheet = 1; // Assume each sheet counts as one "page"
     const pageCount = sheetCount * pagesPerSheet;
 
-    return pageCount * 69; // Adjust price per page
+    return pageCount * amountPerPage; // Adjust price per page
   } catch (error) {
     showError("Erreur lors de l'analyse du fichier Excel:");
     return null;
