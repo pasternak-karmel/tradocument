@@ -49,9 +49,9 @@ export default function NosServices() {
       href: "/nouvelleDevis", // Lien pour ce bouton
     },
     {
-      title: "Service de récupération et de livraison de vos documents",
+      title: "Service récupération et livraison de documents avec procuration",
       icon: <Truck className="h-12 w-12 text-green-500" />,
-      description: "Livraison rapide et sécurisée de vos documents importants.",
+      description: "Livraison rapide et sécurisée de vos documents important.",
       features: [
         {
           icon: <Package className="h-5 w-5" />,
