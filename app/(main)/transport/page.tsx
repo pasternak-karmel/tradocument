@@ -28,11 +28,11 @@ export default function SimplifiedCourierService() {
   const features = [
     {
       icon: <FileText className="h-8 w-8 text-blue-500" />,
-      text: "Récupération des documents auprès des institutions",
+      text: "Récupération des documents auprès des institutions(administrations, entreprises, etc.).",
     },
     {
       icon: <Truck className="h-8 w-8 text-green-500" />,
-      text: "Livraison sécurisée à l'adresse de votre choix",
+      text: "Livraison sécurisée des documents au client ou à l’adresse de son choix.",
     },
     {
       icon: <Lock className="h-8 w-8 text-purple-500" />,
@@ -54,18 +54,20 @@ export default function SimplifiedCourierService() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, type: "spring" }}
         >
-          <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight mb-6 text-gray-900">
+          <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight mb-6 text-gray-900">
             Récupération et Livraison de Documents avec Procuration
           </h1>
-          <p className="text-xl md:text-2xl text-gray-700 max-w-4xl mx-auto leading-relaxed">
+          <p className="text-xl md:text-xl text-gray-700 max-w-3xl mx-auto leading-relaxed mb-2">
             Solution complète et simplifiée pour la gestion de vos documents administratifs et professionnels.
-            Grâce à une procuration, nous prenons en charge l'ensemble du processus pour vous.
+            </p>
+            <p className="text-xl md:text-xl text-gray-700 max-w-4xl mx-auto leading-relaxed">
+              Grâce à une procuration, nous prenons en charge l'ensemble du processus pour vous.
           </p>
         </motion.div>
 
         {/* Caractéristiques */}
         <motion.div
-          className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12"
+          className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-5"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
@@ -108,12 +110,12 @@ export default function SimplifiedCourierService() {
           transition={{ duration: 0.8, delay: 0.8 }}
         >
           <Link href="/nouvelle_devis" passHref>
-            <Button className="bg-blue-500 hover:bg-blue-600 text-white px-8 py-4 rounded-full text-lg font-semibold transition-all duration-300 w-full sm:w-auto shadow-lg hover:shadow-blue-400/50">
+            <Button className="bg-gray-800 hover:bg-gray-900 text-white px-8 py-4 rounded-full text-lg font-semibold transition-all duration-300 w-full sm:w-auto shadow-lg hover:shadow-gray-400/50">
               Demander un devis
             </Button>
           </Link>
           <Link href="/rejoindre" passHref>
-            <Button className="bg-purple-500 hover:bg-purple-600 text-white px-8 py-4 rounded-full text-lg font-semibold transition-all duration-300 w-full sm:w-auto shadow-lg hover:shadow-purple-400/50">
+            <Button className="bg-blue-500 hover:bg-blue-600 text-white px-8 py-4 rounded-full text-lg font-semibold transition-all duration-300 w-full sm:w-auto shadow-lg hover:shadow-blue-400/50">
               Rejoindre notre équipe
             </Button>
           </Link>
