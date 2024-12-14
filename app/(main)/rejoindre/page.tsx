@@ -201,7 +201,8 @@ export default function RejoignezNous() {
         for (const url of data.url) {
           await edgestore.document.delete({ url });
         }
-        deleteCode(data.email);
+        
+        await deleteCode(data.email);
         form.reset();
         setFileStates([]);
         setUrls([]);
