@@ -28,16 +28,15 @@ import { acceptedFileTypes } from "@/type";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
 import { BookOpen, Briefcase, Send, Truck, Users } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import {useRouter} from "next/navigation";
 import {
   deleteCode,
   submitRejoindreForm,
   verifyCode,
 } from "./rejoindre-form-actions";
-import SuccessPage from "./success";
 
 export default function RejoignezNous() {
   const [step, setStep] = useState<"form" | "verification">("form");
@@ -201,7 +200,7 @@ export default function RejoignezNous() {
         for (const url of data.url) {
           await edgestore.document.delete({ url });
         }
-        
+
         await deleteCode(data.email);
         form.reset();
         setFileStates([]);
@@ -242,10 +241,9 @@ export default function RejoignezNous() {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}
         >
-          Si vous êtes traducteur ou traductrice avec un bureau en activité, ou
-          si vous êtes un coursier motorisé ou véhiculé, nous recherchons
-          activement pour renforcer notre réseau. Rejoignez-nous et mettez vos
-          compétences au service d'une clientèle variée.
+          Si vous exercez en tant que traducteur/traductrice ou que vous êtes
+          livreur à moto/voiture, n'hésitez pas à rejoindre notre réseau et à
+          offrir vos compétences à une clientèle diversifiée !
         </motion.p>
 
         <motion.div
