@@ -14,7 +14,7 @@ export default function TraDocumentLanding() {
         {/* Motif de fond subtil */}
         <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:50px_50px]" />
         
-        <div className="text-center text-white m-4 sm:m-10 space-y-8 sm:space-y-12 relative z-10">
+        <div className="text-center text-white m-4 sm:m-10 space-y-8 relative z-10">
           <div className="flex items-center justify-center gap-2 text-blue-400">
             <Globe2 className="w-6 h-6" />
             <span className="text-sm font-medium">Service de Traduction Professionnel</span>
@@ -37,7 +37,7 @@ export default function TraDocumentLanding() {
                   <span className="w-1/3 text-right text-sm">{pair.from}</span>
                   <ArrowRight className="mx-4 text-blue-400" />
                   <span className="w-1/3 text-left text-sm">{pair.to}</span>
-                </div>
+                </div>  
               ))}
             </div>
           </div>
@@ -62,22 +62,25 @@ export default function TraDocumentLanding() {
             et la gestion de vos documents administratifs en toute simplicité.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button
-              size="lg"
-              className="bg-blue-600 hover:bg-blue-700 text-white rounded-full px-8 py-6 text-lg transition-all"
-              >
-              <Link href="/demandeDevis">Demander un Devis</Link>
-              
-            </Button>
-            <Button
-              variant="outline"
-              size="lg"
-              className="rounded-full px-8 py-6 text-lg border-blue-400 text-blue-400 hover:bg-gray-200"
-            >
-              <Link href="/services">Découvrir nos Services</Link>
-            </Button>
-          </div>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center w-full max-w-md mx-auto px-4">
+          <Button
+            size="lg"
+            className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white rounded-full px-4 sm:px-8 py-4 sm:py-6 text-base sm:text-lg transition-all"
+          >
+            <Link href="/demandeDevis" className="w-full text-center">
+              Demander un Devis
+            </Link>
+          </Button>
+          <Button
+            variant="outline"
+            size="lg"
+            className="w-full sm:w-auto rounded-full px-4 sm:px-8 py-4 sm:py-6 text-base sm:text-lg border-blue-400 text-blue-400 hover:bg-gray-200"
+          >
+            <Link href="/services" className="w-full text-center">
+              Découvrir nos Services
+            </Link>
+          </Button>
+        </div>
         </div>
       </div>
     </section>
