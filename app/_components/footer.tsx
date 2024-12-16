@@ -1,188 +1,110 @@
-// import { Button } from "@/components/ui/button"
-// import { Input } from "@/components/ui/input"
-// import { MapPin, Phone, Mail, Facebook, Twitter, Instagram, Linkedin } from "lucide-react"
-// import Link from "next/link"
+import React from 'react'
+import Link from 'next/link'
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+import { Facebook, Twitter, Instagram, Linkedin, MapPin, Phone, Mail } from 'lucide-react'
 
-// export default function Footer() {
-//   return (
-//     <footer className="w-full py-12 bg-gray-900 text-gray-100 mb-0">
-//       <div className="container px-4 md:px-6">
-//         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-//           <div className="space-y-4">
-//             <h3 className="text-lg font-semibold">Tradocument</h3>
-//             <p className="text-sm text-gray-400">Simplifying document translations for businesses and individuals worldwide.</p>
-//             <div className="flex space-x-4">
-//               <Link href="#" aria-label="Facebook">
-//                 <Facebook className="h-6 w-6 text-gray-400 hover:text-white transition-colors" />
-//               </Link>
-//               <Link href="#" aria-label="X">
-//                 <Twitter className="h-6 w-6 text-gray-400 hover:text-white transition-colors" />
-//               </Link>
-//               <Link href="#" aria-label="Instagram">
-//                 <Instagram className="h-6 w-6 text-gray-400 hover:text-white transition-colors" />
-//               </Link>
-//               <Link href="#" aria-label="LinkedIn">
-//                 <Linkedin className="h-6 w-6 text-gray-400 hover:text-white transition-colors" />
-//               </Link>
-//             </div>
-//           </div>
-//           <div className="space-y-4">
-//             <h3 className="text-lg font-semibold">Contact Us</h3>
-//             <div className="flex items-center space-x-2">
-//               <MapPin className="h-5 w-5 text-gray-400" />
-//               <span className="text-sm text-gray-300">123 Translation Ave, Language City, 12345</span>
-//             </div>
-//             <div className="flex items-center space-x-2">
-//               <Phone className="h-5 w-5 text-gray-400" />
-//               <span className="text-sm text-gray-300">+1 (555) 123-4567</span>
-//             </div>
-//             <div className="flex items-center space-x-2">
-//               <Mail className="h-5 w-5 text-gray-400" />
-//               <span className="text-sm text-gray-300">info@tradocument.com</span>
-//             </div>
-//           </div>
-//           <div className="space-y-4">
-//             <h3 className="text-lg font-semibold">Our Location</h3>
-//             <div className="relative h-48 rounded-lg overflow-hidden bg-gray-800">
-//               <div className="absolute inset-0 bg-gray-700 animate-pulse"></div>
-//               <div className="absolute inset-0 flex items-center justify-center">
-//                 <MapPin className="h-12 w-12 text-[#F49C60]" />
-//               </div>
-//             </div>
-//           </div>
-//         </div>
-//         <div className="mt-8 pt-8 border-t border-gray-800">
-//           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-//             <p className="text-sm text-center md:text-left text-gray-400">© 2024 Tradocument. Tout droit réservés.</p>
-//             <nav className="flex space-x-4">
-//               <Link className="text-sm text-gray-400 hover:text-white transition-colors" href="#">
-//                 Termes et services
-//               </Link>
-//               <Link className="text-sm text-gray-400 hover:text-white transition-colors" href="#">
-//                 Privacy Policy
-//               </Link>
-//               <Link className="text-sm text-gray-400 hover:text-white transition-colors" href="#">
-//                 Cookie Policy
-//               </Link>
-//             </nav>
-//           </div>
-//         </div>
-//         <div className="mt-8">
-//           <h3 className="text-lg font-semibold mb-4">Stay Updated</h3>
-//           <form className="flex space-x-2">
-//             <Input
-//               className="max-w-lg flex-1 bg-gray-800 text-white placeholder:text-gray-500 border-gray-700 focus:border-blue-500"
-//               placeholder="Enter your email"
-//               type="email"
-//             />
-//             <Button className="bg-[#F49C60] text-white" type="submit">
-//               Subscribe
-//             </Button>
-//           </form>
-//         </div>
-//       </div>
-//     </footer>
-//   )
-// }
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  MapPin,
-  Phone,
-  Mail,
-  Facebook,
-  Instagram,
-  Linkedin,
-} from "lucide-react";
-import Link from "next/link";
-
-interface SocialIconProps {
+interface socialProps {
+  Icon: any;
   href: string;
-  icon: React.ElementType;
   label: string;
 }
-
-const SocialIcon = ({ href, icon: Icon, label }: SocialIconProps) => (
-  <Link href={href} aria-label={label} className="group relative">
-    <Icon className="h-6 w-6 text-gray-400 group-hover:text-white transition-colors" />
-    <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
-      {label}
-    </span>
-  </Link>
-);
+const SocialIcon = ({ Icon, href, label }: socialProps) => (
+  <a href={href} aria-label={label} className="text-gray-400 hover:text-white transition-colors">
+    <Icon className="h-5 w-5" />
+  </a>
+)
 
 export default function Footer() {
   return (
-    <footer className="w-full py-12 bg-gray-900 text-gray-100 mb-0">
-      <div className="container px-4 md:px-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <footer className="bg-gray-900 text-gray-300">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Tradocument</h3>
-            <p className="text-sm text-gray-400">
+            <h3 className="text-lg font-semibold text-white">Tradocument</h3>
+            <p className="text-sm">
               Simplifier les traductions de documents pour les entreprises et les particuliers du monde entier.
             </p>
             <div className="flex space-x-4">
-              <SocialIcon href="#" icon={Facebook} label="Facebook" />
-              <SocialIcon
-                href="#"
-                icon={() => (
-                  <svg
-                    className="h-6 w-6"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                  >
-                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-                  </svg>
-                )}
-                label="Twitter"
-              />
-              <SocialIcon href="#" icon={Instagram} label="Instagram" />
-              <SocialIcon href="#" icon={Linkedin} label="LinkedIn" />
+              <SocialIcon Icon={Facebook} href="#" label="Facebook" />
+              <SocialIcon Icon={Twitter} href="#" label="Twitter" />
+              <SocialIcon Icon={Instagram} href="#" label="Instagram" />
+              <SocialIcon Icon={Linkedin} href="#" label="LinkedIn" />
             </div>
           </div>
+          
           <div className="space-y-4">
-            <Link href="/contact">
-              <h3 className="text-lg font-semibold">Contactez-nous</h3>
-            </Link>
-            <div className="flex items-center space-x-2">
-              <MapPin className="h-5 w-5 text-gray-400" />
-              <span className="text-sm text-gray-300">
-                123 Avenue de la traduction, Ville des Langues, 12345
-              </span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Phone className="h-5 w-5 text-gray-400" />
-              <span className="text-sm text-gray-300">+1 (555) 123-4567</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Mail className="h-5 w-5 text-gray-400" />
-              <span className="text-sm text-gray-300">info@tradocument.com</span>
-            </div>
+            <h3 className="text-lg font-semibold text-white">Liens rapides</h3>
+            <nav className="flex flex-col space-y-2">
+              <Link href="/apropos" className="hover:text-white transition-colors">À propos</Link>
+              <Link href="/services" className="hover:text-white transition-colors">Nos services</Link>
+              <Link href="/contact" className="hover:text-white transition-colors">Contact</Link>
+            </nav>
           </div>
+          
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Notre emplacement</h3>
-            <div className="relative h-48 rounded-lg overflow-hidden bg-gray-800">
-              <div className="absolute inset-0 bg-gray-700 animate-pulse"></div>
-              <div className="absolute inset-0 flex items-center justify-center">
-                <MapPin className="h-12 w-12 text-[#F49C60]" />
+            <h3 className="text-lg font-semibold text-white">Contact</h3>
+            <div className="space-y-2">
+              <div className="flex items-center space-x-3">
+                <MapPin className="h-5 w-5 text-gray-400" />
+                <span className="text-sm">123 Avenue de la traduction, 75001 Paris</span>
+              </div>
+              <div className="flex items-center space-x-3">
+                <Phone className="h-5 w-5 text-gray-400" />
+                <span className="text-sm">+33 1 23 45 67 89</span>
+              </div>
+              <div className="flex items-center space-x-3">
+                <Mail className="h-5 w-5 text-gray-400" />
+                <span className="text-sm">contact@tradocument.com</span>
               </div>
             </div>
           </div>
+          
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold text-white">Newsletter</h3>
+            <p className="text-sm">Restez informé de nos dernières offres et actualités.</p>
+            <form className="flex space-x-2">
+              <Input
+                className="flex-1 bg-gray-800 border-gray-700 focus:border-blue-500 text-white"
+                placeholder="Votre email"
+                type="email"
+              />
+              <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white">
+                S'abonner
+              </Button>
+            </form>
+          </div>
         </div>
-        <div className="mt-8 pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center md:items-start">
-          <p className="text-sm text-center md:text-left text-gray-400 mb-4 md:mb-0">
-            © 2024 Tradocument. Tout droit réservés.
-          </p>
-          <nav className="flex flex-col space-y-2 text-xs text-gray-500 mr-32 md:space-y-1">
+        
+        <div className="mt-12 pt-8 border-t border-gray-800">
+          <div className="flex flex-col md:flex-row justify-between items-center">
+            <p className="text-sm text-gray-400">
+              © 2024 Tradocument. Tous droits réservés.
+            </p>
+            <nav className="flex flex-wrap justify-center space-x-4 mt-4 md:mt-0">
+              <Link href="/legalTerms" className="text-sm text-gray-400 hover:text-white transition-colors">
+                Mentions légales
+              </Link>
+              <Link href="/termes-et-services" className="text-sm text-gray-400 hover:text-white transition-colors">
+                CGU
+              </Link>
+              <Link href="/politique-de-cookies" className="text-sm text-gray-400 hover:text-white transition-colors">
+              Politique de gestion des cookies
+              </Link>
+              <Link href="/politique-confidentialite" className="text-sm text-gray-400 hover:text-white transition-colors">
+                Politique de confidentialité
+              </Link>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </footer>
+  )
+}
 
-            <Link
-              href="/apropos"
-              className="hover:text-gray-300 text-xl transition-colors"
-            >
-              A propos
-            </Link>
-            <Link
+
+            {/* <Link
               href="/legalTerms"
               className="hover:text-gray-300 transition-colors"
             >
@@ -205,23 +127,4 @@ export default function Footer() {
               className="hover:text-gray-300 transition-colors"
             >
               Politique de Confidentialité et de Protection des données
-            </Link>
-          </nav>
-        </div>
-        <div className="mt-8">
-          <h3 className="text-lg font-semibold mb-4">Restez à jour</h3>
-          <form className="flex space-x-2">
-            <Input
-              className="max-w-lg flex-1 bg-gray-800 text-white placeholder:text-gray-500 border-gray-700 focus:border-blue-500"
-              placeholder="Entrez votre email"
-              type="email"
-            />
-            <Button className="bg-[#F49C60] text-white" type="submit">
-              S'abonner
-            </Button>
-          </form>
-        </div>
-      </div>
-    </footer>
-  );
-}
+            </Link> */}

@@ -3,45 +3,84 @@ import { Button } from "@/components/ui/button";
 import FeaturesSection from "@/components/ui/avantages";
 import Link from "next/link";
 import ElegantSection from "../_components/ElegantSection";
+import { Globe2, FileText, ArrowRight, Clock, Shield } from 'lucide-react'
 
 export default function TraDocumentLanding() {
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
       {/* Section principale */}
       <section className="min-h-screen w-full bg-neutral-950 rounded-md relative flex flex-col items-center antialiased">
-        <div className="absolute inset-0 h-full w-full flex items-center justify-center px-4 sm:px-8 py-16 sm:py-24 [background:radial-gradient(125%_125%_at_50%_10%,#000_35%,#223_100%)]">
-          <div className="text-center text-white m-4 sm:m-10 space-y-8 sm:space-y-12">
-            <h2
-            style={{ lineHeight: '1.5' }}
-            className="text-2xl sm:text-4xl md:text-5xl font-bold tracking-tighter mt-16">
-              Traduction rapide réalisée par des <br />professionnels qualifiés
-            </h2>
-            <div className="flex flex-col items-center sm:space-y-">
-              <div className="flex items-center justify-center w-full max-w-md">
-                <span className="w-1/3 text-right text-xl sm:text-2xl md:text-3xl pr-2 sm:pr-4">Arabe</span>
-                <span className="w-12 sm:w-16 text-center text-2xl sm:text-3xl md:text-4xl">→</span>
-                <span className="w-1/3 text-left text-xl sm:text-2xl md:text-3xl pl-2 sm:pl-4">Français</span>
-              </div>
-              <div className="flex items-center justify-center w-full max-w-md">
-                <span className="w-1/3 text-right text-xl sm:text-2xl md:text-3xl pr-2 sm:pr-4">Français</span>
-                <span className="w-12 sm:w-16 text-center text-2xl sm:text-3xl md:text-4xl">→</span>
-                <span className="w-1/3 text-left text-xl sm:text-2xl md:text-3xl pl-2 sm:pl-4">Arabe</span>
-              </div>
+      <div className="absolute inset-0 h-full w-full flex items-center justify-center px-4 sm:px-8 py-16 sm:py-24 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-900 via-slate-900 to-black">
+        {/* Motif de fond subtil */}
+        <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:50px_50px]" />
+        
+        <div className="text-center text-white m-4 sm:m-10 space-y-8 sm:space-y-12 relative z-10">
+          <div className="flex items-center justify-center gap-2 text-blue-400">
+            <Globe2 className="w-6 h-6" />
+            <span className="text-sm font-medium">Service de Traduction Professionnel</span>
+          </div>
+          
+          <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold tracking-tighter mt-8">
+            Traduction Multilingue & Gestion Administrative<br />
+            <span className="text-blue-400">Une Solution Complète pour vos Documents</span>
+          </h2>
+
+          <div className="flex flex-col items-center space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl">
+              {[
+                { from: "Français", to: "Arabe" },
+                { from: "Anglais", to: "Français" },
+                { from: "Espagnol", to: "Français" },
+                { from: "Arabe", to: "Anglais" }
+              ].map((pair, index) => (
+                <div key={index} className="flex items-center justify-center bg-white/5 rounded-lg p-3">
+                  <span className="w-1/3 text-right text-sm">{pair.from}</span>
+                  <ArrowRight className="mx-4 text-blue-400" />
+                  <span className="w-1/3 text-left text-sm">{pair.to}</span>
+                </div>
+              ))}
             </div>
-            <p className="text-lg sm:text-xl md:text-2xl max-w-[300px] sm:max-w-[500px] md:max-w-[700px] mx-auto">
-              Tradocument.com vous propose une traduction harmonisée et une fiabilité absolue
-            </p>
+          </div>
+
+          <div className="flex flex-wrap justify-center gap-6 text-sm text-gray-300">
+            <div className="flex items-center gap-2">
+              <FileText className="w-5 h-5 text-blue-400" />
+              <span>Réception et Livraison de Documents</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Clock className="w-5 h-5 text-blue-400" />
+              <span>Service Express Disponible</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Shield className="w-5 h-5 text-blue-400" />
+              <span>Documents Certifiés</span>
+            </div>
+          </div>
+
+          <p className="text-lg sm:text-xl max-w-[700px] mx-auto text-gray-300">
+            Tradocument.com - Votre partenaire de confiance pour la traduction professionnelle
+            et la gestion de vos documents administratifs en toute simplicité.
+          </p>
+
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button
-              size={"lg"}
-              className="p-4 sm:p-6 md:p-8 text-lg sm:text-xl md:text-2xl w-full sm:w-fit border-t-2 rounded-full border-[#4D4D4D] bg-[#1F1F1F] hover:bg-[#F49C60] group transition-all gap-4 hover:shadow-3xl hover:shadow-neutral-500 duration-500"
+              size="lg"
+              className="bg-blue-600 hover:bg-blue-700 text-white rounded-full px-8 py-6 text-lg transition-all"
+              >
+              <Link href="/demandeDevis">Demander un Devis</Link>
+              
+            </Button>
+            <Button
+              variant="outline"
+              size="lg"
+              className="rounded-full px-8 py-6 text-lg border-blue-400 text-blue-400 hover:bg-gray-200"
             >
-              <span className="bg-clip-text text-white bg-gradient-to-r from-neutral-500 to-neutral-600 md:text-center font-sans group-hover:bg-gradient-to-r group-hover:from-black group-hover:to-black">
-                <Link href="/apropos">A propos de nous</Link>
-              </span>
+              <Link href="/services">Découvrir nos Services</Link>
             </Button>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
 
       {/* Sections secondaires */}
       <main className="flex-grow w-full flex flex-col items-center justify-center px-4 sm:px-8">
