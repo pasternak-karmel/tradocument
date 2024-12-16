@@ -10,7 +10,7 @@ const AdminOverviewNew = async () => {
   const demandeDevis = await db.select().from(DemandeDevis);
   return (
     <div className="container mx-auto py-10">
-      <h1 className="text-2xl font-bold mb-5">Demandes de Devis</h1>
+      <h1 className="text-2xl font-bold mb-5"> Toutes les Demandes de Devis</h1>
       <DemandeDevisTable data={demandeDevis} />
     </div>
   );

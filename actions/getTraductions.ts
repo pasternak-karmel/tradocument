@@ -79,7 +79,7 @@ export async function CreateTraducteur(values: z.infer<typeof AddTraducteur>) {
       return { error: "Invalid fields!" };
     }
 
-    const { email, nom, password } = validatedFields.data;
+    const { email, nom, password, role } = validatedFields.data;
 
     const existingUser = await getUserByEmail(email);
 
@@ -94,7 +94,7 @@ export async function CreateTraducteur(values: z.infer<typeof AddTraducteur>) {
 
     const [] = await db
       .insert(users)
-      .values({ email, name: nom, password: hashedPassword })
+      .values({ email, name: nom, password: hashedPassword, role })
       .returning();
 
     await AcceptTraducteur(email, password || hashedPassword);
