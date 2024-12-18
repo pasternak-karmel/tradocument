@@ -23,7 +23,7 @@ export default function TraDocumentLanding() {
             </div>
 
             <h2 className="text-2xl sm:text-3xl md:text-3xl font-bold tracking-tighter mt-8">
-              Traduction Multi-langue <br />& <br /> Récuperation de Documents par Procuration
+              Traduction Multi-langue <br />& <br /> Récupération de Documents par Procuration
               <br />
                <span className="text-blue-400">
                 Simplifiez vos démarches !
