@@ -22,23 +22,23 @@ export default function TraDocumentLanding() {
               </span>
             </div>
 
-            <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold tracking-tighter mt-8">
-              Traduction Multilingue & Gestion Administrative
+            <h2 className="text-2xl sm:text-3xl md:text-3xl font-bold tracking-tighter mt-8">
+              Traduction Multilingue <br />& <br /> Récuperation de Documents par Procuration
               <br />
               <span className="text-blue-400">
-                Une Solution Complète pour vos Documents
+                Simplifiez vos démarches administratives !
               </span>
             </h2>
 
             <div className="flex flex-col items-center space-y-4">
               <div className="grid grid-cols-3 sm:grid-cols-3 gap-4 max-w-2xl">
                 {[
-                  { from: "Français", to: "Arabe" },
-                  { from: "Anglais", to: "Français" },
-                  { from: "Espagnol", to: "Français" },
+                  { from: "Arabe", to: "Français" },
                   { from: "Arabe", to: "Anglais" },
                   { from: "Arabe", to: "Espagnol" },
-                  { from: "Espagnol", to: "Arabe" },
+                  { from: "Anglais", to: "Français" },
+                  { from: "Espagnol", to: "Français" },
+                  { from: "Espagnol", to: "Anglais" },
                 ].map((pair, index) => (
                   <div
                     key={index}

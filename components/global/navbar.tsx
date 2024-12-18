@@ -33,28 +33,28 @@ const Navbar = () => {
       {/* Navigation Desktop */}
       <nav className="hidden md:flex justify-center items-center">
         <ul className="flex items-center list-none space-between gap-4">
-          <li className="text-white text-sm hover:text-[#F49C60] duration-500">
+          <li className="text-white text-sm hover:text-blue-400 duration-500">
             <Link href="/">Accueil</Link>
           </li>
-          <li className="text-white text-sm hover:text-[#F49C60] duration-500">
+          <li className="text-white text-sm hover:text-blue-400 duration-500">
             <Link href="/translation">Traduction</Link>
           </li>
-          <li className="text-white text-sm hover:text-[#F49C60] duration-500">
+          <li className="text-white text-sm hover:text-blue-400 duration-500">
             <Link href="/rejoindre">Rejoignez notre équipe</Link>
           </li>
-          <li className="text-white text-sm hover:text-[#F49C60] duration-500">
+          <li className="text-white text-sm hover:text-blue-400 duration-500">
             <Link href="/services">Nos services</Link>
           </li>
-          <li className="text-white text-sm hover:text-[#F49C60] duration-500">
+          <li className="text-white text-sm hover:text-blue-400 duration-500">
             <Link href="/demandeDevis">Demande de devis</Link>
           </li>
-          <li className="text-white text-sm hover:text-[#F49C60] duration-500">
+          <li className="text-white text-sm hover:text-blue-400 duration-500">
             <Link href="/transport">Transport coursier</Link>
           </li>
-          <li className="text-white text-sm hover:text-[#F49C60] duration-500">
+          <li className="text-white text-sm hover:text-blue-400 duration-500">
             <Link href="/procuration">Procuration</Link>
           </li>
-          <li className="text-white text-sm hover:text-[#F49C60] duration-500">
+          <li className="text-white text-sm hover:text-blue-400 duration-500">
             <Link href="/contact">Contact</Link>
           </li>
         </ul>
@@ -136,7 +136,7 @@ const Navbar = () => {
                 Transport coursier
               </Link>
             </li>
-            <li className="text-white text-sm hover:text-[#F49C60] duration-500">
+            <li className="text-white text-sm hover:text-blue-400 duration-500">
               <Link href="/procuration">Procuration</Link>
             </li>
             <li className="text-white text-lg">
