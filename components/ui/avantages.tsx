@@ -81,10 +81,7 @@ export default function FeaturesSection() {
           particulier. Tradocument.com travaille avec plusieurs traducteurs
           assermentés en langues maternelles, très expérimentés dans leurs
           domaines de spécialisation respectifs. Nous traduisons et certifions
-          vos documents officiels. Tradocument.com travaille avec des
-          traducteurs assermentés en langues maternelles, très expérimentés dans
-          leurs domaines de spécialisation respectifs. Nous traduisons et
-          certifions vos documents officiels.
+          vos documents officiels.
         </p>
         <Link href="/apropos">
           <Button
