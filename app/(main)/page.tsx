@@ -26,7 +26,7 @@ export default function TraDocumentLanding() {
               Traduction Multi-langue <br />& <br /> Récuperation de Documents par Procuration
               <br />
                <span className="text-blue-400">
-                Simplifiez vos démarches administratives !
+                Simplifiez vos démarches !
               </span>
             </h2>
 
