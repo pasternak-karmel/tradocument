@@ -31,12 +31,14 @@ export default function TraDocumentLanding() {
             </h2>
 
             <div className="flex flex-col items-center space-y-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl">
+              <div className="grid grid-cols-3 sm:grid-cols-3 gap-4 max-w-2xl">
                 {[
                   { from: "Français", to: "Arabe" },
                   { from: "Anglais", to: "Français" },
                   { from: "Espagnol", to: "Français" },
                   { from: "Arabe", to: "Anglais" },
+                  { from: "Arabe", to: "Espagnol" },
+                  { from: "Espagnol", to: "Arabe" },
                 ].map((pair, index) => (
                   <div
                     key={index}
