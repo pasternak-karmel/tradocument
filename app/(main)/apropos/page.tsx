@@ -1,6 +1,7 @@
 "use client";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { motion } from "framer-motion";
-import { CheckCircle, Clock, CreditCard, FileText } from 'lucide-react';
+import { Car, CheckCircle, Clock, CreditCard, FileText } from 'lucide-react';
 import Image from "next/image";
 
 export default function TradocumentPage() {
@@ -27,10 +28,18 @@ export default function TradocumentPage() {
         variants={stagger}
       >
         <motion.h1
-          className="text-4xl sm:text-5xl font-extrabold text-blue-600 mb-16 text-center"
+          className="text-4xl sm:text-5xl font-extrabold text-blue-600 mb-5 text-center"
           variants={fadeInUp}
         >
-          À PROPOS DE NOUS
+         <Card className="bg-white border border-gray-200 shadow-md ">
+          <CardHeader>
+            <CardTitle className="text-3xl font-bold text-center text-blue-500">
+              À PROPOS DE NOUS
+            </CardTitle>
+            
+          </CardHeader>
+          
+        </Card>
         </motion.h1>
 
         {/* Section 1 */}
