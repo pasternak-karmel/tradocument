@@ -31,7 +31,7 @@ export default function TraDocumentLanding() {
             </h2>
 
             <div className="flex flex-col items-center space-y-4">
-              <div className="grid grid-cols-3 sm:grid-cols-3 gap-4 max-w-2xl">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 max-w-2xl">
                 {[
                   { from: "Arabe", to: "Français" },
                   { from: "Arabe", to: "Anglais" },
