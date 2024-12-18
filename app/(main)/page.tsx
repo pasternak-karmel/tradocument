@@ -1,10 +1,9 @@
 "use client";
 import FeaturesSection from "@/components/ui/avantages";
 import { Button } from "@/components/ui/button";
-import { Clock, FileText, Globe2, Shield } from "lucide-react";
+import { Clock, FileText, Globe2, MoveHorizontal, Shield } from "lucide-react";
 import Link from "next/link";
 import ElegantSection from "../_components/ElegantSection";
-import LanguageCarrousel from "./carrouselLanguage/page";
 
 export default function TraDocumentLanding() {
   return (
@@ -31,22 +30,26 @@ export default function TraDocumentLanding() {
               </span>
             </h2>
 
-            <div className="w-[50%] flex flex-col items-center justify-center space-y-4">
-              <LanguageCarrousel />
-              {/* <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl">
-              {[
-                { from: "Français", to: "Arabe" },
-                { from: "Anglais", to: "Français" },
-                { from: "Espagnol", to: "Français" },
-                { from: "Arabe", to: "Anglais" }
-              ].map((pair, index) => (
-                <div key={index} className="flex items-center justify-center bg-white/5 rounded-lg p-3">
-                  <span className="w-1/3 text-right text-sm">{pair.from}</span>
-                  <ArrowRight className="mx-4 text-blue-400" />
-                  <span className="w-1/3 text-left text-sm">{pair.to}</span>
-                </div>
-              ))}
-            </div> */}
+            <div className="flex flex-col items-center space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl">
+                {[
+                  { from: "Français", to: "Arabe" },
+                  { from: "Anglais", to: "Français" },
+                  { from: "Espagnol", to: "Français" },
+                  { from: "Arabe", to: "Anglais" },
+                ].map((pair, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center justify-center bg-white/5 rounded-lg p-3"
+                  >
+                    <span className="w-1/3 text-right text-sm">
+                      {pair.from}
+                    </span>
+                    <MoveHorizontal className="mx-4 text-blue-400" />
+                    <span className="w-1/3 text-left text-sm">{pair.to}</span>
+                  </div>
+                ))}
+              </div>
             </div>
 
             <div className="flex flex-wrap justify-center gap-6 text-sm text-gray-300">
