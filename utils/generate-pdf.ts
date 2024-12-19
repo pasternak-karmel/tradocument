@@ -57,7 +57,7 @@ export async function generatePDF(data: ProcurationFormData) {
   y -= lineHeight ;
 
   drawText("donne par la présente pouvoir à :", 50, y);
-  y -= lineHeight;
+  y -= lineHeight*2;
 
   drawText("Monsieur/Madame DJOSSOU Carmel", 50, y, timesBold);
   y -= lineHeight;
