@@ -116,6 +116,7 @@ export default function ProcurationForm() {
     }
     setSuccess(message);
     resetForm();
+    router.push("/devis/payment");
   };
 
   const resetForm = () => {

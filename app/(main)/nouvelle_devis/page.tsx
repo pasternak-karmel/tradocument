@@ -225,7 +225,8 @@ const DevisAccueil = () => {
           await devisSent(verificationData as z.infer<typeof demandeDevis>);
           await devisSentAdmin(verificationData, resultat.info);
           form.reset();
-          router.push(`/devis/payment?id=${result.message}`);
+          router.push(`/procuration`);
+          // router.push(`/devis/payment?id=${result.message}`);
         } else {
           showError(result.message);
         }
