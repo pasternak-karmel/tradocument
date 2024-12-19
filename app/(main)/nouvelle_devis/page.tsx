@@ -487,9 +487,6 @@ const DevisAccueil = () => {
                           <SelectContent>
                             <SelectItem value="Français">Français</SelectItem>
                             <SelectItem value="Arabe">Arabe</SelectItem>
-                            <SelectItem value="Anglais">Anglais</SelectItem>
-                            <SelectItem value="Espagnol">Espagnol</SelectItem>
-                            <SelectItem value="Italien">Italien</SelectItem>
                           </SelectContent>
                         </Select>
                         <FormMessage />
@@ -514,9 +511,6 @@ const DevisAccueil = () => {
                           <SelectContent>
                             <SelectItem value="Français">Français</SelectItem>
                             <SelectItem value="Arabe">Arabe</SelectItem>
-                            <SelectItem value="Anglais">Anglais</SelectItem>
-                            <SelectItem value="Espagnol">Espagnol</SelectItem>
-                            <SelectItem value="Italien">Italien</SelectItem>
                           </SelectContent>
                         </Select>
                         <FormMessage />

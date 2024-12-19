@@ -92,7 +92,7 @@ export default function Footer() {
               <Link href="/politique-de-cookies" className="text-sm text-gray-400 hover:text-white transition-colors">
               Politique de gestion des cookies
               </Link>
-              <Link href="/politique-confidentialite" className="text-sm text-gray-400 hover:text-white transition-colors">
+              <Link href="/politique-de-  confidentialite" className="text-sm text-gray-400 hover:text-white transition-colors">
                 Politique de confidentialité
               </Link>
             </nav>

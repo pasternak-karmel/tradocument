@@ -551,9 +551,6 @@ const DevisForm = () => {
                           <SelectContent>
                             <SelectItem value="Français">Français</SelectItem>
                             <SelectItem value="Arabe">Arabe</SelectItem>
-                            <SelectItem value="Anglais">Anglais</SelectItem>
-                            <SelectItem value="Espagnol">Espagnol</SelectItem>
-                            <SelectItem value="Italien">Italien</SelectItem>
                           </SelectContent>
                         </Select>
                         <FormMessage />
@@ -581,9 +578,6 @@ const DevisForm = () => {
                           <SelectContent>
                             <SelectItem value="Français">Français</SelectItem>
                             <SelectItem value="Arabe">Arabe</SelectItem>
-                            <SelectItem value="Anglais">Anglais</SelectItem>
-                            <SelectItem value="Espagnol">Espagnol</SelectItem>
-                            <SelectItem value="Italien">Italien</SelectItem>
                           </SelectContent>
                         </Select>
                         <FormMessage />
@@ -653,12 +647,16 @@ const DevisForm = () => {
                   </div>
                   {montant !== null && (
                     <div className="mt-4">
-                      <h3>Montant total à payer: {totalAmount?.toFixed(2)}€</h3>
-                      <pre>soit:</pre>
                       <pre>
-                        {amountPerPage.toFixed(2)}€ * {numberOfPages} (nombre total de page du document importé )
-                        {numberOfPages > 1 ? "s" : ""}
+                        <h3>
+                          Nombre total de page: {numberOfPages}
+                          {numberOfPages > 1 ? "s" : ""}
+                        </h3>
                       </pre>
+                      <h3>
+                        Montant total à payer: {totalAmount?.toFixed(2)}€ (
+                        {amountPerPage.toFixed(2)}€ par page)
+                      </h3>
                     </div>
                   )}
                   {montant !== null ? (
