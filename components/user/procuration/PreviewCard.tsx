@@ -80,7 +80,7 @@ export const PreviewCard: React.FC<PreviewCardProps> = ({ formData }) => {
                   Objet de la procuration
                 </h3>
                 <p>
-                  Par la présente, j'autorise Tradocument à effectuer en mon nom
+                  Par la présente, j'autorise ___ à effectuer en mon nom
                   toutes les démarches nécessaires au retrait de documents
                   officiels {formData.documents?.join(", ") || "___"} auprès de{" "}
                   {formData.institution || "___"} dans le respect des lois et

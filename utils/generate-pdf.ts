@@ -54,9 +54,9 @@ export async function generatePDF(data: ProcurationFormData) {
   y -= lineHeight;
 
   drawText(`titulaire de la pièce d'identité numéro ${data.numeroIdentite},`, 50, y);
-  y -= lineHeight * 2;
+  y -= lineHeight ;
 
-  drawText("donne par la présente pouvoir à :", 50, y, timesBold);
+  drawText("donne par la présente pouvoir à :", 50, y);
   y -= lineHeight;
 
   drawText("Monsieur/Madame DJOSSOU Carmel", 50, y, timesBold);
@@ -90,12 +90,7 @@ export async function generatePDF(data: ProcurationFormData) {
 
   y -= lineHeight;
 
-  drawText("Cette procuration est valable", 10, y, timesRoman);
-  if (data.dateLimite) {
-    drawText(`jusqu'au ${format(new Date(data.dateLimite), "dd/MM/yyyy", { locale: fr })}.`, 220, y, timesBold);
-  } else {
-    drawText("pour une durée indéterminée.", 220, y, timesBold);
-  }
+  drawText(`Cette procuration est valable jusqu'au ${format(new Date(data.dateLimite), "dd/MM/yyyy", { locale: fr })}.`, 50, y, timesRoman);
   y -= lineHeight * 2;
 
   drawText("Je conserve la responsabilité de toutes les actions effectuées par le mandataire", 50, y);
