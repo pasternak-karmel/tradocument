@@ -90,7 +90,8 @@ export async function generatePDF(data: ProcurationFormData) {
 
   y -= lineHeight;
 
-  drawText(`Cette procuration est valable jusqu'au ${format(new Date(data.dateLimite), "dd/MM/yyyy", { locale: fr })}.`, 50, y, timesRoman);
+  if (data.dateLimite) {
+    drawText(`Cette procuration est valable jusqu'au ${format(new Date(data.dateLimite), "dd/MM/yyyy", { locale: fr })}.`, 50, y, timesRoman);
   y -= lineHeight * 2;
 
   drawText("Je conserve la responsabilité de toutes les actions effectuées par le mandataire", 50, y);
@@ -144,5 +145,4 @@ export async function generatePDF(data: ProcurationFormData) {
   link.click();
   document.body.removeChild(link);
   window.URL.revokeObjectURL(url);
-}
-
+}}
