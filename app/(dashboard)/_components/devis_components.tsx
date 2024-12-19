@@ -96,6 +96,7 @@ const DevisForm = () => {
       country: undefined,
       documentType: undefined,
       customDocumentType: "",
+      institution: "",
       sourceLanguage: undefined,
       targetLanguage: undefined,
       additionalInfo: "",
@@ -649,8 +650,8 @@ const DevisForm = () => {
                     <div className="mt-4">
                       <pre>
                         <h3>
-                          Nombre total de page: {numberOfPages}
-                          {numberOfPages > 1 ? "s" : ""}
+                          Nombre total de page{numberOfPages > 1 ? "s" : ""}:{" "}
+                          {numberOfPages}
                         </h3>
                       </pre>
                       <h3>

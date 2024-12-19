@@ -152,6 +152,7 @@ export const demandeDevis = z
       .min(2, { message: "Le nom doit contenir au moins 2 caractères" }),
     email: z.string().email({ message: "Adresse email invalide" }),
     phone: z.string().min(10, { message: "Numéro de téléphone invalide" }),
+    institution: z.string({ required_error: "Entrez le lieu de récupération" }),
     country: z.string({
       required_error: "Please select a country.",
     }),
@@ -371,6 +372,8 @@ export const ContactSchema = z.object({
   phoneNumber: z.string().min(10, {
     message: "Numéro invalide. Vérifiez le format: eg: +33XXXXXXXXXX",
   }),
-  objet: z.string().min(1, { message: "Veuillez entrer le sujet de votre message." }),
+  objet: z
+    .string()
+    .min(1, { message: "Veuillez entrer le sujet de votre message." }),
   message: z.string().min(1, { message: "Veuillez entrer votre message." }),
 });

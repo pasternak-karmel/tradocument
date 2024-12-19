@@ -8,6 +8,7 @@ import { useCurrentUser } from "@/hooks/use-current-user";
 import { useEdgeStore } from "@/lib/edgestore";
 import { ProcurationUser } from "@/lib/mail";
 import { ProcurationFormData, ProcurationFormSchema } from "@/schemas";
+import { generatePDF } from "@/utils/generate-pdf";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/navigation";
@@ -110,9 +111,9 @@ export default function ProcurationForm() {
       await edgestore.document.confirmUpload({ url });
     }
     await ProcurationUser(data);
-    // if (data.pieceIdentite?.[0]) {
-    //   await generatePDF(data, data.pieceIdentite?.[0] ?? undefined);
-    // }
+    if (data.pieceIdentite?.[0]) {
+      await generatePDF(data);
+    }
     setSuccess(message);
     resetForm();
   };

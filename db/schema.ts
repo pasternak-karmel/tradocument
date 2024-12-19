@@ -1,4 +1,3 @@
-import { InferModel } from "drizzle-orm";
 import {
   boolean,
   integer,
@@ -198,6 +197,7 @@ export const DemandeDevis = pgTable("demande_devis", {
   infoSupl: text("information_supplementaire"),
   fichier: text("fichier").array(),
   fichierTraduis: text("fichier_traduis").unique(),
+  institution: text("institution"),
   traducteur: text("traducteur").references(() => users.id),
   adresseDepart: text("adresse_depart"),
   adresseArriver: text("adresse_arriver"),
@@ -280,7 +280,6 @@ export const procurations = pgTable("procurations", {
   pieceIdentite: text("piece_identite").array().notNull(),
 });
 export type ProcurationType = typeof procurations.$inferSelect;
-
 
 export const codeVerification = pgTable("codeVerification", {
   id: text("id")

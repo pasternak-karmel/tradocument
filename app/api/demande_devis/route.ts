@@ -58,6 +58,7 @@ export async function POST(req: Request) {
         ? deliveryAddress.shippingAddress
         : undefined,
       type: values.deliveryAddress ? true : false,
+      institution: values.institution,
     };
 
     const [result] = await db

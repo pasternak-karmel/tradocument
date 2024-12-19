@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS "demande_devis" (
 	"information_supplementaire" text,
 	"fichier" text[],
 	"fichier_traduis" text,
+	"institution" text,
 	"traducteur" text,
 	"adresse_depart" text,
 	"adresse_arriver" text,
@@ -63,8 +64,12 @@ CREATE TABLE IF NOT EXISTS "codeVerification" (
 CREATE TABLE IF NOT EXISTS "contact" (
 	"id" text PRIMARY KEY NOT NULL,
 	"nom" text NOT NULL,
+	"prenom" text NOT NULL,
 	"email" text NOT NULL,
-	"sujet" text NOT NULL,
+	"pays" text NOT NULL,
+	"ville" text NOT NULL,
+	"phoneNumber" text NOT NULL,
+	"objet" text NOT NULL,
 	"message" text NOT NULL
 );
 --> statement-breakpoint

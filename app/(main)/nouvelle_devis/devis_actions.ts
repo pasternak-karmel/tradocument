@@ -1,19 +1,20 @@
 "use server";
 
-import { UserRejoindre } from "@/actions/rejoindre";
 import { SaveVerifCode } from "@/actions/users";
 import { db } from "@/db/drizzle";
 import { codeVerification } from "@/db/schema";
 import { sendTwoFactorTokenEmail } from "@/lib/mail";
-import { RejoindreFormValues } from "@/schemas";
+import { DemandeDevisFormData } from "@/schemas";
 import { generateVerificationCode } from "@/utils/2fa-utils";
 import { and, eq } from "drizzle-orm";
 
 /**
  * Handles submission of the form by sending a verification code to the user's email.
  */
-export async function submitRejoindreForm(
-  data: RejoindreFormValues
+
+const baseUrl = process.env.DOMAIN;
+export async function submitDevisForm(
+  data: DemandeDevisFormData
 ): Promise<{ success: boolean; message: string }> {
   // Generate a verification code
   const verificationCode = generateVerificationCode();
@@ -23,7 +24,7 @@ export async function submitRejoindreForm(
     await sendTwoFactorTokenEmail(data.email, verificationCode);
 
     // Save the code in the database
-    await SaveVerifCode(data.email, verificationCode, "rejoindre");
+    await SaveVerifCode(data.email, verificationCode, "devis");
 
     return {
       success: true,
@@ -33,7 +34,8 @@ export async function submitRejoindreForm(
     console.error("Error during form submission:", error);
     return {
       success: false,
-      message: "Failed to send verification code. Please try again.",
+      message:
+        "Erreur lors de l'envoie du code de vérification. Veuillez réessayer.",
     };
   }
 }
@@ -42,7 +44,7 @@ export async function submitRejoindreForm(
  * Verifies the user-entered code and completes the form submission process.
  */
 export async function verifyCode(
-  data: RejoindreFormValues,
+  data: DemandeDevisFormData,
   code: string
 ): Promise<{ success: boolean; message: string }> {
   if (!code) {
@@ -61,7 +63,7 @@ export async function verifyCode(
       .where(
         and(
           eq(codeVerification.email, data.email),
-          eq(codeVerification.type, "rejoindre")
+          eq(codeVerification.type, "devis")
         )
       )
       .limit(1);
@@ -81,16 +83,15 @@ export async function verifyCode(
       return { success: false, message: "Code de vérification invalide." };
     }
 
-    // If the code is valid, proceed to user registration
-    const result = await UserRejoindre(data);
-    if (result.error) {
-      return { success: false, message: result.error };
-    }
-
     // Remove the used verification code
     await db
       .delete(codeVerification)
-      .where(eq(codeVerification.email, data.email));
+      .where(
+        and(
+          eq(codeVerification.email, data.email),
+          eq(codeVerification.type, "devis")
+        )
+      );
 
     return { success: true, message: "Formulaire soumis avec succès." };
   } catch (error) {
@@ -106,9 +107,6 @@ export async function deleteCode(email: string) {
   await db
     .delete(codeVerification)
     .where(
-      and(
-        eq(codeVerification.email, email),
-        eq(codeVerification.type, "rejoindre")
-      )
+      and(eq(codeVerification.email, email), eq(codeVerification.type, "devis"))
     );
 }

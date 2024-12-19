@@ -194,7 +194,6 @@ export default function RejoignezNous() {
         setUrls([]);
         setStep("form");
         setIsLoading(false);
-        // <SuccessPage />;
         router.push("/rejoindresuccess");
       } else {
         for (const url of data.url) {
@@ -210,13 +209,6 @@ export default function RejoignezNous() {
         router.push(
           `/rejoindreFailure?message=${encodeURIComponent(result.message)}`
         );
-        // toast("Erreur!!!", {
-        //   description: result.message,
-        //   action: {
-        //     label: "Fermer",
-        //     onClick: () => console.log("Toast fermé"),
-        //   },
-        // });
       }
       return;
     }

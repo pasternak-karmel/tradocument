@@ -95,14 +95,18 @@ export const CreateProcuration = async (values: ProcurationFormData) => {
   }
 };
 
-export const SaveVerifCode = async (email: string, code: string) => {
+export const SaveVerifCode = async (
+  email: string,
+  code: string,
+  type: string
+) => {
   try {
     const [] = await db
       .insert(codeVerification)
       .values({
         email,
         code,
-        type: "verification",
+        type,
       })
       .returning();
     return { success: true, message: "Code envoyé avec succès" };
@@ -118,7 +122,6 @@ export const userContact = async (
   success: boolean;
   message: string;
 }> => {
-
   try {
     const [] = await db
       .insert(contact)

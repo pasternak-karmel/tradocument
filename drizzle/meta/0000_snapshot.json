@@ -1,5 +1,5 @@
 {
-  "id": "8585d01d-59de-4923-acf1-54a6090f11b5",
+  "id": "08ae6d2f-7f73-4a5b-9475-6a12dc9daf9b",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -89,6 +89,12 @@
         },
         "fichier_traduis": {
           "name": "fichier_traduis",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "institution": {
+          "name": "institution",
           "type": "text",
           "primaryKey": false,
           "notNull": false
@@ -432,14 +438,38 @@
           "primaryKey": false,
           "notNull": true
         },
+        "prenom": {
+          "name": "prenom",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
         "email": {
           "name": "email",
           "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "sujet": {
-          "name": "sujet",
+        "pays": {
+          "name": "pays",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ville": {
+          "name": "ville",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "phoneNumber": {
+          "name": "phoneNumber",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "objet": {
+          "name": "objet",
           "type": "text",
           "primaryKey": false,
           "notNull": true
