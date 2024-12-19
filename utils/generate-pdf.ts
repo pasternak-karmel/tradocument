@@ -35,7 +35,6 @@ export async function generatePDF(data: ProcurationFormData) {
 
   // Document title
   drawCenteredText("PROCURATION", 800, timesBold, 18);
-  drawLine(50, 790, 545, 790);
 
   // Content
   let y = 750;
