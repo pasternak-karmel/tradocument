@@ -1,10 +1,11 @@
 "use server";
 
 import { db } from "@/db/drizzle";
-import { codeVerification, procurations } from "@/db/schema";
+import { codeVerification, contact, procurations } from "@/db/schema";
 import { currentUser } from "@/lib/auth";
-import { ProcurationFormData } from "@/schemas";
+import { ContactSchema, ProcurationFormData } from "@/schemas";
 import { and, eq } from "drizzle-orm";
+import { z } from "zod";
 
 export const CreateProcuration = async (values: ProcurationFormData) => {
   const today = new Date();
@@ -49,7 +50,6 @@ export const CreateProcuration = async (values: ProcurationFormData) => {
             .set({
               ...values,
               pieceIdentite: values.pieceIdentite ?? [],
-            
             })
             .where(eq(procurations.id, existing.id))
             .returning();
@@ -109,5 +109,30 @@ export const SaveVerifCode = async (email: string, code: string) => {
   } catch (error) {
     console.error(error);
     return { error: "Une erreur est survenue lors de l'envoi du code" };
+  }
+};
+
+export const userContact = async (
+  values: z.infer<typeof ContactSchema>
+): Promise<{
+  success: boolean;
+  message: string;
+}> => {
+
+  try {
+    const [] = await db
+      .insert(contact)
+      .values({
+        ...values,
+      })
+      .returning();
+
+    return { success: true, message: "Formulaire envoyé avec succès" };
+  } catch (error) {
+    console.error(error);
+    return {
+      success: false,
+      message: "Une erreur est survenue lors de la création du contact",
+    };
   }
 };

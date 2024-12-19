@@ -359,3 +359,18 @@ export const VerificationCodeSchema = z.object({
     message: "Minimum 1 characters required",
   }),
 });
+
+export type ContactFormData = z.infer<typeof ContactSchema>;
+
+export const ContactSchema = z.object({
+  nom: z.string().min(1, { message: "Le nom est requis" }),
+  prenom: z.string().min(1, { message: "Le prénom est requis" }),
+  email: z.string().email({ message: "Adresse email invalide" }),
+  pays: z.string().min(1, { message: "Entrez votre pays." }),
+  ville: z.string().min(1, { message: "Entrez votre ville." }),
+  phoneNumber: z.string().min(10, {
+    message: "Numéro invalide. Vérifiez le format: eg: +33XXXXXXXXXX",
+  }),
+  objet: z.string().min(1, { message: "Veuillez entrer le sujet de votre message." }),
+  message: z.string().min(1, { message: "Veuillez entrer votre message." }),
+});

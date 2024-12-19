@@ -148,7 +148,7 @@ export const calculateDistance = async (userInput: string): Promise<number> => {
     // Step 4: Calculate distance between the two locations
     const distance = await calculate(userCityCoords, capitalCoords);
 
-    return Number(distance.toFixed(2)) * 0.35;
+    return Number(distance.toFixed(2)) * 0.49;
   } catch (error: any) {
     console.error("Erreur dans le processus global :", error.message);
     throw new Error(error.message || "Erreur inattendue.");

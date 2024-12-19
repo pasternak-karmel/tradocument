@@ -240,8 +240,12 @@ export const contact = pgTable("contact", {
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
   nom: text("nom").notNull(),
+  prenom: text("prenom").notNull(),
   email: text("email").notNull(),
-  sujet: text("sujet").notNull(),
+  pays: text("pays").notNull(),
+  ville: text("ville").notNull(),
+  phoneNumber: text("phoneNumber").notNull(),
+  objet: text("objet").notNull(),
   message: text("message").notNull(),
 });
 

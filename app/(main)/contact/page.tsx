@@ -1,24 +1,57 @@
-"use client"
+"use client";
 
-import { useState } from 'react'
-import { motion } from 'framer-motion'
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { MapPin, Phone, Mail, Clock } from "lucide-react"
-import PhoneInput from "react-phone-input-2"
-import "react-phone-input-2/lib/style.css"
+import { userContact } from "@/actions/users";
+import { FormError } from "@/components/form-error";
+import { FormSuccess } from "@/components/form-success";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { IconSpinner } from "@/components/ui/icons";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { ContactSchema } from "@/schemas";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { motion } from "framer-motion";
+import { Clock, Mail, MapPin, Phone } from "lucide-react";
+import { useState, useTransition } from "react";
+import { useForm } from "react-hook-form";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
+import { z } from "zod";
 
 export default function ContactPage() {
-  const [isSubmitted, setIsSubmitted] = useState(false)
-  const [phoneNumber, setPhoneNumber] = useState("")
+  const [error, setError] = useState<string | undefined>("");
+  const [success, setSuccess] = useState<string | undefined>("");
+  const [isPending, startTransition] = useTransition();
+  const form = useForm<z.infer<typeof ContactSchema>>({
+    resolver: zodResolver(ContactSchema),
+  });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    console.log("Form submitted with phone number:", phoneNumber)
-    setIsSubmitted(true)
-    setTimeout(() => setIsSubmitted(false), 3000)
+  async function onSubmit(data: z.infer<typeof ContactSchema>) {
+    setError("");
+    setSuccess("");
+    startTransition(() => {
+      userContact(data)
+        .then((data) => {
+          if (!data?.success) {
+            form.reset();
+            setError(data.message);
+          }
+
+          if (data?.success) {
+            form.reset();
+            setSuccess(data.message);
+          }
+        })
+        .catch(() => setError("Something went wrong"));
+    });
   }
 
   const inputStyle = {
@@ -32,7 +65,7 @@ export default function ContactPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
       <div className="container mx-auto px-4 py-16">
-        <motion.h1 
+        <motion.h1
           className="mt-5 text-4xl font-bold text-center mb-8"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -40,7 +73,7 @@ export default function ContactPage() {
         >
           Contactez-nous
         </motion.h1>
-        
+
         <div className="grid md:grid-cols-2 gap-8">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
@@ -52,33 +85,173 @@ export default function ContactPage() {
                 <CardTitle>Envoyez-nous un message</CardTitle>
               </CardHeader>
               <CardContent>
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  <Input placeholder="Nom" required style={inputStyle} />
-                  <Input placeholder="Prénom" style={inputStyle} required />
-                  <Input type="email" placeholder="Email" style={inputStyle} required />
-                  <Input placeholder="Pays" style={inputStyle} required/>
-                  <Input placeholder="Ville" style={inputStyle} required/>
-                  <div>
-                    <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
-                      Téléphone Mobile (Whatsapp, Telegram, Imo...)
-                    </label>
-                    <PhoneInput
-                      country={"fr"}
-                      value={phoneNumber}
-                      onChange={setPhoneNumber}
-                      inputStyle={{ width: "100%" }}
+                <Form {...form}>
+                  <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className="space-y-4"
+                  >
+                    <FormField
+                      control={form.control}
+                      name="nom"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Nom</FormLabel>
+                          <FormControl>
+                            <Input
+                              disabled={isPending}
+                              placeholder="nom"
+                              style={inputStyle}
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
                     />
-                  </div>
-                  <Input placeholder="Objet" style={inputStyle} required />
-                  <Textarea placeholder="Votre message" required style={inputStyle} className="min-h-[100px]" />
-                  <Button type="submit" className="w-full">
-                    {isSubmitted ? "Message envoyé !" : "Envoyer"}
-                  </Button>
-                </form>
+                    <FormField
+                      control={form.control}
+                      name="prenom"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Prenom</FormLabel>
+                          <FormControl>
+                            <Input
+                              disabled={isPending}
+                              placeholder="prenom"
+                              style={inputStyle}
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>email</FormLabel>
+                          <FormControl>
+                            <Input
+                              disabled={isPending}
+                              placeholder="email"
+                              style={inputStyle}
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="pays"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Pays</FormLabel>
+                          <FormControl>
+                            <Input
+                              disabled={isPending}
+                              placeholder="pays"
+                              style={inputStyle}
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="ville"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>ville</FormLabel>
+                          <FormControl>
+                            <Input
+                              disabled={isPending}
+                              placeholder="ville"
+                              style={inputStyle}
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="phoneNumber"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>
+                            Téléphone Mobile (Whatsapp, Telegram,Imo...)
+                          </FormLabel>
+                          <FormControl>
+                            <PhoneInput
+                              disabled={isPending}
+                              country={"fr"}
+                              value={field.value}
+                              onChange={field.onChange}
+                              inputStyle={{ width: "100%" }}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="objet"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Objet</FormLabel>
+                          <FormControl>
+                            <Input
+                              disabled={isPending}
+                              placeholder="objet"
+                              style={inputStyle}
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="message"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Message</FormLabel>
+                          <FormControl>
+                            <Textarea
+                              disabled={isPending}
+                              placeholder="message"
+                              style={inputStyle}
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormError message={error} />
+                    <FormSuccess message={success} />
+                    <Button
+                      disabled={isPending}
+                      type="submit"
+                      className="w-full"
+                    >
+                      {isPending ? <IconSpinner /> : "Envoyer"}
+                    </Button>
+                  </form>
+                </Form>
               </CardContent>
             </Card>
           </motion.div>
-          
+
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -108,7 +281,7 @@ export default function ContactPage() {
                 </div>
               </CardContent>
             </Card>
-            
+
             <Card>
               <CardHeader>
                 <CardTitle>Notre emplacement</CardTitle>
@@ -131,5 +304,5 @@ export default function ContactPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }
