@@ -91,7 +91,7 @@ export const PreviewCard: React.FC<PreviewCardProps> = ({ formData }) => {
                   {formData.dateLimite
                     ? formatDate(formData.dateLimite)
                     : "___"}{" "}
-                  ou jusqu'à l'accomplissement de la mission décrite ci-dessus.
+                  
                 </p>
               </div>
 

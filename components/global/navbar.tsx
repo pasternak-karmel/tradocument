@@ -51,9 +51,9 @@ const Navbar = () => {
           <li className="text-white text-sm hover:text-blue-400 duration-500">
             <Link href="/transport">Transport coursier</Link>
           </li>
-          <li className="text-white text-sm hover:text-blue-400 duration-500">
+          {/* <li className="text-white text-sm hover:text-blue-400 duration-500">
             <Link href="/procuration">Procuration</Link>
-          </li>
+          </li> */}
           <li className="text-white text-sm hover:text-blue-400 duration-500">
             <Link href="/contact">Contact</Link>
           </li>
