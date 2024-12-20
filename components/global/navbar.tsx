@@ -136,9 +136,7 @@ const Navbar = () => {
                 Transport coursier
               </Link>
             </li>
-            <li className="text-white text-sm hover:text-blue-400 duration-500">
-              <Link href="/procuration">Procuration</Link>
-            </li>
+            
             <li className="text-white text-lg">
               <Link href="/contact" onClick={() => setMenuOpen(false)}>
                 Contact
