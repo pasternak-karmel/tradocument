@@ -155,6 +155,7 @@ function OptionCard({
       className={`bg-white rounded-xl shadow-lg p-6 cursor-pointer border-2 border-${color}-100 hover:border-${color}-300 transition-colors duration-300`}
       onClick={onClick}
     >
+      
       <div className="flex flex-col items-center text-center">
         {icon}
         <h3 className={`mt-4 text-xl font-semibold text-${color}-600`}>

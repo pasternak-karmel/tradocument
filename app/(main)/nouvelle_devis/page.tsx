@@ -97,8 +97,8 @@ const DevisAccueil = () => {
       country: undefined,
       customDocumentType: "",
       // documentType: "",
-      // sourceLanguage: "",
-      // targetLanguage: "",
+      sourceLanguage: " ",
+      targetLanguage: "null",
       additionalInfo: "",
       termsAccepted: false,
       // deliveryAddress: {
@@ -187,8 +187,8 @@ const DevisAccueil = () => {
       customDocumentType: "",
       country: undefined,
       documentType: undefined,
-      sourceLanguage: undefined,
-      targetLanguage: undefined,
+      sourceLanguage: "",
+      targetLanguage: "",
       additionalInfo: "",
       termsAccepted: false,
       deliveryAddress: {
@@ -221,6 +221,12 @@ const DevisAccueil = () => {
         if (!response.ok)
           return showError(result.message || `Internal Server Error`);
         if (result.success) {
+          const get = localStorage.getItem("documentType");
+          if (get) {
+            localStorage.removeItem("documentType");
+          }
+          localStorage.setItem("documentType", verificationData.documentType || verificationData.customDocumentType!);
+
           toast.success("Vérification réussie");
           await devisSent(verificationData as z.infer<typeof demandeDevis>);
           await devisSentAdmin(verificationData, resultat.info);
@@ -519,7 +525,7 @@ const DevisAccueil = () => {
                         />
                       )}
 
-                      <FormField
+                      {/* <FormField
                         control={form.control}
                         name="sourceLanguage"
                         render={({ field }) => (
@@ -569,7 +575,7 @@ const DevisAccueil = () => {
                             <FormMessage />
                           </FormItem>
                         )}
-                      />
+                      /> */}
 
                       <FormField
                         control={form.control}

@@ -79,7 +79,7 @@ const Navbar = () => {
             </span>
           </Link>
         ) : (
-          <LoginButton>
+          <LoginButton mode="redirect">
             <Button>Se connecter</Button>
           </LoginButton>
         )}

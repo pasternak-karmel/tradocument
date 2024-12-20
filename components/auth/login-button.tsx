@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 // import LoginForm from '@/components/login-form'
@@ -17,11 +17,12 @@ export const LoginButton = ({
   mode = "modal",
   asChild,
 }: LoginButtonProps) => {
-  const router = useRouter();
+  // const router = useRouter();
 
   const onClick = () => {
-    router.push("/auth/login");
+    window.open("/auth/login", "_blank");
   };
+  // router.push("/auth/login");
 
   if (mode === "modal") {
     return (
