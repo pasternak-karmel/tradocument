@@ -1,8 +1,10 @@
 "use client";
 
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { usePathname, useRouter } from "next/navigation";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { motion } from "framer-motion";
 import { useState } from "react";
+import Image from "next/image";
 
 interface OptionCardProps {
   icon: React.ReactNode;
@@ -34,166 +36,60 @@ export const Test = ({
   };
 
   const content = (
-    <div className="w-full max-w-3xl mx-auto bg-white rounded-xl p-8">
-      <div className="text-center mb-8">
-        <p className="text-gray-700 text-lg mb-2">
-          Nous sommes là pour vous aider à obtenir la meilleure traduction
-          possible.
-        </p>
-        <p className="text-gray-700 text-lg">
-          Sélectionnez l'option qui correspond le mieux à votre situation.
-        </p>
+    <div className="flex lg:flex-row w-full max-w-7xl mx-auto bg-white rounded-2xl overflow-hidden shadow-2xl">
+      <div className="relative w-full lg:w-1/2 h-full lg:h-auto">
+        <Image
+          src="/admin.jpeg"
+          alt="Professional Translation Services"
+          layout="fill"
+          objectFit="cover"
+          className="absolute inset-0"
+        />
+        <div className="absolute inset-0 bg-black opacity-50 z-0"></div>
+        <div className="absolute inset-0 flex items-center justify-center p-8">
+          <div className="text-center">
+            <h1 className="text-4xl font-bold text-white mb-4">Traductions Professionnelles</h1>
+            <p className="text-xl text-blue-100">Des solutions de traduction sur mesure pour tous vos besoins</p>
+          </div>
+        </div>
       </div>
-
-      <div className="grid md:grid-cols-2 gap-6">
-        <OptionCard
-          icon={
-            <svg
-              className="w-12 h-12 text-blue-600"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M8 2V5"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeMiterlimit="10"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M16 2V5"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeMiterlimit="10"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M3.5 9.09H20.5"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeMiterlimit="10"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M21 8.5V17C21 20 19.5 22 16 22H8C4.5 22 3 20 3 17V8.5C3 5.5 4.5 3.5 8 3.5H16C19.5 3.5 21 5.5 21 8.5Z"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeMiterlimit="10"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M15.6947 13.7H15.7037"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M15.6947 16.7H15.7037"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M11.9955 13.7H12.0045"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M11.9955 16.7H12.0045"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M8.29431 13.7H8.30329"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M8.29431 16.7H8.30329"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          }
-          title="J'ai le Document"
-          description="Téléchargez votre document et recevez un devis instantané pour une traduction professionnelle."
-          onClick={() => handleButtonClick("/nouvelle_devis")}
-        />
-        <OptionCard
-          icon={
-            <svg
-              className="w-12 h-12 text-blue-600"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M16 2V6"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeMiterlimit="10"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M8 2V6"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeMiterlimit="10"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M3 9H21"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeMiterlimit="10"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M19 4H5C3.895 4 3 4.895 3 6V19C3 20.105 3.895 21 5 21H19C20.105 21 21 20.105 21 19V6C21 4.895 20.105 4 19 4Z"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeMiterlimit="10"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M12 12L8 16L12 20"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M8 16H16"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          }
-          title="Je n'ai pas le Document"
-          description="Nous nous occupons de tout ! Nous récupérerons le document via une procuration avant de le traduire."
-          onClick={() => handleButtonClick("/nouvelleDevis")}
-        />
+      
+      <div className="w-full lg:w-1/2 p-8 lg:p-12 space-y-8">
+        <div className="text-center lg:text-left">
+          <h2 className="text-3xl font-bold text-gray-800 mb-4">Choisissez Votre Option</h2>
+          <p className="text-gray-600 text-lg">
+            Sélectionnez l'option qui correspond le mieux à votre situation.
+          </p>
+        </div>
+        
+        <div className="space-y-6">
+          <OptionCard
+            icon={
+              <svg className="w-8 h-8 text-blue-600" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M8 2V5" stroke="currentColor" strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M16 2V5" stroke="currentColor" strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M3.5 9.09H20.5" stroke="currentColor" strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M21 8.5V17C21 20 19.5 22 16 22H8C4.5 22 3 20 3 17V8.5C3 5.5 4.5 3.5 8 3.5H16C19.5 3.5 21 5.5 21 8.5Z" stroke="currentColor" strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            }
+            title="J'ai le Document"
+            description="Téléchargez votre document et recevez un devis instantané pour une traduction professionnelle."
+            onClick={() => handleButtonClick("/nouvelleDevis")}
+          />
+          <OptionCard
+            icon={
+              <svg className="w-8 h-8 text-blue-600" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M16 2V6" stroke="currentColor" strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M8 2V6" stroke="currentColor" strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M3 9H21" stroke="currentColor" strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M19 4H5C3.895 4 3 4.895 3 6V19C3 20.105 3.895 21 5 21H19C20.105 21 21 20.105 21 19V6C21 4.895 20.105 4 19 4Z" stroke="currentColor" strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            }
+            title="Je n'ai pas le Document"
+            description="Nous nous occupons de tout ! Nous récupérerons le document via une procuration avant de le traduire."
+            onClick={() => handleButtonClick("/nouvelle_devis")}
+          />
+        </div>
       </div>
     </div>
   );
@@ -202,7 +98,7 @@ export const Test = ({
     return (
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger asChild={asChild}>{children}</DialogTrigger>
-        <DialogContent className="sm:max-w-[900px] p-0 bg-white">
+        <DialogContent className="sm:max-w-[1200px] p-0">
           {content}
         </DialogContent>
       </Dialog>
@@ -212,41 +108,46 @@ export const Test = ({
   return content;
 };
 
-function OptionCard({ icon, title, description, onClick }: OptionCardProps) {
+function OptionCard({
+  icon,
+  title,
+  description,
+  onClick,
+}: OptionCardProps) {
   return (
-    <div
+    <motion.div
+      whileHover={{ y: -5 }}
       onClick={onClick}
-      className="bg-white rounded-lg p-6 cursor-pointer border border-gray-100 hover:border-blue-600 transition-colors duration-200 flex flex-col items-center text-center group"
+      className="group bg-white rounded-xl p-6 cursor-pointer transition-all duration-300
+                 border border-gray-100 hover:border-blue-200
+                 shadow-sm hover:shadow-xl
+                 flex items-start space-x-4"
     >
-      <div className="mb-4 text-blue-600">{icon}</div>
-      <h3 className="text-xl font-semibold text-gray-900 mb-3">{title}</h3>
-      <p className="text-gray-600 mb-6">{description}</p>
-      <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white">
-        <svg
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M14.4301 5.92993L20.5001 11.9999L14.4301 18.0699"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeMiterlimit="10"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          <path
-            d="M3.5 12H20.33"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeMiterlimit="10"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
+      <div className="flex-shrink-0">
+        <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center
+                        group-hover:bg-blue-600 transition-colors duration-300">
+          <div className="text-blue-600 group-hover:text-white transition-colors duration-300">
+            {icon}
+          </div>
+        </div>
       </div>
-    </div>
+      <div className="flex-grow">
+        <h3 className="text-xl font-semibold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors duration-300">
+          {title}
+        </h3>
+        <p className="text-gray-600 group-hover:text-gray-700 transition-colors duration-300">
+          {description}
+        </p>
+      </div>
+      <div className="flex-shrink-0 self-center">
+        <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center
+                        group-hover:bg-blue-600 transition-colors duration-300">
+          <svg className="w-4 h-4 text-gray-400 group-hover:text-white transition-colors duration-300" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M8.91003 19.9201L15.43 13.4001C16.2 12.6301 16.2 11.3701 15.43 10.6001L8.91003 4.08008" stroke="currentColor" strokeWidth="1.5" strokeMiterlimit="10" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </div>
+      </div>
+    </motion.div>
   );
 }
+

@@ -136,7 +136,7 @@ const Navbar = () => {
                 Transport coursier
               </Link>
             </li>
-            
+
             <li className="text-white text-lg">
               <Link href="/contact" onClick={() => setMenuOpen(false)}>
                 Contact

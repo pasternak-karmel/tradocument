@@ -69,30 +69,45 @@ export default function FeaturesSection() {
   return (
     <div className="container px-4 md:px-6 mt-8">
       {/* Section du texte */}
-      <div className="text-center text-black mb-7">
-        <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl">
-          Qui sommes nous ?
+      <div className="flex flex-col lg:flex-row justify-between items-center px-4 md:px-8 py-12 bg-white">
+      <div className="lg:w-1/2 mb-8 lg:mb-0">
+        <h2 className="text-3xl font-bold text-black mb-6 lg:text-4xl">
+          QUI SOMMES-NOUS ?
         </h2>
-        <p className="mt-4 max-w-[700px] mx-auto">
+        <p className="text-lg leading-relaxed text-gray-800 mb-6">
           Si vous recherchez des services de traduction rapides et de qualité
           optimale, Tradocument.com vous propose des solutions linguistiques
           harmonisées et d&apos;une fiabilité absolue. Nous sommes en mesure de
           vous proposer des traductions pertinentes adaptées à un domaine
-          particulier. Tradocument.com travaille avec plusieurs traducteurs
+          particulier. Tradocument.com travaille avec des traducteurs
           assermentés en langues maternelles, très expérimentés dans leurs
           domaines de spécialisation respectifs. Nous traduisons et certifions
-          vos documents officiels.
+          vos documents officiels, tels que :
         </p>
         <Link href="/apropos">
-          <Button
-            size={"lg"}
-            className="mt-4 hover:bg-blue-400 group transition-all gap-4 hover:shadow-3xl duration-500"
-          >
+          <Button className="bg-blue-900 text-white px-6 py-5 rounded-md hover:bg-blue-700 transition-all duration-300">
             En savoir plus
           </Button>
         </Link>
       </div>
 
+      {/* Section Image */}
+      <div className="lg:w-1/2 relative">
+        <img
+          src="./accueil1.jpg"
+          alt="Illustration d'un traducteur"
+          className="w-full h-auto rounded-lg shadow-lg"
+        />
+        <div className="absolute bottom-0 left-4 bg-blue-900 text-white p-6 rounded-md shadow-lg transform translate-y-1/2">
+          <h3 className="text-3xl font-bold mb-1">
+            25<span className="text-xl">+</span>
+          </h3>
+          <p className="text-sm uppercase tracking-wider">
+            Années d&apos;expériences
+          </p>
+        </div>
+      </div>
+      </div>
       {/* Section des cartes centrées */}
       <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 mt-16 justify-center">
         {features.map((feature, index) => (
