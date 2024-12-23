@@ -117,18 +117,18 @@ export default function TraDocumentLanding() {
       {/* Sections secondaires */}
       <main className="flex-grow w-full flex flex-col items-center justify-center px-4 sm:px-8">
         {/* Centrage du FeaturesSection */}
-        <div className="w-full flex flex-col items-center justify-center">
+        <div className="w-full flex flex-col mb-10 items-center justify-center">
           <FeaturesSection />
-        </div>
 
+        </div>
+        <div className="w-full flex flex-col items-center justify-center mb-10 ">
+          <FeatureAccueil />
+        </div>
         {/* <div className="w-full h-24 mt-10 flex flex-col items-center justify-center">
           <IconsSections />
         </div> */}
         <div className="w-full flex flex-col items-center justify-center ">
           <ElegantSection />
-        </div>
-        <div className="w-full flex flex-col items-center justify-center mb-10 ">
-          <FeatureAccueil />
         </div>
       </main>
     </div>
