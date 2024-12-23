@@ -34,7 +34,7 @@ export default function TraDocumentLanding() {
   ></div>
 
   {/* Overlay gradient */}
-  <div className="absolute inset-0 bg-gradient-to-b from-blue-900/70 via-slate-900/70 to-black/70" />
+  <div className="absolute inset-0 bg-gradient-to-b from-blue-300/70 via-slate-900/70 to-black/70" />
 
   <div className="absolute inset-0 h-full w-full flex items-center justify-center px-4 sm:px-8 py-16 sm:py-24 text-center text-white z-10">
     <div className="text-center m-4 sm:m-10 space-y-8">
